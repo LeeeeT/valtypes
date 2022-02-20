@@ -26,11 +26,11 @@ class Dataclass(metaclass=DataclassMeta):
             setattr(self, field, value)
 
     def __eq__(self, other: object) -> bool:
-        if not isinstance(other, Dataclass):
-            return NotImplemented
-        return self.__all_annotations__.keys() <= other.__all_annotations__.keys() and all(
-            getattr(self, field) == getattr(other, field) for field in self.__all_annotations__
-        )
+        if isinstance(other, Dataclass):
+            return self.__all_annotations__.keys() <= other.__all_annotations__.keys() and all(
+                getattr(self, field) == getattr(other, field) for field in self.__all_annotations__
+            )
+        return super().__eq__(other)
 
     def as_dict(self) -> dict[str, object]:
         intermediate_result: dict[str, object] = {}
