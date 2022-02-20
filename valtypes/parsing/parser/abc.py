@@ -15,5 +15,5 @@ T = TypeVar("T")
 
 class ABC(abc.ABC):
     @abc.abstractmethod
-    def parse(self, target_type: Any, value: Any, collection: Collection) -> Any:
+    def parse(self, target_type: Any, source: Any, collection: Collection) -> Any:
         pass

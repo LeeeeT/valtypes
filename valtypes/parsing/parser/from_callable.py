@@ -19,8 +19,8 @@ class FromCallable(ABC):
     def __init__(self, callable: Callable[[Any, Any, Collection], Any], /):
         self.callable = callable
 
-    def parse(self, target_type: Any, value: Any, collection: Collection) -> Any:
-        return self.callable(target_type, value, collection)
+    def parse(self, target_type: Any, source: Any, collection: Collection) -> Any:
+        return self.callable(target_type, source, collection)
 
 
 def convert(callable: Callable[[Any, Any, Collection], Any], /) -> FromCallable:
