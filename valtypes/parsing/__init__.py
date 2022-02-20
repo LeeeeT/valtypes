@@ -3,6 +3,7 @@ from types import UnionType
 from typing import Any, TypeVar
 from typing import _SpecialForm as SpecialForm  # noqa
 from typing import overload
+from valtypes.dataclass import Dataclass
 
 from valtypes.typing import Floatable
 
@@ -18,6 +19,7 @@ T = TypeVar("T")
 
 collection = Collection(
     Rule(parser.bytes_bytearray_to_bool, source_type=bytes | bytearray, target_type=bool),
+    Rule(parser.dict_to_dataclass, source_type=dict, target_type=Dataclass),
     Rule(parser.float_to_int, source_type=float, target_type=int),
     Rule(parser.floatable_to_float, source_type=Floatable, target_type=float),
     Rule(parser.iterable_to_list, source_type=Iterable, target_type=list),
