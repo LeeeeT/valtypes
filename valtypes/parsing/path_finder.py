@@ -40,7 +40,7 @@ class PathFinder:
         self._queue = [
             [rule]
             for rule in self._rules
-            if isinstance(rule.source_type, type) and issubclass(self._source_type, rule.source_type)
+            if isinstance(rule.source_type, (type, UnionType)) and issubclass(self._source_type, rule.source_type)
         ]
 
     def _process_queue(self) -> None:
@@ -59,7 +59,7 @@ class PathFinder:
     def _process_parent_rule(self) -> None:
         self._explored.append(self._current_parent_rule)
         for child_rule in filter(
-            lambda rule: types_match(rule.source_type, self._current_parent_rule.target_type), self._rules
+            lambda rule: types_match(self._current_parent_rule.target_type, rule.source_type), self._rules
         ):
             self._queue.append(self._current_path + [child_rule])
 
