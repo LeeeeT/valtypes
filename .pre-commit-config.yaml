@@ -1,0 +1,42 @@
+repos:
+  - repo: local
+
+    hooks:
+      - id: isort
+        name: isort formatting
+        entry: poetry run isort
+        language: system
+        pass_filenames: false
+        args: [ . ]
+        stages: [ commit ]
+
+      - id: black
+        name: black formatting
+        entry: poetry run black
+        language: system
+        pass_filenames: false
+        args: [ . ]
+        stages: [ commit ]
+
+      - id: flake8
+        name: flake8 checking
+        entry: poetry run flake8
+        language: system
+        pass_filenames: false
+        stages: [ commit ]
+
+      - id: mypy
+        name: mypy checking
+        entry: mypy
+        language: system
+        pass_filenames: false
+        args: [ . ]
+        stages: [ commit ]
+
+      - id: pytest
+        name: pytest testing
+        entry: pytest
+        language: system
+        pass_filenames: false
+        args: [ tests ]
+        stages: [ commit ]
