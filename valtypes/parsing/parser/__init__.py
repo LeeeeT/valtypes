@@ -1,5 +1,5 @@
 from .abc import ABC
-from .bytes_bytearray_to_bool import bytes_bytearray_to_bool
+from .bytes_bytearray_to_str import bytes_bytearray_to_str
 from .dict_to_dataclass import dict_to_dataclass
 from .float_to_int import float_to_int
 from .floatable_to_float import floatable_to_float
@@ -12,7 +12,7 @@ from .str_to_bool import str_to_bool
 
 __all__ = [
     "ABC",
-    "bytes_bytearray_to_bool",
+    "bytes_bytearray_to_str",
     "dict_to_dataclass",
     "float_to_int",
     "floatable_to_float",
