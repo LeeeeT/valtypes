@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import inspect
-from typing import TypeVar
 
 from regex import Match, Pattern
 
@@ -27,6 +26,3 @@ def strict_match(pattern: Pattern[str], string: str) -> Match[str]:
     if match is None:
         raise ValueError
     return match
-
-
-T = TypeVar("T")
