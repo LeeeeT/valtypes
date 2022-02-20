@@ -3,8 +3,8 @@ from types import UnionType
 from typing import Any, TypeVar
 from typing import _SpecialForm as SpecialForm  # noqa
 from typing import overload
-from valtypes.dataclass import Dataclass
 
+from valtypes.dataclass import Dataclass
 from valtypes.typing import Floatable
 
 from . import parser
