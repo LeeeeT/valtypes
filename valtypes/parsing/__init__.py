@@ -9,9 +9,10 @@ from valtypes.typing import Floatable
 
 from . import parser
 from .collection import Collection
+from .error import NoParserFoundError, ParsingError
 from .rule import Rule
 
-__all__ = ["parse", "collection", "Collection", "Rule"]
+__all__ = ["parse", "collection", "Collection", "NoParserFoundError", "ParsingError", "Rule"]
 
 
 T = TypeVar("T")
