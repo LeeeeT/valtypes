@@ -31,14 +31,14 @@ collection = Collection(
 
 
 @overload
-def parse(target_type: type[T], value: Any) -> T:
+def parse(target_type: type[T], source: Any) -> T:
     ...
 
 
 @overload
-def parse(target_type: Any, value: Any) -> Any:
+def parse(target_type: Any, source: Any) -> Any:
     ...
 
 
-def parse(target_type: Any, value: Any) -> Any:
-    return collection.parse(target_type, value)
+def parse(target_type: Any, source: Any) -> Any:
+    return collection.parse(target_type, source)
