@@ -1,14 +1,13 @@
 from __future__ import annotations
 
 from collections.abc import Callable, Sequence
-from typing import Any, TypeVar
-from typing import _SpecialForm as SpecialForm  # noqa
-from typing import overload
+from typing import Any, TypeVar, overload
 
-from valtypes.typing import GenericAlias
+from valtypes import condition
 
 from . import parser
-from .path_finder import PathFinder
+from .chain import create_chains
+from .error import NoParserFoundError, ParsingError
 from .rule import Rule
 
 T = TypeVar("T")
@@ -22,7 +21,6 @@ __all__ = ["Collection"]
 class Collection:
     def __init__(self, *rules: Rule):
         self._rules = list(rules)
-        self._path_finder = PathFinder(self._rules)
 
     @property
     def rules(self) -> Sequence[Rule]:
@@ -31,9 +29,11 @@ class Collection:
     def add(self, *rules: Rule) -> None:
         self._rules.extend(rules)
 
-    def register(self, *, source_type: object = object, target_type: object = object) -> Callable[[T_Parser], T_Parser]:
+    def register(
+        self, *, source_type: object = object, target_condition: condition.ABC[object] | None = None
+    ) -> Callable[[T_Parser], T_Parser]:
         def registrar(parser: T_Parser) -> T_Parser:
-            self.add(Rule(parser, source_type=source_type, target_type=target_type))
+            self.add(Rule(parser, source_type=source_type, target_condition=target_condition))
             return parser
 
         return registrar
@@ -47,16 +47,9 @@ class Collection:
         ...
 
     def parse(self, target_type: object, source: object) -> Any:
-        if (
-            isinstance(target_type, type)
-            and not isinstance(target_type, GenericAlias)
-            and issubclass(type(source), target_type)
-        ):
-            return source
-
-        path = self._path_finder.find_path(type(source), target_type)
-        target_types = [rule.source_type for rule in path[1:]] + [target_type]
-
-        for rule, target_type in zip(path, target_types):
-            source = rule.parser.parse(target_type, source, self)
-        return source
+        for chain in create_chains(type(source), target_type, self._rules):
+            try:
+                return chain.parse(source, self)
+            except ParsingError:
+                pass
+        raise NoParserFoundError(target_type, source)

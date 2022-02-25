@@ -13,8 +13,8 @@ if TYPE_CHECKING:
 __all__ = ["str_to_bool"]
 
 
-TRUE = {"1", "on", "t", "true", "y", "yes"}
-FALSE = {"0", "off", "f", "false", "n", "no"}
+TRUE = {"on", "t", "true", "y", "yes"}
+FALSE = {"off", "f", "false", "n", "no"}
 
 
 @convert
@@ -23,4 +23,4 @@ def str_to_bool(target_type: type[bool], source: str, collection: Collection) ->
         return True
     if source.lower() in FALSE:
         return False
-    raise ParsingError(bool, source)
+    raise ParsingError(target_type, source)

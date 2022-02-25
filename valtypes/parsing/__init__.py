@@ -1,10 +1,7 @@
 from collections.abc import Iterable
-from types import UnionType
-from typing import Any, TypeVar
-from typing import _SpecialForm as SpecialForm  # noqa
-from typing import overload
+from typing import Any, TypeVar, overload
 
-from valtypes.dataclass import Dataclass
+from valtypes import condition
 from valtypes.typing import Floatable
 
 from . import parser
@@ -19,15 +16,26 @@ T = TypeVar("T")
 
 
 collection = Collection(
-    Rule(parser.bytes_bytearray_to_str, source_type=bytes | bytearray, target_type=str),
-    Rule(parser.dict_to_dataclass, source_type=dict, target_type=Dataclass),
-    Rule(parser.float_to_int, source_type=float, target_type=int),
-    Rule(parser.floatable_to_float, source_type=Floatable, target_type=float),
-    Rule(parser.iterable_to_list, source_type=Iterable, target_type=list),
-    Rule(parser.str_to_bool, source_type=str, target_type=bool),
-    Rule(parser.object_to_special_form, target_type=SpecialForm),
-    Rule(parser.object_to_str, target_type=str),
-    Rule(parser.object_to_union, target_type=UnionType),
+    Rule(
+        parser.bytes_bytearray_to_str,
+        source_type=bytes | bytearray,
+        target_condition=condition.IsInstance(type) & condition.IsSubclass(str),
+    ),
+    Rule(parser.object_to_str, target_condition=condition.IsInstance(type) & condition.IsSubclass(str)),
+    Rule(parser.str_to_bool, source_type=str, target_condition=condition.Is(bool)),
+    Rule(
+        parser.float_to_int, source_type=float, target_condition=condition.IsInstance(type) & condition.IsSubclass(int)
+    ),
+    Rule(
+        parser.floatable_to_float,
+        source_type=Floatable,
+        target_condition=condition.IsInstance(type) & condition.IsSubclass(float),
+    ),
+    Rule(
+        parser.iterable_to_list,
+        source_type=Iterable,
+        target_condition=condition.IsInstance(type) & condition.IsSubclass(list),
+    ),
 )
 
 

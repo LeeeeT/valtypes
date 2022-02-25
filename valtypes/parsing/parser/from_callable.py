@@ -3,6 +3,8 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Any, TypeVar
 
+from valtypes.util import get_absolute_name
+
 from .abc import ABC
 
 if TYPE_CHECKING:
@@ -21,6 +23,9 @@ class FromCallable(ABC):
 
     def parse(self, target_type: Any, source: Any, collection: Collection) -> Any:
         return self.callable(target_type, source, collection)
+
+    def __repr__(self) -> str:
+        return f"{get_absolute_name(self.__class__)}({get_absolute_name(self.callable)})"
 
 
 def convert(callable: Callable[[Any, Any, Collection], Any], /) -> FromCallable:

@@ -6,7 +6,7 @@ from valtypes.parsing.parser import str_to_bool
 
 
 def test_simple() -> None:
-    assert str_to_bool.parse(bool, "0", collection) is False
+    assert str_to_bool.parse(bool, "no", collection) is False
     assert str_to_bool.parse(bool, "YeS", collection) is True
 
 
