@@ -4,6 +4,7 @@ from collections.abc import Iterable
 from types import UnionType
 from typing import TYPE_CHECKING, Any, Final, NamedTuple
 
+from ..util import iterate_in_parallel
 from . import parser
 from .rule import Rule
 
@@ -55,11 +56,20 @@ class ChainsCreator:
             yield from self._chains_according_rules(target_type)
 
     def _chains_according_rules(self, target_type: object) -> Iterable[Chain]:
+        queue = self._make_chains_generators_queue(target_type)
+        yield from iterate_in_parallel(*queue)
+
+    def _make_chains_generators_queue(self, target_type: object) -> list[Iterable[Chain]]:
+        queue: list[Iterable[Chain]] = []
         for rule in self._rules:
             new_node = Node(target_type, rule.parser)
             if new_node not in self._explored and rule.check(target_type):
                 self._explored.add(new_node)
-                yield from (Chain(*chain.nodes, new_node) for chain in self.create_chains(rule.source_type))
+                queue.append(self._make_chains_generator(rule.source_type, new_node))
+        return queue
+
+    def _make_chains_generator(self, source_type: object, new_node: Node) -> Iterable[Chain]:
+        return (Chain(*chain.nodes, new_node) for chain in self.create_chains(source_type))
 
 
 def create_chains(source_type: type, target_type: object, rules: Iterable[Rule]) -> Iterable[Chain]:

@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import inspect
+from collections.abc import Iterable
+from itertools import zip_longest
+from typing import TypeVar
 
 from regex import Match, Pattern
 
@@ -17,7 +20,11 @@ __all__ = [
     "get_caller_namespace",
     "get_absolute_name",
     "strict_match",
+    "iterate_in_parallel",
 ]
+
+
+T = TypeVar("T")
 
 
 def get_caller_namespace() -> dict[str, object]:
@@ -34,3 +41,13 @@ def strict_match(pattern: Pattern[str], string: str) -> Match[str]:
     if match is None:
         raise ValueError
     return match
+
+
+MISSING = object()
+
+
+def iterate_in_parallel(*iterables: Iterable[T]) -> Iterable[T]:
+    for values in zip_longest(*iterables, fillvalue=MISSING):
+        for value in values:
+            if value is not MISSING:
+                yield value
