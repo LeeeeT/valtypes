@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable, Sequence
 from types import UnionType
-from typing import TYPE_CHECKING, Any, NamedTuple
+from typing import TYPE_CHECKING, Any, Final, NamedTuple
 
 from . import parser
 from .rule import Rule
@@ -24,14 +24,10 @@ class Node(NamedTuple):
 
 class Chain:
     def __init__(self, *nodes: Node):
-        self._nodes = nodes
-
-    @property
-    def nodes(self) -> tuple[Node, ...]:
-        return self._nodes
+        self.nodes: Final = nodes
 
     def parse(self, source: object, collection: Collection) -> Any:
-        for node in self._nodes:
+        for node in self.nodes:
             source = node.parse(source, collection)
         return source
 
