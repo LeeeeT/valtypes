@@ -24,14 +24,11 @@ class Node(NamedTuple):
 
 class Chain:
     def __init__(self, *nodes: Node):
-        self._nodes = list(nodes)
+        self._nodes = nodes
 
     @property
-    def nodes(self) -> Sequence[Node]:
+    def nodes(self) -> tuple[Node, ...]:
         return self._nodes
-
-    def add(self, *nodes: Node) -> None:
-        self._nodes.extend(nodes)
 
     def parse(self, source: object, collection: Collection) -> Any:
         for node in self._nodes:
