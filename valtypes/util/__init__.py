@@ -10,12 +10,10 @@ from regex import Match, Pattern
 from valtypes.typing import HasModuleAndName
 
 from .resolve_type_args import resolve_type_args
-from .static_analysis import static_analysis
 from .suppress_slots_meta import SuppressSlotsMeta
 
 __all__ = [
     "resolve_type_args",
-    "static_analysis",
     "SuppressSlotsMeta",
     "get_caller_namespace",
     "get_absolute_name",
