@@ -6,7 +6,7 @@ from . import condition
 from .error import ConstraintError
 from .util import SuppressSlotsMeta, get_absolute_name
 
-__all__ = ["ConstrainedMeta", "Constrained"]
+__all__ = ["ConstrainedMeta", "Constrained", "ConstrainedInt", "ConstrainedFloat", "ConstrainedStr"]
 
 
 T_co = TypeVar("T_co", covariant=True)
@@ -34,3 +34,15 @@ class Constrained(Generic[T_co], metaclass=ConstrainedMeta):
 
     def __repr__(self) -> str:
         return f"{get_absolute_name(self.__class__)}({super().__repr__()})"
+
+
+class ConstrainedInt(Constrained[int], int):
+    pass
+
+
+class ConstrainedFloat(Constrained[float], float):
+    pass
+
+
+class ConstrainedStr(Constrained[str], str):
+    pass
