@@ -1,5 +1,6 @@
 from collections.abc import Iterable, Mapping
 from dataclasses import is_dataclass
+from datetime import datetime
 from typing import Any, TypeVar, overload
 
 from valtypes.condition import FromCallable, Is, IsInstance, IsSubclass
@@ -34,6 +35,7 @@ collection = Collection(
         source_type=Floatable,
         target_condition=IsInstance(type) & IsSubclass(float),
     ),
+    Rule(parser.int_to_datetime, source_type=int, target_condition=Is(datetime)),
     Rule(
         parser.iterable_to_list,
         source_type=Iterable,

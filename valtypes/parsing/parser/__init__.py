@@ -4,6 +4,7 @@ from .dict_to_dataclass import dict_to_dataclass
 from .float_to_int import float_to_int
 from .floatable_to_float import floatable_to_float
 from .from_callable import FromCallable, convert
+from .int_to_datetime import int_to_datetime
 from .iterable_to_list import iterable_to_list
 from .mapping_to_dict import mapping_to_dict
 from .object_to_str import object_to_str
@@ -20,6 +21,7 @@ __all__ = [
     "floatable_to_float",
     "FromCallable",
     "convert",
+    "int_to_datetime",
     "iterable_to_list",
     "mapping_to_dict",
     "object_to_str",
