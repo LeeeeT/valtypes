@@ -1,0 +1,25 @@
+name: Publish
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - name: Set up Python
+        uses: actions/setup-python@main
+        with:
+          python-version: '3.10'
+      - name: Install Poetry
+        uses: snok/install-poetry@main
+        with:
+          version: latest
+      - name: Build
+        run: poetry build
+      - name: Publish
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
