@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Any, Final, NamedTuple
 from valtypes.typing import GenericAlias
 
 from ..util import iterate_in_parallel
-from . import parser
+from . import parser  # noqa
 from .rule import Rule
 
 if TYPE_CHECKING:
