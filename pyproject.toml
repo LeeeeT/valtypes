@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "valtypes"
-version = "0.1.0"
+version = "1.1.0"
 description = "A library for data parsing using Python type hints."
 authors = ["LeeeeT <leeeet@inbox.ru>"]
 license = "MIT"
