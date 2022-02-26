@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import abc
 from collections.abc import Container
+from types import UnionType
 from typing import Any, Callable, Generic, TypeVar
 
 import regex
@@ -142,25 +143,25 @@ class Is(ABC[object]):
 
 
 class IsInstance(ABC[object]):
-    def __init__(self, *classes: type):
-        self.classes = classes
+    def __init__(self, *types: type | UnionType):
+        self.types = types
 
     def check(self, value: object, /) -> bool:
-        return isinstance(value, self.classes)
+        return isinstance(value, self.types)
 
     def __repr__(self) -> str:
-        return f"{get_absolute_name(self.__class__)}({', '.join(map(repr, self.classes))})"
+        return f"{get_absolute_name(self.__class__)}({', '.join(map(repr, self.types))})"
 
 
 class IsSubclass(ABC[type]):
-    def __init__(self, *classes: type):
-        self.classes = classes
+    def __init__(self, *types: type | UnionType):
+        self.types = types
 
     def check(self, value: type, /) -> bool:
-        return issubclass(value, self.classes)
+        return issubclass(value, self.types)
 
     def __repr__(self) -> str:
-        return f"{get_absolute_name(self.__class__)}({', '.join(map(repr, self.classes))})"
+        return f"{get_absolute_name(self.__class__)}({', '.join(map(repr, self.types))})"
 
 
 class Equals(ABC[object]):

@@ -4,6 +4,8 @@ from collections.abc import Iterable
 from types import UnionType
 from typing import TYPE_CHECKING, Any, Final, NamedTuple
 
+from valtypes.typing import GenericAlias
+
 from ..util import iterate_in_parallel
 from . import parser
 from .rule import Rule
@@ -50,7 +52,11 @@ class ChainsCreator:
             yield from self.create_chains(choice)
 
     def _process_type(self, target_type: object) -> Iterable[Chain]:
-        if isinstance(target_type, type) and issubclass(self._source_type, target_type):
+        if (
+            isinstance(target_type, type)
+            and not isinstance(target_type, GenericAlias)
+            and issubclass(self._source_type, target_type)
+        ):
             yield Chain()
         else:
             yield from self._chains_according_rules(target_type)

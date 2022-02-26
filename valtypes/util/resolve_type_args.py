@@ -71,8 +71,8 @@ class TypeArgsResolver:
 
     def _resolve_generic_alias_bases(self) -> None:
         for base in self._generic_alias_bases:
-            missing_type_args = (self._type_vars_to_type_args[type_var] for type_var in base.__parameters__)
-            new_type = base.__class_getitem__(*missing_type_args)
+            missing_type_args = tuple(self._type_vars_to_type_args[type_var] for type_var in base.__parameters__)
+            new_type = base.__class_getitem__(missing_type_args)
             try:
                 self._resolved_type_args = self.__class__().resolve(new_type, self._target_class)
             except TypeError:
