@@ -12,7 +12,11 @@ F = TypeVar("F")
 
 
 def test_simple() -> None:
-    assert iterable_to_fixed_length_tuple.parse(tuple[bytes, int, str], (1, "2", b"3"), collection) == (b"1", 2, "3")
+    assert iterable_to_fixed_length_tuple.parse(tuple[bytes, int, str], (1, "2", b"3"), collection) == (  # type: ignore
+        b"1",
+        2,
+        "3",
+    )
 
 
 def test_custom_type() -> None:
@@ -24,7 +28,7 @@ def test_custom_type() -> None:
 
 def test_error() -> None:
     with pytest.raises(ParsingError):
-        iterable_to_fixed_length_tuple.parse(tuple[float, int], (1, "2.5"), collection)
+        iterable_to_fixed_length_tuple.parse(tuple[float, int], (1, "2.5"), collection)  # type: ignore
 
     with pytest.raises(ParsingError):
-        iterable_to_fixed_length_tuple.parse(tuple[float, int], (1,), collection)
+        iterable_to_fixed_length_tuple.parse(tuple[float, int], (1,), collection)  # type: ignore
