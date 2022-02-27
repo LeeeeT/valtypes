@@ -7,6 +7,7 @@ from .from_callable import FromCallable, convert
 from .int_to_datetime import int_to_datetime
 from .iterable_to_list import iterable_to_list
 from .mapping_to_dict import mapping_to_dict
+from .object_to_literal import object_to_literal
 from .object_to_str import object_to_str
 from .str_to_bool import str_to_bool
 from .str_to_bytearray import str_to_bytearray
@@ -24,6 +25,7 @@ __all__ = [
     "int_to_datetime",
     "iterable_to_list",
     "mapping_to_dict",
+    "object_to_literal",
     "object_to_str",
     "str_to_bool",
     "str_to_bytearray",

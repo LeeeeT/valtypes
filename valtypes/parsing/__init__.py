@@ -1,7 +1,9 @@
 from collections.abc import Iterable, Mapping
 from dataclasses import is_dataclass
 from datetime import datetime
-from typing import Any, TypeVar, overload
+from typing import Any, TypeVar
+from typing import _LiteralGenericAlias as LiteralGenericAlias  # type: ignore
+from typing import overload
 
 from valtypes.condition import FromCallable, Is, IsInstance, IsSubclass
 from valtypes.decorator import origin
@@ -46,6 +48,7 @@ collection = Collection(
         source_type=Mapping,
         target_condition=IsInstance(type) & IsSubclass(dict) | IsInstance(GenericAlias) & origin >> IsSubclass(dict),
     ),
+    Rule(parser.object_to_literal, target_condition=IsInstance(LiteralGenericAlias)),
     Rule(parser.object_to_str, target_condition=IsInstance(type) & IsSubclass(str)),
     Rule(parser.str_to_bool, source_type=str, target_condition=Is(bool)),
     Rule(
