@@ -65,8 +65,9 @@ class TypeArgsResolver:
         self._type_vars = self._base_generic_class.__args__  # type: ignore
 
     def _get_type_args(self) -> None:
-        self._type_args = self._generic.__args__ + (object,) * (  # type: ignore
-            len(self._type_vars) - len(self._generic.__args__)  # type: ignore
+        self._type_args = self._generic.__args__ + tuple(  # type: ignore
+            (type_var.__bound__,) or type_var.__constraints__
+            for type_var in self._type_vars[len(self._generic.__args__) :]  # type: ignore
         )
 
     def _resolve_generic_alias_bases(self) -> None:
