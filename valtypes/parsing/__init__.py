@@ -5,7 +5,7 @@ from typing import Any, TypeVar
 from typing import _LiteralGenericAlias as LiteralGenericAlias  # type: ignore
 from typing import overload
 
-from valtypes.condition import FromCallable, Is, IsInstance, IsSubclass
+from valtypes.condition import FromCallable, Is, IsInstance, IsSubclass, is_fixed_length_tuple, is_variable_length_tuple
 from valtypes.decorator import origin
 from valtypes.typing import Floatable, GenericAlias
 
@@ -39,9 +39,29 @@ collection = Collection(
     ),
     Rule(parser.int_to_datetime, source_type=int, target_condition=Is(datetime)),
     Rule(
+        parser.iterable_to_fixed_length_tuple,
+        source_type=Iterable,
+        target_condition=IsInstance(GenericAlias) & is_fixed_length_tuple,
+    ),
+    Rule(
+        parser.iterable_to_frozenset,
+        source_type=Iterable,
+        target_condition=IsInstance(type) & IsSubclass(frozenset),
+    ),
+    Rule(
         parser.iterable_to_list,
         source_type=Iterable,
-        target_condition=IsInstance(type) & IsSubclass(list) | IsInstance(GenericAlias) & origin >> IsSubclass(list),
+        target_condition=IsInstance(type) & IsSubclass(list),
+    ),
+    Rule(
+        parser.iterable_to_set,
+        source_type=Iterable,
+        target_condition=IsInstance(type) & IsSubclass(set),
+    ),
+    Rule(
+        parser.iterable_to_variable_length_tuple,
+        source_type=Iterable,
+        target_condition=IsInstance(type) & IsSubclass(tuple) | IsInstance(GenericAlias) & is_variable_length_tuple,
     ),
     Rule(
         parser.mapping_to_dict,

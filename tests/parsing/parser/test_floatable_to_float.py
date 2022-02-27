@@ -16,6 +16,6 @@ def test_custom_type() -> None:
     assert isinstance(floatable_to_float.parse(MyFloat, 2, collection), MyFloat)
 
 
-def test_non_float() -> None:
+def test_error() -> None:
     with pytest.raises(ValueError):
         floatable_to_float.parse(float, "twenty", collection)

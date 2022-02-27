@@ -8,8 +8,8 @@ from typing import Any, Callable, Generic, TypeVar
 import regex
 
 from . import decorator
-from .typing import SupportsGe, SupportsGt, SupportsLe, SupportsLt
-from .util import get_absolute_name
+from .typing import GenericAlias, SupportsGe, SupportsGt, SupportsLe, SupportsLt
+from .util import get_absolute_name, resolve_type_args
 
 __all__ = [
     "ABC",
@@ -37,6 +37,8 @@ __all__ = [
     "convert",
     "truthy",
     "falsy",
+    "is_fixed_length_tuple",
+    "is_variable_length_tuple",
 ]
 
 T = TypeVar("T")
@@ -283,3 +285,19 @@ def truthy(_: object, /) -> bool:
 @convert
 def falsy(_: object, /) -> bool:
     return False
+
+
+@convert
+def is_fixed_length_tuple(alias: GenericAlias) -> bool:
+    return (
+        issubclass(alias.__origin__, tuple)
+        and len(type_args := resolve_type_args(alias, tuple)) == 2
+        and type_args[1] is ...
+    )
+
+
+@convert
+def is_variable_length_tuple(alias: GenericAlias) -> bool:
+    return issubclass(alias.__origin__, tuple) and not (
+        len(type_args := resolve_type_args(alias, tuple)) == 2 and type_args[1] is ...
+    )

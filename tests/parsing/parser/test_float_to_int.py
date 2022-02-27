@@ -17,6 +17,6 @@ def test_custom_type() -> None:
     assert isinstance(float_to_int.parse(MyInt, 1.0, collection), MyInt)
 
 
-def test_non_int() -> None:
+def test_error() -> None:
     with pytest.raises(ParsingError):
         float_to_int.parse(int, 3.14, collection)

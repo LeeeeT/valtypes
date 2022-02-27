@@ -5,7 +5,11 @@ from .float_to_int import float_to_int
 from .floatable_to_float import floatable_to_float
 from .from_callable import FromCallable, convert
 from .int_to_datetime import int_to_datetime
+from .iterable_to_fixed_length_tuple import iterable_to_fixed_length_tuple
+from .iterable_to_frozenset import iterable_to_frozenset
 from .iterable_to_list import iterable_to_list
+from .iterable_to_set import iterable_to_set
+from .iterable_to_variable_length_tuple import iterable_to_variable_length_tuple
 from .mapping_to_dict import mapping_to_dict
 from .object_to_literal import object_to_literal
 from .object_to_str import object_to_str
@@ -23,7 +27,11 @@ __all__ = [
     "FromCallable",
     "convert",
     "int_to_datetime",
+    "iterable_to_fixed_length_tuple",
+    "iterable_to_frozenset",
     "iterable_to_list",
+    "iterable_to_set",
+    "iterable_to_variable_length_tuple",
     "mapping_to_dict",
     "object_to_literal",
     "object_to_str",
