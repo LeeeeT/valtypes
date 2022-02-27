@@ -4,7 +4,6 @@ from collections.abc import Iterable
 from typing import TYPE_CHECKING, Any, TypeVar
 
 from valtypes.parsing.error import ParsingError
-from valtypes.typing import GenericAlias
 from valtypes.util import resolve_type_args
 
 from .from_callable import convert
