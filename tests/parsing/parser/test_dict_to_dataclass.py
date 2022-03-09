@@ -7,7 +7,11 @@ from valtypes.parsing import collection
 from valtypes.parsing.parser import dict_to_dataclass
 
 
-def test_simple() -> None:
+def test_fields_parsing() -> None:
+    """
+    It should parse dict items to dataclass fields according to their annotations
+    """
+
     @dataclass
     class MyDataclass:
         a: bool
@@ -17,16 +21,24 @@ def test_simple() -> None:
 
 
 def test_optional_fields() -> None:
+    """
+    It should support optional fields
+    """
+
     @dataclass(kw_only=True)
     class MyDataclass:
         a: bool = False
-        b: str
+        b: str = ""
         c: int = 0
 
     assert dict_to_dataclass.parse(MyDataclass, {"b": False, "c": 1.0}, collection) == MyDataclass(b="False", c=1)
 
 
 def test_alias() -> None:
+    """
+    It should support creating aliases to fields
+    """
+
     @dataclass
     class MyDataclass:
         a: bool = field(metadata=Alias("b", "B"))
@@ -36,6 +48,10 @@ def test_alias() -> None:
 
 
 def test_error() -> None:
+    """
+    It should throw an error if the given dict does not have all the required keys
+    """
+
     @dataclass
     class MyDataclass:
         a: bool
