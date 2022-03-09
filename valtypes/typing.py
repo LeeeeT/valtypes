@@ -12,6 +12,7 @@ __all__ = [
     "SupportsLt",
     "SupportsMod",
     "HasModuleAndName",
+    "HasOrigBases",
 ]
 
 
@@ -58,3 +59,7 @@ class SupportsMod(Protocol[T_contra, T_co]):
 class HasModuleAndName(Protocol):
     __module__: str
     __name__: str
+
+
+class HasOrigBases(Protocol):
+    __orig_bases__: tuple[object, ...]

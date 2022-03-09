@@ -1,84 +1,91 @@
-from collections.abc import Mapping
-from typing import Generic, TypeVar
+from typing import Generic, Protocol, TypeGuard, TypeVar, Union
+from typing import _UnionGenericAlias as UnionGenericAlias  # type: ignore
 
-from valtypes.typing import GenericAlias
+from valtypes.typing import GenericAlias, HasOrigBases
 
 __all__ = ["resolve_type_args"]
 
 
 class TypeArgsResolver:
-    _generic_alias: GenericAlias
-    _target_class: type
-    _resolved_type_args: tuple[object, ...] | None
-
-    _generic: type[Generic]  # type: ignore
-    _base_generic_class: type[Generic]  # type: ignore
-
-    _generic_alias_bases: list[GenericAlias]
-
-    _type_vars: tuple[TypeVar, ...]
-    _type_args: tuple[object, ...]
-    _type_vars_to_type_args: Mapping[TypeVar, object]
-
-    def resolve(self, generic_alias: GenericAlias, target_class: type) -> tuple[object, ...]:
-        self._generic_alias = generic_alias
+    def __init__(self, target_class: type):
         self._target_class = target_class
 
-        self._try_resolve()
+    def resolve(self, source_type: type | GenericAlias) -> tuple[object, ...]:
+        if self._is_generic(source_type):
+            return self._resolve_generic(source_type)
+        if self._has_orig_bases(source_type):
+            return self._resolve_subclass_of_generic(source_type)
+        return self._resolve_class(source_type)
 
-        if self._resolved_type_args is None:
-            raise TypeError(f"{target_class} is not in {generic_alias} bases")
+    @staticmethod
+    def _is_generic(typ: type | GenericAlias) -> bool:
+        return isinstance(typ, GenericAlias) or typ is not Protocol and Generic in typ.__bases__  # type: ignore
 
-        return self._resolved_type_args
+    def _resolve_generic(self, generic: type | GenericAlias) -> tuple[object, ...]:
+        alias = self._restore_missing_type_args(generic)
+        if alias.__origin__ is self._target_class:
+            return alias.__args__  # type: ignore
+        elif Generic in alias.__origin__.__bases__:
+            return self._search_in_bases(self._propagate_type_args_to_bases(alias))
+        return ()
 
-    def _try_resolve(self) -> None:
-        if issubclass(self._generic_alias, Generic):  # type: ignore
-            self._generic = self._generic_alias
-            self._resolve_generic()
-        elif self._generic_alias.__origin__ is self._target_class:
-            self._resolved_type_args = self._generic_alias.__args__
-        else:
-            self._resolved_type_args = None
+    def _restore_missing_type_args(self, alias: type | GenericAlias) -> GenericAlias:
+        missing_type_args = tuple(
+            self._get_type_var_bound(type_var) for type_var in alias.__parameters__  # type: ignore
+        )
+        return alias[missing_type_args] if missing_type_args else alias  # type: ignore
 
-    def _resolve_generic(self) -> None:
-        self._get_generic_alias_bases()
-        self._extract_base_generic_class()
-        self._create_type_vars_to_type_args_mapping()
-        self._resolve_generic_alias_bases()
+    @staticmethod
+    def _get_type_var_bound(type_var: TypeVar) -> object:
+        if type_var.__constraints__:
+            return UnionGenericAlias(Union, type_var.__constraints__)
+        return object if type_var.__bound__ is None else type_var.__bound__
 
-    def _get_generic_alias_bases(self) -> None:
-        self._generic_alias_bases = [
-            base for base in self._generic.__orig_bases__ if isinstance(base, GenericAlias)  # type: ignore
-        ]
-
-    def _extract_base_generic_class(self) -> None:
-        for i, base in enumerate(self._generic_alias_bases):
-            if base.__origin__ is Generic:
-                self._base_generic_class = self._generic_alias_bases.pop(i)
-
-    def _create_type_vars_to_type_args_mapping(self) -> None:
-        self._get_type_vars()
-        self._get_type_args()
-        self._type_vars_to_type_args = dict(zip(self._type_vars, self._type_args))
-
-    def _get_type_vars(self) -> None:
-        self._type_vars = self._base_generic_class.__args__  # type: ignore
-
-    def _get_type_args(self) -> None:
-        self._type_args = self._generic.__args__ + tuple(  # type: ignore
-            (type_var.__bound__,) or type_var.__constraints__
-            for type_var in self._type_vars[len(self._generic.__args__) :]  # type: ignore
+    def _propagate_type_args_to_bases(self, alias: GenericAlias) -> tuple[type | GenericAlias, ...]:
+        return tuple(
+            self._propagate_type_args_to_alias(alias, base) if isinstance(base, GenericAlias) else base
+            for base in self._get_alias_bases(alias)
         )
 
-    def _resolve_generic_alias_bases(self) -> None:
-        for base in self._generic_alias_bases:
-            missing_type_args = tuple(self._type_vars_to_type_args[type_var] for type_var in base.__parameters__)
-            new_type = base.__class_getitem__(missing_type_args)
-            try:
-                self._resolved_type_args = self.__class__().resolve(new_type, self._target_class)
-            except TypeError:
-                pass
+    def _propagate_type_args_to_alias(self, from_alias: GenericAlias, to_alias: GenericAlias) -> GenericAlias:
+        vars_to_args = self._create_vars_to_args_mapping(from_alias)
+        args = tuple(vars_to_args[var] for var in to_alias.__parameters__)
+        return to_alias[args]
+
+    def _create_vars_to_args_mapping(self, alias: GenericAlias) -> dict[TypeVar, object]:
+        return dict(zip(self._get_generic_base(alias.__origin__).__parameters__, alias.__args__))
+
+    @staticmethod
+    def _get_generic_base(generic: GenericAlias) -> GenericAlias:
+        for base in generic.__orig_bases__:
+            if isinstance(base, GenericAlias) and base.__origin__ is Generic:
+                return base
+        raise TypeError(f"{Generic} is not in {generic} bases")
+
+    @staticmethod
+    def _get_alias_bases(alias: GenericAlias) -> tuple[type | GenericAlias, ...]:
+        return tuple(
+            base
+            for base in alias.__origin__.__orig_bases__
+            if not (isinstance(base, GenericAlias) and base.__origin__ is Generic)
+        )
+
+    def _search_in_bases(self, bases: tuple[type | GenericAlias, ...]) -> tuple[object, ...]:
+        for base in bases:
+            if type_args := self.resolve(base):
+                return type_args
+        return ()
+
+    @staticmethod
+    def _has_orig_bases(obj: object) -> TypeGuard[HasOrigBases]:
+        return hasattr(obj, "__orig_bases__")
+
+    def _resolve_subclass_of_generic(self, cls: HasOrigBases) -> tuple[object, ...]:
+        return self._search_in_bases(cls.__orig_bases__)
+
+    def _resolve_class(self, cls: type) -> tuple[object, ...]:
+        return self._search_in_bases(cls.__bases__)
 
 
-def resolve_type_args(generic_alias: GenericAlias, target_class: type) -> tuple[object, ...]:
-    return TypeArgsResolver().resolve(generic_alias, target_class)
+def resolve_type_args(source_type: type | GenericAlias, target_class: type) -> tuple[object, ...]:
+    return TypeArgsResolver(target_class).resolve(source_type)
