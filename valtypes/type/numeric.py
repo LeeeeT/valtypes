@@ -10,6 +10,7 @@ __all__ = [
     "NonPositiveFloat",
     "NegativeFloat",
     "NonNegativeFloat",
+    "Hex",
 ]
 
 
@@ -43,3 +44,8 @@ class NegativeFloat(ConstrainedFloat):
 
 class NonNegativeFloat(ConstrainedFloat):
     _constraint = non_negative
+
+
+class Hex(ConstrainedInt):
+    def __str__(self) -> str:
+        return f"{self:X}"
