@@ -8,7 +8,7 @@ from typing import _UnionGenericAlias as UnionGenericAlias  # type: ignore
 from valtypes.typing import GenericAlias
 from valtypes.util import iterate_in_parallel
 
-from . import parser
+from . import parser  # noqa
 from .rule import Rule
 
 if TYPE_CHECKING:
