@@ -3,11 +3,12 @@ from __future__ import annotations
 from collections.abc import Iterable
 from types import UnionType
 from typing import TYPE_CHECKING, Any, Final, NamedTuple
+from typing import _UnionGenericAlias as UnionGenericAlias  # type: ignore
 
 from valtypes.typing import GenericAlias
+from valtypes.util import iterate_in_parallel
 
-from ..util import iterate_in_parallel
-from . import parser  # noqa
+from . import parser
 from .rule import Rule
 
 if TYPE_CHECKING:
@@ -42,12 +43,12 @@ class ChainsCreator:
         self._explored: set[Node] = set()
 
     def create_chains(self, target_type: object) -> Iterable[Chain]:
-        if isinstance(target_type, UnionType):
+        if isinstance(target_type, UnionType | UnionGenericAlias):
             yield from self._process_union(target_type)
         else:
             yield from self._process_type(target_type)
 
-    def _process_union(self, target_union: UnionType) -> Iterable[Chain]:
+    def _process_union(self, target_union: UnionType | UnionGenericAlias) -> Iterable[Chain]:
         for choice in target_union.__args__:
             yield from self.create_chains(choice)
 

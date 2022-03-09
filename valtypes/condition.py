@@ -30,6 +30,7 @@ __all__ = [
     "Contains",
     "In",
     "Pattern",
+    "GenericAliasOf",
     "positive",
     "negative",
     "non_positive",
@@ -155,12 +156,12 @@ class IsInstance(ABC[object]):
         return f"{get_absolute_name(self.__class__)}({', '.join(map(repr, self.types))})"
 
 
-class IsSubclass(ABC[type]):
+class IsSubclass(ABC[object]):
     def __init__(self, *types: type | UnionType):
         self.types = types
 
-    def check(self, value: type, /) -> bool:
-        return issubclass(value, self.types)
+    def check(self, value: object, /) -> bool:
+        return isinstance(value, type) and issubclass(value, self.types)
 
     def __repr__(self) -> str:
         return f"{get_absolute_name(self.__class__)}({', '.join(map(repr, self.types))})"
@@ -264,6 +265,14 @@ class Pattern(ABC[str]):
         return bool(self.pattern.fullmatch(value))
 
 
+class GenericAliasOf(ABC[object]):
+    def __init__(self, *types: type | UnionType):
+        self.types = types
+
+    def check(self, value: object, /) -> bool:
+        return isinstance(value, GenericAlias) and issubclass(value.__origin__, self.types)
+
+
 positive = GreaterThan(0)
 
 negative = LowerThan(0)
@@ -288,16 +297,16 @@ def falsy(_: object, /) -> bool:
 
 
 @convert
-def is_fixed_length_tuple(alias: GenericAlias) -> bool:
-    return (
-        issubclass(alias.__origin__, tuple)
-        and len(type_args := resolve_type_args(alias, tuple)) == 2
-        and type_args[1] is ...
-    )
+def is_fixed_length_tuple(obj: object) -> bool:
+    if isinstance(obj, (type | GenericAlias)):
+        type_args = resolve_type_args(obj, tuple)
+        return bool(type_args) and (len(type_args) != 2 or len(type_args) == 2 and type_args[1] != ...)
+    return False
 
 
 @convert
-def is_variable_length_tuple(alias: GenericAlias) -> bool:
-    return issubclass(alias.__origin__, tuple) and not (
-        len(type_args := resolve_type_args(alias, tuple)) == 2 and type_args[1] is ...
-    )
+def is_variable_length_tuple(obj: object) -> bool:
+    if isinstance(obj, (type | GenericAlias)):
+        type_args = resolve_type_args(obj, tuple)
+        return len(type_args) == 2 and type_args[1] == ...
+    return False
