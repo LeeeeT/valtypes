@@ -13,7 +13,7 @@ python = "^3.10"
 regex = ">=2021.11.10,<2023.0.0"
 
 [tool.poetry.dev-dependencies]
-mypy = "^0.940"
+mypy = "^0.941"
 flake8 = "^4.0.1"
 isort = "^5.10.1"
 black = "^22.1"
