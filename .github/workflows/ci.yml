@@ -33,6 +33,7 @@ jobs:
       - name: Test
         run: poetry run pre-commit run --all-files pytest
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@master
+        uses: codecov/codecov-action@v2
         with:
           verbose: true
+          fail_ci_if_error: true
