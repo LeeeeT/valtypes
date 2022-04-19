@@ -38,5 +38,5 @@ repos:
         entry: pytest
         language: system
         pass_filenames: false
-        args: [--cov-report xml --cov valtypes tests ]
+        args: [--cov-report, xml, --cov, valtypes, tests ]
         stages: [ commit ]
