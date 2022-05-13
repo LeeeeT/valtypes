@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
 from valtypes.util import pretty_type_repr
@@ -28,29 +29,29 @@ class BaseParsingError(Exception):
     pass
 
 
+@dataclass
 class NoParserError(BaseParsingError):
-    def __init__(self, source: object, target_type: object):
-        self.source = source
-        self.target_type = target_type
+    source: object
+    target_type: object
 
     def __str__(self) -> str:
         return f"there's no parser for {pretty_type_repr(self.target_type)}"
 
 
+@dataclass
 class ParsingError(BaseParsingError):
-    def __init__(self, source_type: object, target_type: object, cause: BaseParsingError):
-        self.source_type = source_type
-        self.target_type = target_type
-        self.cause = cause
+    source_type: object
+    target_type: object
+    cause: BaseParsingError
 
     def __str__(self) -> str:
         return f"{pretty_type_repr(self.source_type)} 〉 {pretty_type_repr(self.target_type)}: {self.cause}"
 
 
-class CompositeParsingError(ParsingError):
-    def __init__(self, target_type: object, causes: tuple[BaseParsingError, ...]):
-        self.target_type = target_type
-        self.causes = causes
+@dataclass
+class CompositeParsingError(BaseParsingError):
+    target_type: object
+    causes: tuple[BaseParsingError, ...]
 
     def __str__(self) -> str:
         result = pretty_type_repr(self.target_type)
@@ -61,53 +62,53 @@ class CompositeParsingError(ParsingError):
         return result
 
 
+@dataclass
 class WrongTypeError(BaseParsingError):
-    def __init__(self, source: object, target_type: object):
-        self.source = source
-        self.target_type = target_type
+    source: object
+    target_type: object
 
     def __str__(self) -> str:
         return f"not an instance of {pretty_type_repr(self.target_type)}"
 
 
+@dataclass
 class ConversionError(BaseParsingError):
-    def __init__(self, source: object, target_type: object):
-        self.source = source
-        self.target_type = target_type
+    source: object
+    target_type: object
 
     def __str__(self) -> str:
         return f"can't convert the value to {pretty_type_repr(self.target_type)}"
 
 
+@dataclass
 class ConstraintError(BaseParsingError):
-    def __init__(self, source: object, constrained: type[Constrained[Any]]):
-        self.source = source
-        self.constrained = constrained
+    source: object
+    constrained: type[Constrained[Any]]
 
     def __str__(self) -> str:
         return f"the value doesn't match the {self.constrained.__name__} constraint"
 
 
+@dataclass
 class FractionalNumberError(BaseParsingError):
-    def __init__(self, number: float):
-        self.number = number
+    number: float
 
     def __str__(self) -> str:
         return "fractional number"
 
 
+@dataclass
 class WrongItemError(BaseParsingError):
-    def __init__(self, item: int, cause: BaseParsingError):
-        self.item = item
-        self.cause = cause
+    item: int
+    cause: BaseParsingError
 
     def __str__(self) -> str:
         return f"[{self.item}]: {self.cause}"
 
 
+@dataclass
 class NotEnoughItemsError(BaseParsingError):
-    def __init__(self, missing_items_count: int):
-        self.missing_items_count = missing_items_count
+    missing_items_count: int
 
     def __str__(self) -> str:
         if self.missing_items_count == 1:
@@ -115,18 +116,18 @@ class NotEnoughItemsError(BaseParsingError):
         return f"{self.missing_items_count} items are missing"
 
 
+@dataclass
 class WrongFieldError(BaseParsingError):
-    def __init__(self, field: str, cause: BaseParsingError):
-        self.field = field
-        self.cause = cause
+    field: str
+    cause: BaseParsingError
 
     def __str__(self) -> str:
         return f"[{self.field}]: {self.cause}"
 
 
+@dataclass
 class MissingFieldError(BaseParsingError):
-    def __init__(self, field: str):
-        self.field = field
+    field: str
 
     def __str__(self) -> str:
         return f"[{self.field}]: required field is missing"
