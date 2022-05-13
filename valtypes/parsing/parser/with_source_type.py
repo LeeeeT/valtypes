@@ -1,14 +1,13 @@
+from collections.abc import Callable
 from typing import Any
 
 from valtypes.parsing.controller import Controller
 
-from .proto import Proto
-
 __all__ = ["WithSourceType"]
 
 
-class WithSourceType(Proto):
-    def __init__(self, parser: Proto, source_type: object):
+class WithSourceType:
+    def __init__(self, parser: Callable[[Any, Any, Controller], Any], source_type: object):
         self.parser = parser
         self.source_type = source_type
 

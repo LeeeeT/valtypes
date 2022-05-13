@@ -9,7 +9,6 @@ from .list_to_set import list_to_set
 from .list_to_variable_length_tuple import list_to_variable_length_tuple
 from .mapping_to_dict import mapping_to_dict
 from .object_to_type import object_to_type
-from .proto import Proto
 from .str_to_bool import str_to_bool
 from .str_to_bytes_bytearray import str_to_bytes_bytearray
 from .to_constrained import to_constrained
@@ -20,7 +19,6 @@ from .with_source_type import WithSourceType
 
 __all__ = [
     "FromCallable",
-    "Proto",
     "WithSourceType",
     "bytes_bytearray_to_str",
     "dict_to_dataclass",

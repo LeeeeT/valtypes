@@ -1,7 +1,7 @@
+from collections.abc import Callable
 from functools import lru_cache
 from typing import Any, TypeVar, overload
 
-from . import parser
 from .controller import Controller
 from .rule import Rule
 
@@ -35,5 +35,5 @@ class Collection:
         return Controller(self).delegate(target_type, source)
 
     @lru_cache(1024)
-    def get_parsers_matching_type(self, type: object, /) -> list[parser.Proto]:
+    def get_parsers_matching_type(self, type: object, /) -> list[Callable[[Any, Any, Controller], Any]]:
         return [rule.parser for rule in self.rules if rule.target_condition(type)]

@@ -6,12 +6,10 @@ from typing import Any
 from valtypes.error import ConversionError
 from valtypes.parsing.controller import Controller
 
-from .proto import Proto
-
 __all__ = ["FromCallable"]
 
 
-class FromCallable(Proto):
+class FromCallable:
     def __init__(self, callable: Callable[[Any], Any], /):
         self.callable = callable
 
