@@ -85,7 +85,7 @@ class ConstraintError(BaseParsingError):
         self.constrained = constrained
 
     def __str__(self) -> str:
-        return f"the value does not match the {self.constrained.__name__} constraint"
+        return f"the value doesn't match the {self.constrained.__name__} constraint"
 
 
 class FractionalNumberError(BaseParsingError):
