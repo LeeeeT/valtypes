@@ -15,7 +15,7 @@ class Collection:
     def __init__(self, rules: list[Rule] | None = None):
         self.rules: list[Rule] = [] if rules is None else rules
 
-    def add_to_end(self, *rules: Rule) -> None:
+    def add(self, *rules: Rule) -> None:
         self.rules.extend(rules)
         self.get_parsers_matching_type.cache_clear()
 
