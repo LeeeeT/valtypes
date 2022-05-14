@@ -5,7 +5,7 @@ from valtypes import BaseParsingError, parse
 
 def test() -> None:
     """
-    It calls __str__ to convert object to str
+    It calls __str__ to convert the value to str
     """
 
     class Class:
@@ -17,7 +17,7 @@ def test() -> None:
 
 def test_error() -> None:
     """
-    It throws an error if __str__ throws an error
+    It raises an error if __str__ raises an error
     """
 
     class Class:

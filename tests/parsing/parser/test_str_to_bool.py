@@ -5,7 +5,7 @@ from valtypes import BaseParsingError, parse
 
 def test() -> None:
     """
-    It returns False if a string is falsy and True if a string is truthy (case-insensitive)
+    It returns False if the string is falsy and True if the string is truthy (case-insensitive)
     """
 
     assert parse(bool, "no") is False
@@ -14,7 +14,7 @@ def test() -> None:
 
 def test_error() -> None:
     """
-    It throws an error if a string does not represent a boolean
+    It raises an error if the string doesn't represent a boolean
     """
 
     with pytest.raises(BaseParsingError):

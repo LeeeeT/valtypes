@@ -53,7 +53,7 @@ def test_str() -> None:
 
 def test_error() -> None:
     """
-    It throws an error if it can't convert a value to float
+    It raises an error if it can't convert the value to float
     """
 
     with pytest.raises(BaseParsingError):

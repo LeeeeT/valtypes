@@ -5,7 +5,7 @@ from valtypes import BaseParsingError, parse
 
 def test_parse_to_choice() -> None:
     """
-    It tries to parse a value to each union choice
+    It tries to parse the value to each Union choice
     """
 
     assert parse(bool | float | str, "1") is True
@@ -15,7 +15,7 @@ def test_parse_to_choice() -> None:
 
 def test_wrong_value() -> None:
     """
-    It throws an error if it can't parse a value to any union choices
+    It raises an error if it can't parse the value to any Union choices
     """
 
     with pytest.raises(BaseParsingError):

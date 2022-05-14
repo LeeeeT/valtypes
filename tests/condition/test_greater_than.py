@@ -3,7 +3,7 @@ from valtypes.condition import GreaterThan
 
 def test_not_greater() -> None:
     """
-    It returns False if a value is not greater than another value
+    It returns False if the value isn't greater than the exclusive minimum
     """
 
     assert not GreaterThan(1)(0)
@@ -12,7 +12,7 @@ def test_not_greater() -> None:
 
 def test_greater() -> None:
     """
-    It returns True if a value is greater than another value
+    It returns True if the value is greater than the exclusive minimum
     """
 
     assert GreaterThan(1)(2)

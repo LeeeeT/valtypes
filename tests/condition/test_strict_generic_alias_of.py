@@ -7,7 +7,7 @@ T = TypeVar("T")
 
 def test_not_generic_alias() -> None:
     """
-    It returns False if a value is not a generic alias
+    It returns False if the value isn't a generic alias
     """
 
     assert not StrictGenericAliasOf(list)([])
@@ -15,7 +15,7 @@ def test_not_generic_alias() -> None:
 
 def test_origin_is_not_desired_class() -> None:
     """
-    It returns False if an origin is not the desired class
+    It returns False if the origin isn't the desired class
     """
 
     assert not StrictGenericAliasOf(list)(Literal[1])
@@ -28,7 +28,7 @@ def test_origin_is_not_desired_class() -> None:
 
 def test_origin_is_subclass() -> None:
     """
-    It returns True if an origin is the desired class
+    It returns True if the origin is the desired class
     """
 
     assert StrictGenericAliasOf(list)(list[int])

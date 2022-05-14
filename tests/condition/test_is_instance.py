@@ -3,7 +3,7 @@ from valtypes.condition import IsInstance
 
 def test_not_instance() -> None:
     """
-    It returns False if a value is not an instance of the type
+    It returns False if the value isn't an instance of the desired type
     """
 
     assert not IsInstance(int)("1")
@@ -12,7 +12,7 @@ def test_not_instance() -> None:
 
 def test_instance() -> None:
     """
-    It returns True if a value is an instance of the type
+    It returns True if the value is an instance of the desired type
     """
 
     assert IsInstance(int | float)(1.0)

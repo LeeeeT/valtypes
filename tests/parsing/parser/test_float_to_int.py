@@ -14,7 +14,7 @@ def test_integer_float() -> None:
 
 def test_non_integer() -> None:
     """
-    It throws an error if a float is not an integer
+    It raises an error if a float is not an integer
     """
 
     with pytest.raises(BaseParsingError):

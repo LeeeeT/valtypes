@@ -47,7 +47,7 @@ def test_alias() -> None:
 
 def test_wrong_field() -> None:
     """
-    It throws an error if it can't parse some value to the desired field type
+    It raises an error if it can't parse some value to the desired field type
     """
 
     @dataclass
@@ -60,7 +60,7 @@ def test_wrong_field() -> None:
 
 def test_missing_field() -> None:
     """
-    It throws an error if a dict does not have all the required keys
+    It raises an error if a dict doesn't have all the required keys
     """
 
     @dataclass

@@ -9,7 +9,7 @@ T = TypeVar("T")
 
 def test_parse_items() -> None:
     """
-    It parses items of iterable to desired type
+    It parses the iterable items to the desired type
     """
 
     assert parse(list[int], (1, "2", b"3")) == [1, 2, 3]
@@ -17,7 +17,7 @@ def test_parse_items() -> None:
 
 def test_wrong_item() -> None:
     """
-    It throws an error if it can't parse some item to desired type
+    It raises an error if it can't parse some item to the desired type
     """
 
     with pytest.raises(BaseParsingError):

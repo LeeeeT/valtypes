@@ -6,7 +6,7 @@ from valtypes.condition import false, true
 
 def test_constraint_returns_false() -> None:
     """
-    It throws an error if a constraint returns False when creating an instance
+    It raises an error if the constraint returns False when creating an instance
     """
 
     class Class(Constrained[object]):
@@ -18,7 +18,7 @@ def test_constraint_returns_false() -> None:
 
 def test_constraint_returns_true() -> None:
     """
-    It returns a value itself if a constraint returns True when creating an instance
+    It returns the value itself if the constraint returns True when creating an instance
     """
 
     class Class(Constrained[object]):

@@ -3,7 +3,7 @@ from valtypes import ForwardRef, parse
 
 def test() -> None:
     """
-    It parses a value to the ForwardRef argument
+    It parses the value to the ForwardRef argument
     """
 
     RecursiveList = list[ForwardRef["int | RecursiveList"]]  # type: ignore

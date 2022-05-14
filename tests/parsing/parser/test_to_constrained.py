@@ -27,7 +27,7 @@ def test_pass_to_init() -> None:
 
 def test_parse_to_bound() -> None:
     """
-    It parses a value to the bound of a constrained before creating an instance
+    It parses the value to the bound of the constrained before creating an instance
     """
 
     class ConstrainedFloat(Constrained[float]):
@@ -38,7 +38,7 @@ def test_parse_to_bound() -> None:
 
 def test_resolve_bound_type_args() -> None:
     """
-    It resolves type arguments of the bound of a constrained
+    It resolves the type argument of the bound of the constrained
     """
 
     class MyList(Constrained[list[T]], list[T], Generic[T]):

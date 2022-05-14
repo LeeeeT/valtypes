@@ -5,7 +5,7 @@ from valtypes.condition import Pattern
 
 def test_not_matches() -> None:
     """
-    It returns False if a values does not match the pattern
+    It returns False if the values doesn't match the pattern
     """
 
     assert not Pattern(re.compile(r"^a$"))("abc")
@@ -13,7 +13,7 @@ def test_not_matches() -> None:
 
 def test_matches() -> None:
     """
-    It returns True if a value matches the pattern
+    It returns True if the value matches the pattern
     """
 
     assert Pattern(re.compile(r"a"))("abc")
