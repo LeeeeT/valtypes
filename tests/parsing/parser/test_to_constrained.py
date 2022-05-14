@@ -13,10 +13,10 @@ def test_parse_to_bound() -> None:
     It parses the value to the bound of the constrained before creating an instance
     """
 
-    class ConstrainedFloat(Constrained[float]):
+    class Float(Constrained[float]):
         __constraint__ = condition.true
 
-    assert isinstance(parse(ConstrainedFloat, "inf"), float)
+    assert isinstance(parse(Float, "inf"), float)
 
 
 def test_resolve_bound_type_args() -> None:
