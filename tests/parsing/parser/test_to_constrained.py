@@ -24,11 +24,11 @@ def test_resolve_bound_type_args() -> None:
     It resolves the type argument of the bound of the constrained
     """
 
-    class MyList(Constrained[list[T]], list[T], Generic[T]):
+    class List(Constrained[list[T]], list[T], Generic[T]):
         __constraint__ = condition.true
 
-    assert parse(MyList[object], range(3)) == [0, 1, 2]
-    assert parse(MyList[bytes], range(3)) == [b"0", b"1", b"2"]
+    assert parse(List[object], range(3)) == [0, 1, 2]
+    assert parse(List[bytes], range(3)) == [b"0", b"1", b"2"]
 
 
 def test_error() -> None:
