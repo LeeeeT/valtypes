@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/logo.svg" />
+  <img src="https://github.com/LeeeeT/valtypes/blob/main/docs/logo.svg" />
 </p>
 
 <p align="center">
