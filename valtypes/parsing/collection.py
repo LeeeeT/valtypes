@@ -12,6 +12,8 @@ __all__ = ["Collection"]
 
 T = TypeVar("T")
 
+T_Parser = TypeVar("T_Parser", bound=Callable[[Any, Any, Controller], Any])
+
 
 class Collection(collection.Collection[Rule]):
     def add(self, *rules: Rule) -> None:
@@ -28,6 +30,13 @@ class Collection(collection.Collection[Rule]):
 
     def parse(self, target_type: object, source: object) -> Any:
         return Controller(self).delegate(target_type, source)
+
+    def register(self, target_condition: Callable[[object], bool]) -> Callable[[T_Parser], T_Parser]:
+        def registrar(parser: T_Parser) -> T_Parser:
+            self.add(Rule(parser, target_condition))
+            return parser
+
+        return registrar
 
     @lru_cache(1024)
     def get_parsers_matching_type(self, type: object, /) -> list[Callable[[Any, Any, Controller], Any]]:

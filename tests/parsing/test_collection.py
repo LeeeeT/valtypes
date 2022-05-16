@@ -22,3 +22,14 @@ def test_clear_cache() -> None:
     collection.add(Rule(FromCallable(str), Is(str)))
 
     assert collection.get_parsers_matching_type(str) == [FromCallable(str), FromCallable(str)]
+
+
+def test_register() -> None:
+    """
+    It adds a rule to the collection
+    """
+
+    collection = Collection()
+    collection.register(Is(str))(FromCallable(str))
+
+    assert list(collection) == [Rule(FromCallable(str), Is(str))]
