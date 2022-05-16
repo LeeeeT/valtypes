@@ -3,7 +3,7 @@ from __future__ import annotations
 from types import TracebackType
 from typing import TYPE_CHECKING, Any, TypeVar, overload
 
-from valtypes.error import BaseParsingError, CompositeParsingError, NoParserError, ParsingError
+from valtypes.error import BaseParsingError, CompositeParsingError, NoParserError, ParsingError, RecursiveParsingError
 
 if TYPE_CHECKING:
     from .collection import Collection
@@ -17,24 +17,20 @@ T = TypeVar("T")
 
 class InvolvedTypes:
     def __init__(self) -> None:
+        self.last: object = object
         self._involved_types: list[object] = []
-        self._last_type: object = object
-
-    @property
-    def last(self) -> object:
-        return self._last_type
 
     def add(self, type: object, /) -> None:
         self._involved_types.append(type)
 
     def pop(self) -> None:
-        self._last_type = self._involved_types.pop()
+        self.last = self._involved_types.pop()
 
     def additional_type(self, type: object, /) -> AdditionalType:
+        if type in self._involved_types:
+            self.last = type
+            raise RecursiveParsingError(tuple(self._involved_types))
         return AdditionalType(self, type)
-
-    def __contains__(self, item: object) -> bool:
-        return item in self._involved_types
 
 
 class AdditionalType:
@@ -54,7 +50,6 @@ class Controller:
     def __init__(self, collection: Collection):
         self._collection = collection
         self._involved_types = InvolvedTypes()
-        self._last_type: object = object
 
     @overload
     def parse(self, target_type: type[T], source: object) -> T:
@@ -76,14 +71,13 @@ class Controller:
         ...
 
     def delegate(self, target_type: object, source: object) -> Any:
-        if target_type not in self._involved_types:
-            with self._involved_types.additional_type(target_type):
-                errors: list[BaseParsingError] = []
-                for parser in self._collection.get_parsers_matching_type(target_type):
-                    try:
-                        return parser(target_type, source, self)
-                    except BaseParsingError as e:
-                        errors.append(ParsingError(self._involved_types.last, target_type, e))
-                if errors:
-                    raise CompositeParsingError(target_type, tuple(errors))
-        raise NoParserError(source, target_type)
+        with self._involved_types.additional_type(target_type):
+            errors: list[BaseParsingError] = []
+            for parser in self._collection.get_parsers_matching_type(target_type):
+                try:
+                    return parser(target_type, source, self)
+                except BaseParsingError as e:
+                    errors.append(ParsingError(self._involved_types.last, target_type, e))
+            if errors:
+                raise CompositeParsingError(target_type, tuple(errors))
+            raise NoParserError(source, target_type)
