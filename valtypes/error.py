@@ -19,6 +19,7 @@ __all__ = [
     "NoParserError",
     "NotEnoughItemsError",
     "ParsingError",
+    "RecursiveParsingError",
     "WrongFieldError",
     "WrongItemError",
     "WrongTypeError",
@@ -36,6 +37,14 @@ class NoParserError(BaseParsingError):
 
     def __str__(self) -> str:
         return f"there's no parser for {pretty_type_repr(self.target_type)}"
+
+
+@dataclass
+class RecursiveParsingError(BaseParsingError):
+    chain: tuple[object, ...]
+
+    def __str__(self) -> str:
+        return "recursion detected: " + " 〉 ".join(map(pretty_type_repr, self.chain))
 
 
 @dataclass

@@ -8,6 +8,7 @@ from valtypes.error import (
     NoParserError,
     NotEnoughItemsError,
     ParsingError,
+    RecursiveParsingError,
     WrongFieldError,
     WrongItemError,
     WrongTypeError,
@@ -23,6 +24,11 @@ def test_no_parser_error() -> None:
 def test_parsing_error() -> None:
     error = ParsingError(list[int], tuple[int], BaseParsingError("cause"))
     assert str(error) == "list[int] 〉 tuple[int]: cause"
+
+
+def test_recursive_parsing_error() -> None:
+    error = RecursiveParsingError((object, list[int], int))
+    assert str(error) == "recursion detected: object 〉 list[int] 〉 int"
 
 
 def test_composite_parsing_error() -> None:
