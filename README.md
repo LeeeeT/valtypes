@@ -30,6 +30,8 @@
 
 ---
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/45b4246dde17461ea91bc71b345a956c)](https://app.codacy.com/gh/LeeeeT/valtypes?utm_source=github.com&utm_medium=referral&utm_content=LeeeeT/valtypes&utm_campaign=Badge_Grade_Settings)
+
 
 ## What is Valtypes
 
