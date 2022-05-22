@@ -41,16 +41,7 @@ repos:
 
       - id: pytest
         name: pytest
-        entry: coverage
+        entry: pytest
         language: python
         pass_filenames: false
-        args: [ run, -m, pytest ]
-        stages: [ commit ]
-
-      - id: coverage
-        name: coverage
-        entry: coverage
-        language: python
-        pass_filenames: false
-        args: [ report ]
         stages: [ commit ]

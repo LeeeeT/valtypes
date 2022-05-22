@@ -31,7 +31,7 @@ black = "^22.3.0"
 pyproject-flake8 = "^0.0.1-alpha.4"
 mypy = "^0.950"
 pytest = "^7.1.2"
-coverage = "^6.3.2"
+pytest-cov = "^3.0.0"
 Sphinx = "^4.5.0"
 sphinx-rtd-theme = "^1.0.0"
 
@@ -52,12 +52,13 @@ exclude = ["venv", "dist"]
 strict = true
 files = ["valtypes", "tests"]
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=valtypes --cov-report xml"
+
 [tool.coverage.run]
 branch = true
 source = ["valtypes"]
-
-[tool.pytest.ini_options]
-testpaths = ["tests"]
 
 [tool.coverage.report]
 fail_under = 100
