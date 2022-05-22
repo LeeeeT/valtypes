@@ -1,7 +1,7 @@
 import pytest
 
 from valtypes.condition import Is
-from valtypes.error import CompositeParsingError, NoParserError, ParsingError, RecursiveParsingError
+from valtypes.error import CompositeParsingError, ConversionError, NoParserError, ParsingError, RecursiveParsingError
 from valtypes.parsing import Collection, Controller, Rule, with_source_type
 from valtypes.parsing.parser import FromCallable
 
@@ -57,4 +57,29 @@ def test_recursion() -> None:
                 ),
             ),
         ),
+    )
+
+
+def test_multiple_matching_parsers_with_different_source_types() -> None:
+    """
+    It properly constructs a parsing error when there are multiple parsers for a target type with different source types
+    """
+
+    collection = Collection()
+
+    @collection.register(Is(int))
+    @with_source_type(str)
+    def to_int_1(target_type: type[int], source: str, controller: Controller) -> int:
+        return 0
+
+    @collection.register(Is(int))
+    def to_int_2(target_type: type[int], source: object, controller: Controller) -> int:
+        raise ConversionError(source, int)
+
+    with pytest.raises(CompositeParsingError) as info:
+        collection.parse(int, ...)
+
+    assert info.value == CompositeParsingError(
+        int,
+        (ParsingError(str, int, NoParserError(..., str)), ParsingError(object, int, ConversionError(..., int))),
     )
