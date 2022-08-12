@@ -30,6 +30,7 @@ repos:
         entry: pflake8
         language: python
         pass_filenames: false
+        args: [ valtypes, tests ]
         stages: [ commit ]
 
       - id: mypy
@@ -37,6 +38,21 @@ repos:
         entry: mypy
         language: python
         pass_filenames: false
+        stages: [ commit ]
+
+      - id: pyright
+        name: pyright
+        entry: pyright
+        language: node
+        pass_filenames: false
+        stages: [ commit ]
+
+      - id: pyright-verify
+        name: pyright verify
+        entry: pyright
+        language: node
+        pass_filenames: false
+        args: [ --verifytypes, valtypes ]
         stages: [ commit ]
 
       - id: pytest

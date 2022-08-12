@@ -1,23 +1,27 @@
 import pytest
 
-from valtypes import BaseParsingError, parse
+import valtypes.error.parsing as parsing_error
+from valtypes.parsing.parser import ObjectToType
 
 
-def test_instance() -> None:
-    """
-    It returns the value itself if it is an instance of the desired type
-    """
-
-    assert parse(bytes, b"123") == b"123"
+def test_passes_when_correct_type() -> None:
+    assert ObjectToType(int).parse(2) == 2
 
 
-def test_not_instance() -> None:
-    """
-    It raises an error if a value isn't an instance of the desired type
-    """
+def test_raises_when_wrong_type() -> None:
+    with pytest.raises(parsing_error.WrongType) as info:
+        ObjectToType(int).parse("2")
 
-    class Class:
-        pass
+    assert info.value == parsing_error.WrongType("2", int)
 
-    with pytest.raises(BaseParsingError):
-        parse(Class, 1)
+
+def test_eq_same_types() -> None:
+    assert ObjectToType(int) == ObjectToType(int)
+
+
+def test_eq_different_types() -> None:
+    assert ObjectToType(str) != ObjectToType(int)
+
+
+def test_eq_not_implemented() -> None:
+    ObjectToType(int) != int  # type: ignore

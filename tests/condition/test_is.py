@@ -1,17 +1,21 @@
 from valtypes.condition import Is
 
 
-def test_not_identical() -> None:
-    """
-    It returns False if the values aren't identical
-    """
-
-    assert not Is(False)(True)
+def test_returns_true_when_values_are_the_same() -> None:
+    assert Is(1).check(1)
 
 
-def test_identical() -> None:
-    """
-    It returns True if the values are identical
-    """
+def test_returns_false_when_values_are_different() -> None:
+    assert not Is(1).check(2)
 
-    assert Is(True)(True)
+
+def test_eq_returns_true_if_objects_are_equal() -> None:
+    assert Is(1) == Is(1)
+
+
+def test_eq_returns_false_if_objects_are_not_equal() -> None:
+    assert Is(1) != Is(2)
+
+
+def test_eq_not_implemented() -> None:
+    assert Is(1) != 1

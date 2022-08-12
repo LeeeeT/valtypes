@@ -1,25 +1,13 @@
-from typing import TypeVar
-
-import pytest
-
-from valtypes import BaseParsingError, parse
-
-T = TypeVar("T")
-F = TypeVar("F")
+from valtypes.parsing.parser import FromCallableReraise, MappingToDict
 
 
-def test_parse_keys_and_values() -> None:
-    """
-    It parses the keys and values of the mapping to the desired types
-    """
-
-    assert parse(dict[str, int], {False: "0.0", 1: "1"}) == {"False": 0, "1": 1}
+def test_eq_returns_true_if_parsers_are_equal() -> None:
+    assert MappingToDict(FromCallableReraise(int), FromCallableReraise(str)) == MappingToDict(FromCallableReraise(int), FromCallableReraise(str))
 
 
-def test_wrong_key_or_value() -> None:
-    """
-    It raises an error if it can't parse some key or value to the desired type
-    """
+def test_eq_returns_false_if_parsers_are_not_equal() -> None:
+    assert MappingToDict(FromCallableReraise(int), FromCallableReraise(str)) != MappingToDict(FromCallableReraise(str), FromCallableReraise(int))
 
-    with pytest.raises(BaseParsingError):
-        parse(dict[int, int], {1: 1.5})
+
+def test_eq_returns_not_implemented_if_other_is_not_mapping_to_union() -> None:
+    assert MappingToDict(FromCallableReraise(int), FromCallableReraise(str)) != 1

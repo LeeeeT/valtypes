@@ -1,17 +1,44 @@
-from typing import Any
+from collections.abc import Iterable
+from functools import cached_property
+from typing import Generic, TypeVar
 
-from valtypes.error import BaseParsingError, CompositeParsingError
-from valtypes.parsing.controller import Controller
-from valtypes.typing import UnionType
+import valtypes.error.parsing as parsing_error
+from valtypes import error
+from valtypes.util import ErrorsCollector
 
-__all__ = ["to_union"]
+from .abc import ABC
+
+__all__ = ["Parser", "ToUnion"]
 
 
-def to_union(target_type: UnionType, source: object, controller: Controller) -> Any:
-    errors: list[BaseParsingError] = []
-    for choice in target_type.__args__:
-        try:
-            return controller.delegate(choice, source)
-        except BaseParsingError as error:
-            errors.append(error)
-    raise CompositeParsingError(target_type, tuple(errors))
+T_co = TypeVar("T_co", covariant=True)
+T_contra = TypeVar("T_contra", contravariant=True)
+
+
+class ToUnion(ABC[T_contra, T_co], Generic[T_contra, T_co]):
+    def __init__(self, choices: Iterable[ABC[T_contra, T_co]]):
+        self._choices = choices
+
+    def parse(self, source: T_contra, /) -> T_co:
+        return Parser(self._choices, source).parse()
+
+    def __eq__(self, other: object, /) -> bool:
+        if isinstance(other, ToUnion):
+            return self._choices == other._choices
+        return NotImplemented
+
+
+class Parser(Generic[T_contra, T_co]):
+    def __init__(self, choices: Iterable[ABC[T_contra, T_co]], source: T_contra):
+        self._choices = choices
+        self._source = source
+
+    def parse(self) -> T_co:
+        for choice in self._choices:
+            with self._errors_collector:
+                return choice.parse(self._source)
+        raise parsing_error.Composite(tuple(self._errors_collector))
+
+    @cached_property
+    def _errors_collector(self) -> ErrorsCollector[error.Base]:
+        return ErrorsCollector(error.Base)

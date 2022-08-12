@@ -1,0 +1,29 @@
+site_name: valtypes
+site_description: Parsing in Python has never been easier
+site_url: https://valtypes.readthedocs.io
+site_author: LeeeeT
+
+repo_name: LeeeeT/valtypes
+repo_url: https://github.com/LeeeeT/valtypes
+
+edit_uri: edit/main/docs
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: blue
+      toggle:
+        icon: material/lightbulb
+    - scheme: slate
+      primary: blue
+      toggle:
+        icon: material/lightbulb-outline
+
+nav:
+  - Overview: index.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight
+  - pymdownx.extra

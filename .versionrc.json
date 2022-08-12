@@ -1,8 +1,0 @@
-{
-  "bumpFiles": [
-    {
-      "filename": "pyproject.toml",
-      "updater": "scripts/standard-version-updater.js"
-    }
-  ]
-}

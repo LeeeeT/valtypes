@@ -1,16 +1,25 @@
-from typing import TypeVar
+from typing import Generic, TypeVar
 
-from valtypes.error import WrongTypeError
-from valtypes.parsing.controller import Controller
-from valtypes.typing import GenericAlias
+import valtypes.error.parsing as error
 
-__all__ = ["object_to_type"]
+from .abc import ABC
 
-
-T = TypeVar("T")
+__all__ = ["ObjectToType"]
 
 
-def object_to_type(target_type: type[T], source: object, controller: Controller) -> T:
-    if not isinstance(target_type, GenericAlias) and isinstance(source, target_type):
-        return source
-    raise WrongTypeError(source, target_type)
+T_co = TypeVar("T_co", covariant=True)
+
+
+class ObjectToType(ABC[object, T_co], Generic[T_co]):
+    def __init__(self, type: type[T_co]):
+        self._type = type
+
+    def parse(self, source: object, /) -> T_co:
+        if isinstance(source, self._type):
+            return source
+        raise error.WrongType(source, self._type)
+
+    def __eq__(self, other: object, /) -> bool:
+        if isinstance(other, ObjectToType):
+            return self._type is other._type
+        return NotImplemented
