@@ -10,13 +10,14 @@ __all__ = ["IterableToList"]
 
 
 T = TypeVar("T")
-T_contra = TypeVar("T_contra", contravariant=True)
+
+F = TypeVar("F")
 
 
-class IterableToList(ABC[type[list[T]], Iterable[T_contra], list[T]], Generic[T, T_contra]):
-    def __init__(self, factory: ABC[object, T_contra, T]):
+class IterableToList(ABC[type[list[T]], Iterable[F], list[T]], Generic[T, F]):
+    def __init__(self, factory: ABC[object, F, T]):
         self._factory = factory
 
-    def get_parser_for(self, type: type[list[T]], /) -> parser.IterableToList[T_contra, T]:
+    def get_parser_for(self, type: type[list[T]], /) -> parser.IterableToList[F, T]:
         (items_type,) = resolve_type_args(type, list)
         return parser.IterableToList(self._factory.get_parser_for(items_type))

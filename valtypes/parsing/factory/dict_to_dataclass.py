@@ -12,23 +12,24 @@ __all__ = ["DictToDataclass", "Factory"]
 
 
 T = TypeVar("T")
-T_contra = TypeVar("T_contra", contravariant=True)
+
+F = TypeVar("F")
 
 
-class DictToDataclass(ABC[type, dict[str, T_contra], Any], Generic[T_contra]):
-    def __init__(self, factory: ABC[object, T_contra, Any]):
+class DictToDataclass(ABC[type, dict[str, F], Any], Generic[F]):
+    def __init__(self, factory: ABC[object, F, Any]):
         self._factory = factory
 
-    def get_parser_for(self, type: type[T], /) -> parser.DictToDataclass[T_contra, T]:
+    def get_parser_for(self, type: type[T], /) -> parser.DictToDataclass[F, T]:
         return Factory(self._factory, type).get_parser()
 
 
-class Factory(Generic[T_contra, T]):
-    def __init__(self, factory: ABC[object, T_contra, Any], type: type[T]):
+class Factory(Generic[F, T]):
+    def __init__(self, factory: ABC[object, F, Any], type: type[T]):
         self._factory = factory
         self._type = type
 
-    def get_parser(self) -> parser.DictToDataclass[T_contra, T]:
+    def get_parser(self) -> parser.DictToDataclass[F, T]:
         self._collect_parsers()
         return parser.DictToDataclass(self._type, self._required_fields_parsers, self._optional_fields_parsers)
 
@@ -46,9 +47,9 @@ class Factory(Generic[T_contra, T]):
                 yield field
 
     @cached_property
-    def _required_fields_parsers(self) -> dict[str, parser.ABC[T_contra, Any]]:
+    def _required_fields_parsers(self) -> dict[str, parser.ABC[F, Any]]:
         return {}
 
     @cached_property
-    def _optional_fields_parsers(self) -> dict[str, parser.ABC[T_contra, Any]]:
+    def _optional_fields_parsers(self) -> dict[str, parser.ABC[F, Any]]:
         return {}

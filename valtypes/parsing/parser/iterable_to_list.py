@@ -7,12 +7,13 @@ __all__ = ["IterableToList"]
 
 
 T = TypeVar("T")
-T_contra = TypeVar("T_contra", contravariant=True)
+
+F = TypeVar("F")
 
 
-class IterableToList(ABC[Iterable[T_contra], list[T]], Generic[T_contra, T]):
-    def __init__(self, items_parser: ABC[T_contra, T]):
+class IterableToList(ABC[Iterable[F], list[T]], Generic[F, T]):
+    def __init__(self, items_parser: ABC[F, T]):
         self._items_parser = items_parser
 
-    def parse(self, source: Iterable[T_contra], /) -> list[T]:
+    def parse(self, source: Iterable[F], /) -> list[T]:
         return [self._items_parser.parse(item) for item in source]
