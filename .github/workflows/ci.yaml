@@ -15,10 +15,10 @@ jobs:
           version: latest
           virtualenvs-create: false
       - run: poetry install
-      - run: pre-commit run flake8
-      - run: pre-commit run mypy
-      - run: pre-commit run pyright
-      - run: pre-commit run pyright-verify
+      - run: pre-commit run --all-files flake8
+      - run: pre-commit run --all-files mypy
+      - run: pre-commit run --all-files pyright
+      - run: pre-commit run --all-files pyright-verify
 
   test:
     runs-on: ${{ matrix.os }}
@@ -36,7 +36,7 @@ jobs:
           version: latest
           virtualenvs-create: false
       - run: poetry install
-      - run: pre-commit run pytest
+      - run: pre-commit run --all-files pytest
       - uses: codecov/codecov-action@v2
         with:
           fail_ci_if_error: true
