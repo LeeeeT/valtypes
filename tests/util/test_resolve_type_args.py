@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar
+from typing import Any, Generic, TypeVar, cast
 
 import pytest
 
@@ -7,11 +7,11 @@ from valtypes.util import resolve_type_args
 
 def test_parameterized_builtin_type() -> None:
     """
-    It returns the type arguments of parameterized built-in types
+    It returns type arguments of parameterized built-in types
     """
 
     assert resolve_type_args(list[int], list) == (int,)
-    assert resolve_type_args(tuple[int, bytes, str], tuple) == (int, bytes, str)  # type: ignore
+    assert resolve_type_args(cast(Any, tuple)[int, bytes, str], tuple) == (int, bytes, str)
 
 
 def test_subclass_of_parameterized_builtin_type() -> None:

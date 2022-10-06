@@ -1,68 +1,35 @@
-from valtypes.condition import And, Decorated, Not, Or, false, true
+import pytest
+
+from valtypes import decorator
+from valtypes.condition import And, Decorated, Is, Not, Or
 
 
-def test_and() -> None:
-    """
-    It supports __and__
-    """
-
-    and_condition = true & str.istitle
-
-    assert isinstance(and_condition, And)
-    assert and_condition.conditions == (true, str.istitle)
+def test_and_returns_and() -> None:
+    assert Is(1) & Is(2) == And(Is(1), Is(2))
 
 
-def test_rand() -> None:
-    """
-    It supports __rand__
-    """
-
-    and_condition = str.istitle & true
-
-    assert isinstance(and_condition, And)
-    assert and_condition.conditions == (str.istitle, true)
+def test_and_not_implemented() -> None:
+    with pytest.raises(TypeError):
+        Is(1) & 2  # type: ignore
 
 
-def test_or() -> None:
-    """
-    It supports __or__
-    """
-
-    or_condition = true | str.istitle  # type: ignore
-
-    assert isinstance(or_condition, Or)
-    assert or_condition.conditions == (true, str.istitle)
+def test_or_returns_or() -> None:
+    assert Is(1) | Is(2) == Or(Is(1), Is(2))
 
 
-def test_ror() -> None:
-    """
-    It supports __ror__
-    """
-
-    or_condition = str.istitle | true  # type: ignore
-
-    assert isinstance(or_condition, Or)
-    assert or_condition.conditions == (str.istitle, true)
+def test_or_not_implemented() -> None:
+    with pytest.raises(TypeError):
+        Is(1) | 2  # type: ignore
 
 
-def test_invert() -> None:
-    """
-    It supports __invert__
-    """
-
-    inverted_condition = ~false
-
-    assert isinstance(inverted_condition, Not)
-    assert inverted_condition.condition is false
+def test_rrshift_returns_decorated() -> None:
+    assert decorator.FromCallable(int) >> Is(1) == Decorated(decorator.FromCallable(int), Is(1))
 
 
-def test_rrshift() -> None:
-    """
-    It supports __rrshift__
-    """
+def test_rrshift_not_implemented() -> None:
+    with pytest.raises(TypeError):
+        int >> Is(1)  # type: ignore
 
-    decorated_condition = len >> false
 
-    assert isinstance(decorated_condition, Decorated)
-    assert decorated_condition.decorator == len
-    assert decorated_condition.condition is false
+def test_invert_returns_not() -> None:
+    assert ~Is(1) == Not(Is(1))

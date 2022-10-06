@@ -1,18 +1,21 @@
-from valtypes.condition import false, true
+from valtypes.condition import Is
 
 
-def test_some_returns_false() -> None:
-    """
-    It returns False if some condition returns False
-    """
-
-    assert not (false & false)(...)
-    assert not (true & false)(...)
+def test_returns_true_if_both_conditions_return_true() -> None:
+    assert (Is(1) & Is(1)).check(1)
 
 
-def test_all_return_true() -> None:
-    """
-    It returns True if all conditions return True
-    """
+def test_returns_false_if_one_condition_returns_false() -> None:
+    assert not (Is(1) & Is(2)).check(1)
 
-    assert (true & true)(...)
+
+def test_eq_returns_true_if_both_conditions_are_equal() -> None:
+    assert (Is(1) & Is(2)) == (Is(1) & Is(2))
+
+
+def test_eq_returns_false_if_one_condition_is_not_equal() -> None:
+    assert (Is(1) & Is(2)) != (Is(1) & Is(3))
+
+
+def test_eq_not_implemented() -> None:
+    assert (Is(1) & Is(2)) != 1

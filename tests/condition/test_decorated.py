@@ -1,10 +1,22 @@
-from valtypes.condition import Equals, Wrap
+from valtypes import decorator
+from valtypes.condition import Is
 
 
-def test() -> None:
-    """
-    It calls the decorator before passing the value to the condition
-    """
+def test_calls_decorator_before_checking() -> None:
+    assert (decorator.FromCallable(int) >> Is(1)).check("1")
 
-    assert not (len >> Equals(2))("abc")
-    assert (str.capitalize >> Wrap(str.isupper))("f")
+
+def test_eq_returns_true_if_decorators_and_conditions_are_equal() -> None:
+    assert (decorator.FromCallable(int) >> Is(1)) == (decorator.FromCallable(int) >> Is(1))
+
+
+def test_eq_returns_false_if_decorator_is_not_equal() -> None:
+    assert not ((decorator.FromCallable(int) >> Is(1)) == (decorator.FromCallable(str) >> Is(1)))
+
+
+def test_eq_returns_false_if_condition_is_not_equal() -> None:
+    assert not ((decorator.FromCallable(int) >> Is(1)) == (decorator.FromCallable(int) >> Is(2)))
+
+
+def test_eq_not_implemented() -> None:
+    assert (decorator.FromCallable(int) >> Is(1)) != 1

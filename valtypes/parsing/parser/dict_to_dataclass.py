@@ -1,66 +1,80 @@
-from __future__ import annotations
-
-from dataclasses import MISSING, Field, fields
+from functools import cached_property
 from typing import Any, Generic, TypeVar
 
-from valtypes.alias import ALIASES_KEY
-from valtypes.error import BaseParsingError, CompositeParsingError, MissingFieldError, WrongFieldError
-from valtypes.parsing.controller import Controller
-from valtypes.parsing.util import with_source_type
+import valtypes.error.parsing as parsing_error
+import valtypes.error.parsing.dataclass as dataclass_parsing_error
+from valtypes import error
+from valtypes.util import ErrorsCollector
 
-__all__ = ["DictToDataclass", "dict_to_dataclass"]
+from .abc import ABC
+
+__all__ = ["DictToDataclass", "Parser"]
 
 
 T = TypeVar("T")
+T_co = TypeVar("T_co", covariant=True)
 
 
-class DictToDataclass(Generic[T]):
-    def __init__(self, target_type: type[T], source: dict[str, object], controller: Controller) -> None:
-        self._target_type = target_type
+class DictToDataclass(ABC[dict[str, T], T_co], Generic[T, T_co]):
+    def __init__(self, dataclass: type[T_co], required_fields_parsers: dict[str, ABC[T, Any]], optional_fields_parsers: dict[str, ABC[T, Any]]):
+        self._dataclass = dataclass
+        self._required_fields_parsers = required_fields_parsers
+        self._optional_fields_parsers = optional_fields_parsers
+
+    def parse(self, source: dict[str, T], /) -> T_co:
+        return Parser(self._dataclass, self._required_fields_parsers, self._optional_fields_parsers, source).parse()
+
+
+class Parser(Generic[T, T_co]):
+    def __init__(
+        self,
+        dataclass: type[T_co],
+        required_fields_parsers: dict[str, ABC[T, Any]],
+        optional_fields_parsers: dict[str, ABC[T, Any]],
+        source: dict[str, T],
+    ):
+        self._dataclass = dataclass
+        self._required_fields_parsers = required_fields_parsers
+        self._optional_fields_parsers = optional_fields_parsers
         self._source = source
-        self._controller = controller
-        self._fields: dict[str, object] = {}
-        self._errors: list[BaseParsingError] = []
 
-    def parse(self) -> T:
-        self._collect_fields()
-        if self._errors:
-            raise CompositeParsingError(self._target_type, tuple(self._errors))
-        return self._target_type(**self._fields)
+    def parse(self) -> T_co:
+        self._try_parse()
+        self._check_for_errors()
+        return self._dataclass(**self._fields)
 
-    def _collect_fields(self) -> None:
-        for field in fields(self._target_type):
-            value = self._try_find_value_for_field(field)
-            if value is not MISSING:
-                self._try_add_field_value(field, value)
+    def _try_parse(self) -> None:
+        for field_name in self._fields_parsers:
+            with self._errors_collector:
+                self._try_parse_field(field_name)
 
-    def _try_add_field_value(self, field: Field[Any], value: object) -> None:
+    def _try_parse_field(self, field_name: str) -> Any:
+        if field_name in self._source:
+            self._parse_field(field_name)
+        elif self._field_required(field_name):
+            raise dataclass_parsing_error.MissingField(field_name)
+
+    def _field_required(self, field_name: str) -> bool:
+        return field_name in self._required_fields_parsers
+
+    def _parse_field(self, field_name: str) -> None:
         try:
-            self._fields[field.name] = self._controller.parse(field.type, value)
-        except BaseParsingError as e:
-            self._errors.append(WrongFieldError(field.name, e))
+            self._fields[field_name] = self._required_fields_parsers[field_name].parse(self._source[field_name])
+        except error.Base as e:
+            raise dataclass_parsing_error.WrongFieldValue(field_name, e)
 
-    def _try_find_value_for_field(self, field: Field[Any]) -> object:
-        value = self._find_value_for_field(field)
-        if value is MISSING and self._is_field_required(field):
-            self._errors.append(MissingFieldError(field.name))
-        return value
+    def _check_for_errors(self) -> None:
+        if self._errors_collector:
+            raise parsing_error.Composite(tuple(self._errors_collector))
 
-    def _find_value_for_field(self, field: Field[Any]) -> object:
-        for alias in self._get_aliases(field):
-            if alias in self._source:
-                return self._source[alias]
-        return MISSING
+    @cached_property
+    def _errors_collector(self) -> ErrorsCollector[error.Base]:
+        return ErrorsCollector(error.Base)
 
-    @staticmethod
-    def _get_aliases(field: Field[Any]) -> tuple[str, ...]:
-        return field.metadata.get(ALIASES_KEY, (field.name,))
+    @cached_property
+    def _fields_parsers(self) -> dict[str, ABC[T, Any]]:
+        return self._required_fields_parsers | self._optional_fields_parsers
 
-    @staticmethod
-    def _is_field_required(field: Field[Any]) -> bool:
-        return field.default is MISSING and field.default_factory is MISSING
-
-
-@with_source_type(dict[str, object])
-def dict_to_dataclass(target_type: type[T], source: dict[str, object], controller: Controller) -> T:
-    return DictToDataclass(target_type, source, controller).parse()
+    @cached_property
+    def _fields(self) -> dict[str, Any]:
+        return {}

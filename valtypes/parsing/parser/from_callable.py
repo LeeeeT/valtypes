@@ -1,21 +1,23 @@
-from __future__ import annotations
-
 from collections.abc import Callable
-from dataclasses import dataclass
-from typing import Any
+from typing import Generic, TypeVar
 
-from valtypes.error import ConversionError
-from valtypes.parsing.controller import Controller
+from .abc import ABC
 
 __all__ = ["FromCallable"]
 
 
-@dataclass
-class FromCallable:
-    callable: Callable[[Any], Any]
+T_co = TypeVar("T_co", covariant=True)
+T_contra = TypeVar("T_contra", contravariant=True)
 
-    def __call__(self, target_type: Any, source: Any, controller: Controller) -> Any:
-        try:
-            return self.callable(source)
-        except Exception:
-            raise ConversionError(source, target_type)
+
+class FromCallable(ABC[T_contra, T_co], Generic[T_contra, T_co]):
+    def __init__(self, callable: Callable[[T_contra], T_co]):
+        self._callable = callable
+
+    def parse(self, source: T_contra, /) -> T_co:
+        return self._callable(source)
+
+    def __eq__(self, other: object, /) -> bool:
+        if isinstance(other, FromCallable):
+            return self._callable == other._callable
+        return NotImplemented
