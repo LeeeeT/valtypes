@@ -1,10 +1,10 @@
 import re
 
-import valtypes.error.str as error
+import valtypes.error.parsing.type.str as error
 
 from . import generic, sized
 
-__all__ = ["InitHook", "LengthHook", "MaximumLength", "MinimumLength", "NonEmpty", "Pattern"]
+__all__ = ["InitHook", "NonEmpty", "Pattern"]
 
 
 class InitHook(generic.InitHook, str):
@@ -12,19 +12,7 @@ class InitHook(generic.InitHook, str):
         super().__init__()
 
 
-class LengthHook(InitHook, sized.LengthHook):
-    pass
-
-
-class MinimumLength(LengthHook, sized.MinimumLength):
-    pass
-
-
-class MaximumLength(LengthHook, sized.MaximumLength):
-    pass
-
-
-class NonEmpty(MinimumLength, sized.NonEmpty):
+class NonEmpty(InitHook, sized.NonEmpty):
     pass
 
 

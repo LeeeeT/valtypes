@@ -1,23 +1,23 @@
 from dataclasses import dataclass
 
-from valtypes.error import base
+from .generic import Base
 
 __all__ = ["WrongItem", "WrongItemsCount"]
 
 
 @dataclass
-class WrongItem(base.Base):
+class WrongItem(Base):
     index: int
-    cause: base.Base
+    cause: Base
 
     def __str__(self) -> str:
         return f"[{self.index}]: {self.cause}"
 
 
 @dataclass
-class WrongItemsCount(base.Base):
+class WrongItemsCount(Base):
     expected: int
     actual: int
 
     def __str__(self) -> str:
-        return f"{self.expected} item(s) expected, but got {self.actual}"
+        return f"{self.expected} item(s) expected, got {self.actual}"

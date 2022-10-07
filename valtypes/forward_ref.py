@@ -39,12 +39,12 @@ else:
             return eval(self._code, None, self._namespace)
 
         @property
-        def _code(self) -> str:
-            return self.__args__[0]
-
-        @property
         def _namespace(self) -> Mapping[str, object]:
             return ChainMap(self._frame.f_locals, self._frame.f_globals, self._frame.f_builtins)
+
+        @property
+        def _code(self) -> str:
+            return self.__args__[0]
 
         @property
         def _frame(self) -> FrameType:

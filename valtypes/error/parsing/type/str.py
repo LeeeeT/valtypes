@@ -1,13 +1,13 @@
 import re
 from dataclasses import dataclass
 
-from . import base
+from valtypes.error.generic import Base
 
 __all__ = ["Pattern"]
 
 
 @dataclass
-class Pattern(base.Base):
+class Pattern(Base):
     pattern: re.Pattern[str]
     got: str
 

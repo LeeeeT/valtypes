@@ -1,3 +1,3 @@
-from .base import Base
+from .generic import Base, NoParser
 
-__all__ = ["Base"]
+__all__ = ["Base", "NoParser"]

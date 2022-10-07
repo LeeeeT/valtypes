@@ -1,6 +1,6 @@
 import pytest
 
-import valtypes.error.parsing as parsing_error
+import valtypes.error.parsing as error
 from valtypes import parse
 
 
@@ -10,10 +10,12 @@ def test_returns_value_if_it_is_instance_of_type() -> None:
 
 
 def test_raises_if_value_is_not_instance_of_type() -> None:
-    with pytest.raises(parsing_error.WrongType) as info:
+    with pytest.raises(error.WrongType) as info:
         parse(int, "1")
-    assert info.value == parsing_error.WrongType("1", int)
 
-    with pytest.raises(parsing_error.WrongType) as info:
+    assert info.value == error.WrongType("1", int)
+
+    with pytest.raises(error.WrongType) as info:
         parse(float, 1)
-    assert info.value == parsing_error.WrongType(1, float)
+
+    assert info.value == error.WrongType(1, float)

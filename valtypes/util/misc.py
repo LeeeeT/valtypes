@@ -43,15 +43,15 @@ class Binder(Generic[T]):
 
 
 class CompositeBinder(Generic[T]):
-    def __init__(self, objects: tuple[Descriptor[T] | T, ...]):
-        self._binders = tuple(Binder(object) for object in objects)
+    def __init__(self, objects: Iterable[Descriptor[T] | T]):
+        self._binders = [Binder(object) for object in objects]
 
-    def bind(self, instance: object, owner: type | None) -> tuple[T, ...]:
-        return tuple(binder.bind(instance, owner) for binder in self._binders)
+    def bind(self, instance: object, owner: type | None) -> list[T]:
+        return [binder.bind(instance, owner) for binder in self._binders]
 
 
 class CompositeCallable(Generic[P]):
-    def __init__(self, callables: tuple[Callable[P, object], ...]):
+    def __init__(self, callables: Iterable[Callable[P, object]]):
         self._callables = callables
 
     def __call__(self, *args: P.args, **kwargs: P.kwargs) -> None:
@@ -60,7 +60,7 @@ class CompositeCallable(Generic[P]):
 
 
 class CompositeCallableDescriptor(Generic[P]):
-    def __init__(self, callables: tuple[Descriptor[Callable[P, object]] | Callable[P, object], ...]):
+    def __init__(self, callables: Iterable[Descriptor[Callable[P, object]] | Callable[P, object]]):
         self._binder = CompositeBinder(callables)
 
     def __get__(self, instance: object, owner: type | None = None) -> Callable[P, None]:

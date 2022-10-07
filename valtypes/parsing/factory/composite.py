@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Generic, TypeVar
 
-import valtypes.error.parsing as error
+from valtypes import error
 from valtypes.collection import Collection
 from valtypes.parsing import parser
 from valtypes.util import cached_method

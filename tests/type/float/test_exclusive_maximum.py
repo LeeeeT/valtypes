@@ -1,6 +1,6 @@
 import pytest
 
-import valtypes.error.float as error
+import valtypes.error.parsing.type.numeric as error
 import valtypes.type.float as type
 
 

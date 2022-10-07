@@ -1,6 +1,7 @@
 import pytest
 
-from valtypes import error, parse
+import valtypes.error.parsing as error
+from valtypes import parse
 
 
 def test_parses_list_items() -> None:

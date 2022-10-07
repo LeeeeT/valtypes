@@ -2,8 +2,7 @@ from collections.abc import Iterable
 from functools import cached_property
 from typing import Generic, TypeVar
 
-import valtypes.error.parsing as parsing_error
-from valtypes import error
+import valtypes.error.parsing as error
 from valtypes.util import ErrorsCollector
 
 from .abc import ABC
@@ -37,7 +36,7 @@ class Parser(Generic[T_contra, T_co]):
         for choice in self._choices:
             with self._errors_collector:
                 return choice.parse(self._source)
-        raise parsing_error.Composite(tuple(self._errors_collector))
+        raise error.Composite(tuple(self._errors_collector))
 
     @cached_property
     def _errors_collector(self) -> ErrorsCollector[error.Base]:

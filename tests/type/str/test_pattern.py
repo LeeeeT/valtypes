@@ -2,7 +2,7 @@ import re
 
 import pytest
 
-import valtypes.error.str as error
+import valtypes.error.parsing.type.str as error
 import valtypes.type.str as type
 
 
