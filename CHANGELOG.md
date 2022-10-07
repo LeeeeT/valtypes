@@ -1,5 +1,16 @@
 # Changelog
 
+## [5.0.0](https://github.com/LeeeeT/valtypes/compare/v4.0.0...v5.0.0) (2022-10-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* reorganize errors (#22)
+
+### Code Refactoring
+
+* reorganize errors ([#22](https://github.com/LeeeeT/valtypes/issues/22)) ([d7f7a5d](https://github.com/LeeeeT/valtypes/commit/d7f7a5da7a0da8901d972f57af88397b4e0e1576))
+
 ## [4.0.0](https://github.com/LeeeeT/valtypes/compare/v3.0.2...v4.0.0) (2022-10-06)
 
 
