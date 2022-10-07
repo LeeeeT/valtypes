@@ -73,11 +73,13 @@ def test_raises_error_if_got_dataclass_instance() -> None:
     class Foo:
         bar: int
 
-    with pytest.raises(error.Base):
+    with pytest.raises(error.NoParser) as info:
         parse(Foo(1), {"bar": 1})
 
+    assert info.value == error.NoParser(Foo(1))
 
-def test_raises_error_if_some_required_field_is_missing() -> None:
+
+def test_raises_error_if_required_field_is_missing() -> None:
     @dataclass
     class Foo:
         bar: int
@@ -89,7 +91,7 @@ def test_raises_error_if_some_required_field_is_missing() -> None:
     assert info.value == parsing_error.Composite((dataclass_parsing_error.MissingField("baz"),))
 
 
-def test_raises_error_if_cant_parse_some_field() -> None:
+def test_raises_error_if_cant_parse_field() -> None:
     @dataclass
     class Foo:
         bar: int

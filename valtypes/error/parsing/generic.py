@@ -1,38 +1,19 @@
 from dataclasses import dataclass
 
-from valtypes.error import base
+from valtypes.error import generic
+
+__all__ = ["Base", "Composite", "WrongType"]
+
 from valtypes.util import pretty_type_repr
 
-__all__ = ["Composite", "NoParser", "Parsing", "Recursion", "WrongType"]
+
+class Base(generic.Base, ValueError):
+    pass
 
 
 @dataclass
-class NoParser(base.Base):
-    type: object
-
-    def __str__(self) -> str:
-        return f"there's no parser for {pretty_type_repr(self.type)}"
-
-
-@dataclass
-class Recursion(base.Base):
-    chain: tuple[object, ...]
-
-    def __str__(self) -> str:
-        return "recursion detected: " + " › ".join(map(pretty_type_repr, self.chain))
-
-
-@dataclass
-class Parsing(base.Base):
-    source: object
-
-    def __str__(self) -> str:
-        return f"can't parse the value {self.source!r}"
-
-
-@dataclass
-class Composite(base.Base):
-    causes: tuple[base.Base, ...]
+class Composite(Base):
+    causes: tuple[Base, ...]
 
     def __str__(self) -> str:
         result = "composite error"
@@ -44,7 +25,7 @@ class Composite(base.Base):
 
 
 @dataclass
-class WrongType(base.Base):
+class WrongType(Base):
     source: object
     expected_type: object
 

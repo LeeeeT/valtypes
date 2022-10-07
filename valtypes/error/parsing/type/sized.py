@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 
-from . import base
+from valtypes.error.generic import Base
 
 __all__ = ["MaximumLength", "MinimumLength"]
 
 
 @dataclass
-class MaximumLength(base.Base):
+class MaximumLength(Base):
     maximum: int
     length: int
 
@@ -15,7 +15,7 @@ class MaximumLength(base.Base):
 
 
 @dataclass
-class MinimumLength(base.Base):
+class MinimumLength(Base):
     minimum: int
     length: int
 

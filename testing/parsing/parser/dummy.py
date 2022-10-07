@@ -14,7 +14,7 @@ class Dummy(ABC[object, NoReturn]):
     def parse(self, source: object, /) -> NoReturn:
         raise NotImplementedError
 
-    def __eq__(self, other: Dummy, /) -> bool:
+    def __eq__(self, other: object, /) -> bool:
         if isinstance(other, Dummy):
             return self._type == other._type
         return NotImplemented

@@ -1,36 +1,31 @@
-from typing import cast
-
 import pytest
 
-import valtypes.error.parsing as parsing_error
-from valtypes.parsing.parser import ABC, FromCallableReraise, ToUnion
-
-to_int_or_float = ToUnion[float | str, float]([FromCallableReraise(int), FromCallableReraise(float)])
+import testing.error.parsing as testing_error
+import valtypes.error.parsing as error
+from testing.parsing.parser import AlwaysRaise, Const
+from valtypes.parsing.parser import ToUnion
 
 
 def test_returns_first_successful_parsing_result() -> None:
-    assert to_int_or_float.parse(1.6) == 1
-    assert to_int_or_float.parse("1.6") == 1.6
+    assert ToUnion[object, object]([Const(1), AlwaysRaise(error.Base("error"))]).parse(...) == 1
+    assert ToUnion[object, object]([AlwaysRaise(error.Base("error")), Const(2)]).parse(...) == 2
 
 
-def test_raises_if_all_parsers_fail() -> None:
-    with pytest.raises(parsing_error.Composite) as info:
-        to_int_or_float.parse("a")
+def test_raises_error_if_all_parsers_fail() -> None:
+    with pytest.raises(error.Composite) as info:
+        ToUnion([AlwaysRaise(testing_error.Dummy("error 1")), AlwaysRaise(testing_error.Dummy("error 2"))]).parse(...)
 
-    assert info.value == parsing_error.Composite((parsing_error.Parsing("a"), parsing_error.Parsing("a")))
+    assert info.value == error.Composite((testing_error.Dummy("error 1"), testing_error.Dummy("error 2")))
 
 
 def test_eq_returns_true_if_parsers_are_equal() -> None:
-    assert ToUnion(cast(list[ABC[float, float]], [FromCallableReraise(int), FromCallableReraise(float)])) == ToUnion(
-        cast(list[ABC[float, float]], [FromCallableReraise(int), FromCallableReraise(float)])
-    )
+    assert ToUnion([Const(1), Const(2)]) == ToUnion([Const(1), Const(2)])
 
 
-def test_eq_returns_false_if_parsers_are_not_equal() -> None:
-    assert ToUnion(cast(list[ABC[float, float]], [FromCallableReraise(int), FromCallableReraise(float)])) != ToUnion(
-        cast(list[ABC[float, float]], [FromCallableReraise(float), FromCallableReraise(int)])
-    )
+def test_eq_returns_false_if_parsers_are_different() -> None:
+    assert ToUnion([Const(1), Const(2)]) != ToUnion([Const(1), Const(1)])
+    assert ToUnion([Const(1), Const(2)]) != ToUnion([Const(2), Const(2)])
 
 
-def test_eq_returns_not_implemented_if_other_is_not_to_union() -> None:
-    assert ToUnion(cast(list[ABC[float, float]], [FromCallableReraise(int), FromCallableReraise(float)])) != 1
+def test_eq_returns_not_implemented_if_got_not_to_union() -> None:
+    assert ToUnion([]) != ...

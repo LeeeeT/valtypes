@@ -1,6 +1,6 @@
 from typing import SupportsIndex, overload
 
-import valtypes.error.int as error
+import valtypes.error.parsing.type.numeric as error
 from valtypes.typing import Intable
 
 from . import generic

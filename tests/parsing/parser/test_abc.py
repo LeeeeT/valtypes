@@ -1,12 +1,13 @@
 import pytest
 
-from valtypes.parsing.parser import Chain, FromCallable
+from testing.parsing.parser import Const
+from valtypes.parsing.parser import Chain
 
 
 def test_rshift_returns_chain() -> None:
-    assert FromCallable(int) >> FromCallable(str) == Chain(FromCallable(int), FromCallable(str))
+    assert Const(1) >> Const(2) == Chain(Const(1), Const(2))
 
 
-def test_rshift_not_implemented() -> None:
+def test_rshift_returns_not_implemented_if_got_not_parser() -> None:
     with pytest.raises(TypeError):
-        FromCallable(int) >> str  # type: ignore
+        Const(2) >> ...  # type: ignore

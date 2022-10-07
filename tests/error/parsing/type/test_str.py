@@ -1,6 +1,6 @@
 import re
 
-import valtypes.error.str as error
+import valtypes.error.parsing.type.str as error
 
 
 def test_pattern() -> None:

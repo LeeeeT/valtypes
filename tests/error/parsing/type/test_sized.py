@@ -1,4 +1,4 @@
-import valtypes.error.sized as error
+import valtypes.error.parsing.type.sized as error
 
 
 def test_maximum_length() -> None:

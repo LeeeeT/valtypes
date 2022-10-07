@@ -1,7 +1,6 @@
 from .abc import ABC, Chain
 from .dict_to_dataclass import DictToDataclass
 from .from_callable import FromCallable
-from .from_callable_reraise import FromCallableReraise
 from .iterable_to_list import IterableToList
 from .mapping_to_dict import MappingToDict
 from .object_to_type import ObjectToType
@@ -12,7 +11,6 @@ __all__ = [
     "Chain",
     "DictToDataclass",
     "FromCallable",
-    "FromCallableReraise",
     "IterableToList",
     "MappingToDict",
     "ObjectToType",

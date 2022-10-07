@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 
-from valtypes.error import base
+from .generic import Base
 
 __all__ = ["FractionalNumber"]
 
 
 @dataclass
-class FractionalNumber(base.Base):
+class FractionalNumber(Base):
     number: float
 
     def __str__(self) -> str:

@@ -2,7 +2,7 @@ from abc import ABC
 from collections.abc import Sized
 from typing import TypeVar
 
-import valtypes.error.sized as error
+import valtypes.error.parsing.type.sized as error
 from valtypes.util import super_endpoint
 
 from . import generic

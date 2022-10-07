@@ -1,4 +1,4 @@
-import valtypes.error.float as error
+import valtypes.error.parsing.type.numeric as error
 from valtypes.typing import Floatable
 
 from . import generic

@@ -1,44 +1,29 @@
-import valtypes.error.parsing as parsing_error
-
-
-def test_no_parser() -> None:
-    e = parsing_error.NoParser(list[int])
-    assert str(e) == "there's no parser for list[int]"
-
-
-def test_recursion() -> None:
-    e = parsing_error.Recursion((object, list[int], int))
-    assert str(e) == "recursion detected: object › list[int] › int"
+import valtypes.error.parsing as error
 
 
 def test_wrong_type() -> None:
-    e = parsing_error.WrongType(..., "type")
+    e = error.WrongType(..., "type")
     assert str(e) == "not an instance of 'type'"
 
 
-def test_parsing() -> None:
-    e = parsing_error.Parsing("123")
-    assert str(e) == "can't parse the value '123'"
-
-
 def test_composite() -> None:
-    e = parsing_error.Composite(
+    e = error.Composite(
         (
-            parsing_error.NoParser(list[int]),
-            parsing_error.Composite(
+            error.WrongType(..., int),
+            error.Composite(
                 (
-                    parsing_error.Recursion((object, list[int], int)),
-                    parsing_error.Parsing("123"),
+                    error.Base("nested cause 1"),
+                    error.Base("nested cause 2"),
                 ),
             ),
-            parsing_error.Parsing(456),
+            error.WrongType(..., list[str]),
         )
     )
     assert str(e) == (
         "composite error"
-        "\n├ there's no parser for list[int]"
+        "\n├ not an instance of int"
         "\n├ composite error"
-        "\n│ ├ recursion detected: object › list[int] › int"
-        "\n│ ╰ can't parse the value '123'"
-        "\n╰ can't parse the value 456"
+        "\n│ ├ nested cause 1"
+        "\n│ ╰ nested cause 2"
+        "\n╰ not an instance of list[str]"
     )

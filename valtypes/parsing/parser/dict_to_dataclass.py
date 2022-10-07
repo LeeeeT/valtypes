@@ -1,9 +1,8 @@
 from functools import cached_property
 from typing import Any, Generic, TypeVar
 
-import valtypes.error.parsing as parsing_error
-import valtypes.error.parsing.dataclass as dataclass_parsing_error
-from valtypes import error
+import valtypes.error.parsing as error
+import valtypes.error.parsing.dataclass as dataclass_error
 from valtypes.util import ErrorsCollector
 
 from .abc import ABC
@@ -52,7 +51,7 @@ class Parser(Generic[T, T_co]):
         if field_name in self._source:
             self._parse_field(field_name)
         elif self._field_required(field_name):
-            raise dataclass_parsing_error.MissingField(field_name)
+            raise dataclass_error.MissingField(field_name)
 
     def _field_required(self, field_name: str) -> bool:
         return field_name in self._required_fields_parsers
@@ -61,11 +60,11 @@ class Parser(Generic[T, T_co]):
         try:
             self._fields[field_name] = self._required_fields_parsers[field_name].parse(self._source[field_name])
         except error.Base as e:
-            raise dataclass_parsing_error.WrongFieldValue(field_name, e)
+            raise dataclass_error.WrongFieldValue(field_name, e)
 
     def _check_for_errors(self) -> None:
         if self._errors_collector:
-            raise parsing_error.Composite(tuple(self._errors_collector))
+            raise error.Composite(tuple(self._errors_collector))
 
     @cached_property
     def _errors_collector(self) -> ErrorsCollector[error.Base]:
