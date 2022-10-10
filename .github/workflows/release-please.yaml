@@ -8,6 +8,12 @@ jobs:
   create-release:
     runs-on: ubuntu-latest
     steps:
+      - uses: crazy-max/ghaction-import-gpg@master
+        with:
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          git-user-signingkey: true
+          git-commit-gpgsign: true
+          git_tag_gpgsign: true
       - uses: google-github-actions/release-please-action@main
         with:
           token: ${{ secrets.PAT }}
