@@ -32,305 +32,193 @@ def error_instance() -> ErrorSet:
     return error_instance
 
 
-def test_add(instance: Set) -> None:
-    """
-    It triggers the hook when `add` is called if an element isn't present in the set
-    """
-
+def test_triggers_hook_when_add_is_called_and_element_is_not_present(instance: Set) -> None:
     instance.add(3)
 
     assert instance.length == 4
     assert instance == {0, 1, 2, 3}
 
 
-def test_add_present(instance: Set) -> None:
-    """
-    It doesn't trigger the hook when `add` is called if an element is present in the set
-    """
-
+def test_doesnt_trigger_hook_when_add_is_called_and_element_is_present(instance: Set) -> None:
     instance.add(1)
 
     assert instance.length is None
 
 
-def test_add_error(error_instance: ErrorSet) -> None:
-    """
-    It doesn't change the set if the hook raises an error
-    """
-
+def test_doesnt_change_value_if_hook_raised_error_when_add_was_called(error_instance: ErrorSet) -> None:
     with pytest.raises(Exception):
         error_instance.add(3)
 
     assert error_instance == {0, 1, 2}
 
 
-def test_difference_update(instance: Set) -> None:
-    """
-    It triggers the hook when `difference_update` is called
-    """
-
+def test_triggers_hook_when_difference_update_is_called(instance: Set) -> None:
     instance.difference_update(iter((0,)), iter((2,)))
 
     assert instance.length == 1
     assert instance == {1}
 
 
-def test_difference_update_error(error_instance: ErrorSet) -> None:
-    """
-    It doesn't change the set if the hook raises an error
-    """
-
+def test_doesnt_change_value_if_hook_raised_error_when_difference_update_was_called(error_instance: ErrorSet) -> None:
     with pytest.raises(Exception):
         error_instance.difference_update((0,), (2,))
 
     assert error_instance == {0, 1, 2}
 
 
-def test_discard(instance: Set) -> None:
-    """
-    It triggers the hook when `discard` is called if an element is present in the set
-    """
-
+def test_triggers_hook_when_discard_is_called_and_element_is_present(instance: Set) -> None:
     instance.discard(1)
 
     assert instance.length == 2
     assert instance == {0, 2}
 
 
-def test_discard_present(instance: Set) -> None:
-    """
-    It doesn't trigger the hook when `discard` is called if an element isn't present in the set
-    """
-
+def test_doesnt_trigger_hook_when_discard_is_called_and_element_is_not_present(instance: Set) -> None:
     instance.discard(3)
 
     assert instance.length is None
 
 
-def test_discard_error(error_instance: ErrorSet) -> None:
-    """
-    It doesn't change the set if the hook raises an error
-    """
-
+def test_doesnt_change_value_if_hook_raised_error_when_discard_was_called(error_instance: ErrorSet) -> None:
     with pytest.raises(Exception):
         error_instance.discard(1)
 
     assert error_instance == {0, 1, 2}
 
 
-def test_intersection_update(instance: Set) -> None:
-    """
-    It triggers the hook when `intersection_update` is called
-    """
-
+def test_triggers_hook_when_intersection_update_is_called(instance: Set) -> None:
     instance.intersection_update(iter((0, 1)), iter((1, 2)))
 
     assert instance.length == 1
     assert instance == {1}
 
 
-def test_intersection_update_error(error_instance: ErrorSet) -> None:
-    """
-    It doesn't change the set if the hook raises an error
-    """
-
+def test_doesnt_change_value_if_hook_raised_error_when_intersection_update_was_called(error_instance: ErrorSet) -> None:
     with pytest.raises(Exception):
         error_instance.intersection_update((0, 1), (1, 2))
 
     assert error_instance == {0, 1, 2}
 
 
-def test_clear(instance: Set) -> None:
-    """
-    It triggers the hook when `clear` is called
-    """
-
+def test_triggers_hook_when_clear_is_called(instance: Set) -> None:
     instance.clear()
 
     assert instance.length == 0
     assert instance == set()
 
 
-def test_clear_error(error_instance: ErrorSet) -> None:
-    """
-    It doesn't change the set if the hook raises an error
-    """
-
+def test_doesnt_change_value_if_hook_raised_error_when_clear_was_called(error_instance: ErrorSet) -> None:
     with pytest.raises(Exception):
         error_instance.clear()
 
     assert error_instance == {0, 1, 2}
 
 
-def test_pop(instance: Set) -> None:
-    """
-    It triggers the hook when `pop` is called
-    """
-
+def test_triggers_hook_when_pop_is_called(instance: Set) -> None:
     assert instance.pop() == 0
     assert instance.length == 2
     assert instance == {1, 2}
 
 
-def test_pop_error(error_instance: ErrorSet) -> None:
-    """
-    It doesn't change the set if the hook raises an error
-    """
-
+def test_doesnt_change_value_if_hook_raised_error_when_pop_was_called(error_instance: ErrorSet) -> None:
     with pytest.raises(Exception):
         error_instance.pop()
 
     assert error_instance == {0, 1, 2}
 
 
-def test_remove(instance: Set) -> None:
-    """
-    It triggers the hook when `remove` is called
-    """
-
+def test_triggers_hook_when_remove_is_called(instance: Set) -> None:
     instance.remove(1)
 
     assert instance.length == 2
     assert instance == {0, 2}
 
 
-def test_remove_error(error_instance: ErrorSet) -> None:
-    """
-    It doesn't change the set if the hook raises an error
-    """
-
+def test_doesnt_change_value_if_hook_raised_error_when_remove_was_called(error_instance: ErrorSet) -> None:
     with pytest.raises(Exception):
         error_instance.remove(1)
 
     assert error_instance == {0, 1, 2}
 
 
-def test_symmetric_difference_update(instance: Set) -> None:
-    """
-    It triggers the hook when `symmetric_difference_update` is called with a slice
-    """
-
+def test_triggers_hook_when_symmetric_difference_update_is_called(instance: Set) -> None:
     instance.symmetric_difference_update(iter(range(1, 4)))
 
     assert instance.length == 2
     assert instance == {0, 3}
 
 
-def test_symmetric_difference_update_error(error_instance: ErrorSet) -> None:
-    """
-    It doesn't change the set if the hook raises an error
-    """
-
+def test_doesnt_change_value_if_hook_raised_error_when_symmetric_difference_update_was_called(error_instance: ErrorSet) -> None:
     with pytest.raises(Exception):
         error_instance.symmetric_difference_update(range(1, 4))
 
     assert error_instance == {0, 1, 2}
 
 
-def test_update(instance: Set) -> None:
-    """
-    It triggers the hook when `update` is called
-    """
-
+def test_triggers_hook_when_update_is_called(instance: Set) -> None:
     instance.update(iter((2, 3)), iter((3, 4)))
 
     assert instance.length == 5
     assert instance == {0, 1, 2, 3, 4}
 
 
-def test_update_error(error_instance: ErrorSet) -> None:
-    """
-    It doesn't change the set if the hook raises an error
-    """
-
+def test_doesnt_change_value_if_hook_raised_error_when_update_was_called(error_instance: ErrorSet) -> None:
     with pytest.raises(Exception):
         error_instance.update((2, 3), (3, 4))
 
     assert error_instance == {0, 1, 2}
 
 
-def test_iand(instance: Set) -> None:
-    """
-    It triggers the hook when `__iand__` is called
-    """
-
+def test_triggers_hook_when_iand_is_called(instance: Set) -> None:
     instance &= {0, 1}
 
     assert instance.length == 2
     assert instance == {0, 1}
 
 
-def test_iand_error(error_instance: ErrorSet) -> None:
-    """
-    It doesn't change the set if the hook raises an error
-    """
-
+def test_doesnt_change_value_if_hook_raised_error_when_iand_was_called(error_instance: ErrorSet) -> None:
     with pytest.raises(Exception):
         error_instance &= {0, 1}
 
     assert error_instance == {0, 1, 2}
 
 
-def test_ior(instance: Set) -> None:
-    """
-    It triggers the hook when `__ior__` is called
-    """
-
+def test_triggers_hook_when_ior_is_called(instance: Set) -> None:
     instance |= {2, 3}
 
     assert instance.length == 4
     assert instance == {0, 1, 2, 3}
 
 
-def test_ior_error(error_instance: ErrorSet) -> None:
-    """
-    It doesn't change the set if the hook raises an error
-    """
-
+def test_doesnt_change_value_if_hook_raised_error_when_ior_was_called(error_instance: ErrorSet) -> None:
     with pytest.raises(Exception):
         error_instance |= {2, 3}
 
     assert error_instance == {0, 1, 2}
 
 
-def test_isub(instance: Set) -> None:
-    """
-    It triggers the hook when `__isub__` is called
-    """
-
+def test_triggers_hook_when_isub_is_called(instance: Set) -> None:
     instance -= {0}
 
     assert instance.length == 2
     assert instance == {1, 2}
 
 
-def test_isub_error(error_instance: ErrorSet) -> None:
-    """
-    It doesn't change the set if the hook raises an error
-    """
-
+def test_doesnt_change_value_if_hook_raised_error_when_isub_was_called(error_instance: ErrorSet) -> None:
     with pytest.raises(Exception):
         error_instance -= {0}
 
     assert error_instance == {0, 1, 2}
 
 
-def test_ixor(instance: Set) -> None:
-    """
-    It triggers the hook when `__ixor__` is called with a slice
-    """
-
+def test_triggers_hook_when_ixor_is_called(instance: Set) -> None:
     instance ^= {1, 2, 3}
 
     assert instance.length == 2
     assert instance == {0, 3}
 
 
-def test_ixor_error(error_instance: ErrorSet) -> None:
-    """
-    It doesn't change the set if the hook raises an error
-    """
-
+def test_doesnt_change_value_if_hook_raised_error_when_ixor_was_called(error_instance: ErrorSet) -> None:
     with pytest.raises(Exception):
         error_instance ^= {1, 2, 3}
 

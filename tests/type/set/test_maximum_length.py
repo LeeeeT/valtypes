@@ -4,11 +4,7 @@ import valtypes.error.parsing.type.sized as error
 import valtypes.type.set as type
 
 
-def test_greater() -> None:
-    """
-    It raises an error if the length is greater than the allowed maximum
-    """
-
+def test_raises_error_if_length_is_greater_than_maximum() -> None:
     class Set(type.MaximumLength[object]):
         __maximum_length__ = 2
 
@@ -21,11 +17,7 @@ def test_greater() -> None:
     assert info.value == error.MaximumLength(2, 3)
 
 
-def test_equals() -> None:
-    """
-    It succeeds if the length equals to the allowed maximum
-    """
-
+def test_succeeds_if_length_equals_to_maximum() -> None:
     class Set(type.MaximumLength[object]):
         __maximum_length__ = 2
 
@@ -35,11 +27,7 @@ def test_equals() -> None:
     Set()
 
 
-def test_less() -> None:
-    """
-    It succeeds if the length is less than the allowed maximum
-    """
-
+def test_succeeds_if_length_is_less_than_maximum() -> None:
     class Set(type.MaximumLength[object]):
         __maximum_length__ = 2
 

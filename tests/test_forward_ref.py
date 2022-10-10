@@ -6,11 +6,7 @@ from valtypes.forward_ref import ForwardRef
 List = list
 
 
-def test_evaluate() -> None:
-    """
-    It evaluates its argument in the context of the frame where it was created
-    """
-
+def test_evaluate_evaluates_refs_argument_in_context_of_frame_where_it_was_created() -> None:
     Int = int
 
     RecursiveRef = ForwardRef["List[Int | str]"]  # type: ignore
@@ -18,17 +14,9 @@ def test_evaluate() -> None:
     assert RecursiveRef.evaluate() == List[Int | str]  # type: ignore
 
 
-def test_union() -> None:
-    """
-    It supports union with other types
-    """
-
+def test_supports_union_with_other_types() -> None:
     assert cast(GenericAlias, ForwardRef["int"] | str).__args__ == (ForwardRef["int"], str)
 
 
-def test_repr() -> None:
-    """
-    It returns the code representation
-    """
-
+def test_repr_returns_refs_argument_representation() -> None:
     assert repr(ForwardRef["list[int]"]) == "'list[int]'"

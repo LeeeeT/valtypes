@@ -5,20 +5,12 @@ import pytest
 from valtypes.util import resolve_type_args
 
 
-def test_parameterized_builtin_type() -> None:
-    """
-    It returns type arguments of parameterized built-in types
-    """
-
+def test_returns_type_arguments_of_parameterized_builtin_type() -> None:
     assert resolve_type_args(list[int], list) == (int,)
     assert resolve_type_args(cast(Any, tuple)[int, bytes, str], tuple) == (int, bytes, str)
 
 
-def test_subclass_of_parameterized_builtin_type() -> None:
-    """
-    It finds parameterized built-in types in the bases of the class
-    """
-
+def test_finds_parameterized_builtin_types_in_bases_of_class() -> None:
     class Tuple(tuple[float, bytes, None]):
         pass
 
@@ -29,11 +21,7 @@ def test_subclass_of_parameterized_builtin_type() -> None:
     assert resolve_type_args(TupleSubclass, tuple) == (float, bytes, None)
 
 
-def test_type_args_propagation() -> None:
-    """
-    It propagates type arguments to the generic's bases
-    """
-
+def test_propagates_type_arguments_to_bases_of_generic_class() -> None:
     T = TypeVar("T", bound=float)
     F = TypeVar("F", str, bytes)
     S = TypeVar("S")
@@ -49,19 +37,11 @@ def test_type_args_propagation() -> None:
     assert resolve_type_args(TupleSubclass[bool, None], tuple) == (bool, ...)
 
 
-def test_not_generic() -> None:
-    """
-    It raises an error if the target class isn't a generic
-    """
-
+def test_raises_error_if_target_class_isnt_generic() -> None:
     with pytest.raises(TypeError):
         resolve_type_args(tuple, tuple)
 
 
-def test_target_not_in_bases() -> None:
-    """
-    It raises an error if the target class isn't in the bases of the origin class
-    """
-
+def test_raises_error_if_target_class_isnt_in_bases_of_origin_class() -> None:
     with pytest.raises(TypeError):
         resolve_type_args(list[int], tuple)

@@ -6,7 +6,7 @@ import valtypes.error.parsing.type.str as error
 import valtypes.type.str as type
 
 
-def test_raises_error_if_str_does_not_match_pattern() -> None:
+def test_raises_error_if_value_doesnt_match_pattern() -> None:
     class Str(type.Pattern):
         __pattern__ = re.compile("^[a-z]+$")
 
@@ -16,7 +16,7 @@ def test_raises_error_if_str_does_not_match_pattern() -> None:
     assert info.value == error.Pattern(re.compile("^[a-z]+$"), "123")
 
 
-def test_succeeds_if_str_matches_pattern() -> None:
+def test_succeeds_if_value_matches_pattern() -> None:
     class Str(type.Pattern):
         __pattern__ = re.compile("^[a-z]+$")
 

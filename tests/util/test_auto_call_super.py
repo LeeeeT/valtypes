@@ -1,11 +1,7 @@
 from valtypes.util import AutoCallSuper, super_endpoint
 
 
-def test_call_super() -> None:
-    """
-    It changes methods of child classes, so they automatically call corresponding methods of the super class
-    """
-
+def test_automatically_calls_method_of_super_class_in_child_classes() -> None:
     class Base(AutoCallSuper):
         Base_received_args: tuple[tuple[object, ...], dict[str, object]]
 
@@ -37,11 +33,7 @@ def test_call_super() -> None:
     assert instance.Base_received_args == instance.A_received_args == instance.B_received_args == instance.C_received_args == ((1,), {"a": 2})
 
 
-def test_non_descriptors() -> None:
-    """
-    It works with any callables, not only descriptors
-    """
-
+def test_supports_any_callables() -> None:
     class F:
         def __call__(self, a: int, /, *, b: int) -> None:
             pass
@@ -55,11 +47,7 @@ def test_non_descriptors() -> None:
     Derived().f(1, b=2)
 
 
-def test_call_once() -> None:
-    """
-    It calls methods of each class in hierarchy exactly one time
-    """
-
+def test_calls_methods_of_each_class_in_hierarchy_exactly_once() -> None:
     class Base(AutoCallSuper):
         Base_count = 0
 

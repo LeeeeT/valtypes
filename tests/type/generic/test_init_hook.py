@@ -1,11 +1,7 @@
 import valtypes.type.generic as type
 
 
-def test_init() -> None:
-    """
-    It triggers the hook on instance creation
-    """
-
+def test_triggers_hook_on_instance_creation() -> None:
     class Class(type.InitHook):
         hook_triggered = False
 

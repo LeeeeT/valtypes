@@ -14,4 +14,4 @@ def test_eq_returns_false_if_callables_are_different() -> None:
 
 
 def test_eq_returns_not_implemented_if_got_not_from_callable() -> None:
-    assert FromCallable(int) != ...  # type: ignore
+    assert FromCallable(int) != ...

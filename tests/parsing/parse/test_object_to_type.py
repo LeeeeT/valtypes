@@ -9,7 +9,7 @@ def test_returns_value_if_it_is_instance_of_type() -> None:
     assert parse(bool, True) is True
 
 
-def test_raises_if_value_is_not_instance_of_type() -> None:
+def test_raises_error_if_value_is_not_instance_of_type() -> None:
     with pytest.raises(error.WrongType) as info:
         parse(int, "1")
 

@@ -4,31 +4,19 @@ import valtypes.error.parsing.type.numeric as error
 import valtypes.type.float as type
 
 
-def test_positive() -> None:
-    """
-    It raises an error if the value is positive
-    """
-
+def test_raises_error_if_value_is_positive() -> None:
     with pytest.raises(error.ExclusiveMaximum) as info:
         type.Negative(1)
 
     assert info.value == error.ExclusiveMaximum(0, 1)
 
 
-def test_0() -> None:
-    """
-    It raises an error if the value equals to 0
-    """
-
+def test_raises_error_if_value_equals_to_0() -> None:
     with pytest.raises(error.ExclusiveMaximum) as info:
         type.Negative(0)
 
     assert info.value == error.ExclusiveMaximum(0, 0)
 
 
-def test_negative() -> None:
-    """
-    It succeeds if the value is negative
-    """
-
+def test_succeeds_if_value_is_negative() -> None:
     type.Negative(-1)
