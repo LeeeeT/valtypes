@@ -10,5 +10,6 @@ jobs:
     steps:
       - uses: google-github-actions/release-please-action@main
         with:
+          token: ${{ secrets.PAT }}
           release-type: python
           package-name: valtypes
