@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.0.1](https://github.com/LeeeeT/valtypes/compare/v5.0.0...v5.0.1) (2022-10-10)
+
+
+### Documentation
+
+* fix link and format code in README ([04900b6](https://github.com/LeeeeT/valtypes/commit/04900b62cac97f151693b8f8e07e6c066bc5b83d))
+
 ## [5.0.0](https://github.com/LeeeeT/valtypes/compare/v4.0.0...v5.0.0) (2022-10-07)
 
 
