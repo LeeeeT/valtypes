@@ -1,27 +1,15 @@
 from valtypes import Collection
 
 
-def test_empty() -> None:
-    """
-    It creates an empty collection
-    """
-
+def test_empty_creates_empty_collection() -> None:
     assert list(Collection[object].empty()) == []
 
 
-def test_iter() -> None:
-    """
-    It iterates through the collection items
-    """
-
+def test_iter_iterates_through_items() -> None:
     assert list(Collection([1, 2, 3])) == [1, 2, 3]
 
 
-def test_add_to_top() -> None:
-    """
-    It adds objects to the top of the collection
-    """
-
+def test_add_to_top_adds_objects_to_top() -> None:
     collection = Collection[int].empty()
     collection.add_to_top(1)
 
@@ -32,11 +20,7 @@ def test_add_to_top() -> None:
     assert list(collection) == [2, 3, 1]
 
 
-def test_add_to_end() -> None:
-    """
-    It adds objects to the end of the collection
-    """
-
+def test_add_to_end_adds_objects_to_end() -> None:
     collection = Collection[int].empty()
     collection.add_to_end(1)
 

@@ -10,13 +10,13 @@ def test_eq_returns_true_if_decorators_and_conditions_are_equal() -> None:
     assert (decorator.FromCallable(int) >> Is(1)) == (decorator.FromCallable(int) >> Is(1))
 
 
-def test_eq_returns_false_if_decorator_is_not_equal() -> None:
+def test_eq_returns_false_if_decorators_are_different() -> None:
     assert not ((decorator.FromCallable(int) >> Is(1)) == (decorator.FromCallable(str) >> Is(1)))
 
 
-def test_eq_returns_false_if_condition_is_not_equal() -> None:
+def test_eq_returns_false_if_conditions_are_different() -> None:
     assert not ((decorator.FromCallable(int) >> Is(1)) == (decorator.FromCallable(int) >> Is(2)))
 
 
-def test_eq_not_implemented() -> None:
-    assert (decorator.FromCallable(int) >> Is(1)) != 1
+def test_eq_returns_not_implemented_if_got_not_decorated() -> None:
+    assert (decorator.FromCallable(int) >> Is(1)) != ...

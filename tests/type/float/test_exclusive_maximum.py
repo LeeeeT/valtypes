@@ -8,31 +8,19 @@ class Float(type.ExclusiveMaximum):
     __exclusive_maximum__ = 10
 
 
-def test_greater() -> None:
-    """
-    It raises an error if the value is greater than the exclusive maximum
-    """
-
+def test_raises_error_if_value_is_greater_than_exclusive_maximum() -> None:
     with pytest.raises(error.ExclusiveMaximum) as info:
         Float(11)
 
     assert info.value == error.ExclusiveMaximum(10, 11)
 
 
-def test_equals() -> None:
-    """
-    It raises an error if the value equals to the exclusive maximum
-    """
-
+def test_raises_error_if_value_equals_to_exclusive_maximum() -> None:
     with pytest.raises(error.ExclusiveMaximum) as info:
         Float(10)
 
     assert info.value == error.ExclusiveMaximum(10, 10)
 
 
-def test_less() -> None:
-    """
-    It succeeds if the value is less than the exclusive maximum
-    """
-
+def test_succeeds_if_value_is_less_than_exclusive_maximum() -> None:
     Float(9)

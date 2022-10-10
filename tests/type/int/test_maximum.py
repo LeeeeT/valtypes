@@ -8,28 +8,16 @@ class Int(type.Maximum):
     __maximum__ = 10
 
 
-def test_greater() -> None:
-    """
-    It raises an error if the value is greater than the maximum
-    """
-
+def test_raises_error_if_value_is_greater_than_maximum() -> None:
     with pytest.raises(error.Maximum) as info:
         Int(11)
 
     assert info.value == error.Maximum(10, 11)
 
 
-def test_equals() -> None:
-    """
-    It succeeds if the value equals to the maximum
-    """
-
+def test_succeeds_if_value_equals_to_maximum() -> None:
     Int(10)
 
 
-def test_less() -> None:
-    """
-    It succeeds if the value is less than the maximum
-    """
-
+def test_succeeds_if_value_is_less_than_maximum() -> None:
     Int(9)

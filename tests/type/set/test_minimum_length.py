@@ -4,11 +4,7 @@ import valtypes.error.parsing.type.sized as error
 import valtypes.type.set as type
 
 
-def test_less() -> None:
-    """
-    It raises an error if the length is less than the allowed minimum
-    """
-
+def test_raises_error_if_length_is_less_than_minimum() -> None:
     class Set(type.MinimumLength[object]):
         __minimum_length__ = 3
 
@@ -21,11 +17,7 @@ def test_less() -> None:
     assert info.value == error.MinimumLength(3, 2)
 
 
-def test_equals() -> None:
-    """
-    It succeeds if the length equals to the allowed minimum
-    """
-
+def test_succeeds_if_length_equals_to_minimum() -> None:
     class Set(type.MinimumLength[object]):
         __minimum_length__ = 3
 
@@ -35,11 +27,7 @@ def test_equals() -> None:
     Set()
 
 
-def test_greater() -> None:
-    """
-    It succeeds if the length is greater than the allowed minimum
-    """
-
+def test_succeeds_if_length_is_greater_than_minimum() -> None:
     class Set(type.MinimumLength[object]):
         __minimum_length__ = 3
 

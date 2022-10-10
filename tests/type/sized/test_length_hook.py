@@ -18,36 +18,20 @@ def instance() -> Sized:
     return Sized()
 
 
-def test_instance_creation(instance: Sized) -> None:
-    """
-    It triggers the hook on instance creation
-    """
-
+def test_triggers_hook_on_instance_creation(instance: Sized) -> None:
     assert instance.length == 10
 
 
-def test_notify_length_delta(instance: Sized) -> None:
-    """
-    It triggers the hook passing current object length + delta to it
-    """
-
+def test_notify_length_delta_passes_current_length_plus_delta_to_hook(instance: Sized) -> None:
     instance.__notify_length_delta__(4)
     assert instance.length == 14
 
 
-def test_notify_length_increments(instance: Sized) -> None:
-    """
-    It triggers the hook passing incremented object length to it
-    """
-
+def test_notify_length_increments_passes_incremented_length_to_hook(instance: Sized) -> None:
     instance.__notify_length_increments__()
     assert instance.length == 11
 
 
-def test_notify_length_decrements(instance: Sized) -> None:
-    """
-    It triggers the hook passing decremented object length to it
-    """
-
+def test_notify_length_decrements_passes_decremented_length_to_hook(instance: Sized) -> None:
     instance.__notify_length_decrements__()
     assert instance.length == 9

@@ -8,28 +8,16 @@ class Float(type.Minimum):
     __minimum__ = 10
 
 
-def test_less() -> None:
-    """
-    It raises an error if the value is less than the minimum
-    """
-
+def test_raises_error_if_value_is_less_than_minimum() -> None:
     with pytest.raises(error.Minimum) as info:
         Float(9)
 
     assert info.value == error.Minimum(10, 9)
 
 
-def test_equals() -> None:
-    """
-    It succeeds if the value equals to the minimum
-    """
-
+def test_succeeds_if_value_equals_to_minimum() -> None:
     Float(10)
 
 
-def test_greater() -> None:
-    """
-    It succeeds if the value is greater than the minimum
-    """
-
+def test_succeeds_if_value_is_greater_than_minimum() -> None:
     Float(11)

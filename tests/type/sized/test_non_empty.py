@@ -4,11 +4,7 @@ import valtypes.error.parsing.type.sized as error
 import valtypes.type.sized as type
 
 
-def test_empty() -> None:
-    """
-    It raises an error if the length equals to 0
-    """
-
+def test_raises_error_if_value_is_empty() -> None:
     class Sized(type.NonEmpty):
         def __len__(self) -> int:
             return 0
@@ -19,11 +15,7 @@ def test_empty() -> None:
     assert info.value == error.MinimumLength(1, 0)
 
 
-def test_non_empty() -> None:
-    """
-    It succeeds if the length is greater than 0
-    """
-
+def test_succeeds_if_value_is_not_empty() -> None:
     class Sized(type.NonEmpty):
         def __len__(self) -> int:
             return 1

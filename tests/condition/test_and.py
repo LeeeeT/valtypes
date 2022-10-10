@@ -13,9 +13,10 @@ def test_eq_returns_true_if_both_conditions_are_equal() -> None:
     assert (Is(1) & Is(2)) == (Is(1) & Is(2))
 
 
-def test_eq_returns_false_if_one_condition_is_not_equal() -> None:
-    assert (Is(1) & Is(2)) != (Is(1) & Is(3))
+def test_eq_returns_false_if_conditions_are_different() -> None:
+    assert (Is(1) & Is(2)) != (Is(1) & Is(1))
+    assert (Is(1) & Is(2)) != (Is(2) & Is(2))
 
 
-def test_eq_not_implemented() -> None:
-    assert (Is(1) & Is(2)) != 1
+def test_eq_returns_not_implemented_if_got_not_and() -> None:
+    assert (Is(1) & Is(2)) != ...
