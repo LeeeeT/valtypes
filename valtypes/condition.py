@@ -198,7 +198,7 @@ class LenientStrictAliasOf(Shortcut[object]):
 
 
 @FromCallable
-def variable_length_tuple_alias(value: GenericAlias, /) -> bool:
+def variable_length_tuple_alias(value: GenericAlias, /) -> bool:  # type: ignore
     match resolve_type_args(value, tuple):
         case (_, second_argument) if second_argument is ...:
             return True

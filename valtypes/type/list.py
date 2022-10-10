@@ -65,7 +65,7 @@ class LengthHook(InitHook[T], sized.LengthHook, Generic[T]):
             self.__notify_length_decrements__()
         super().__delitem__(item)
 
-    def __iadd__(self: T_LengthHook, iterable: Iterable[T], /) -> T_LengthHook:
+    def __iadd__(self: T_LengthHook, iterable: Iterable[T], /) -> T_LengthHook:  # type: ignore
         sequence = ensure_sequence(iterable)
         self.__notify_length_delta__(len(sequence))
         return super().__iadd__(sequence)
