@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "valtypes"
-version = "5.0.0"
+version = "5.0.1"
 description = "Parsing in Python has never been easier"
 authors = ["LeeeeT <leeeet@inbox.ru>"]
 license = "Unlicense"
