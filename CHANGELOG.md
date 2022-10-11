@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.0.2](https://github.com/LeeeeT/valtypes/compare/v5.0.1...v5.0.2) (2022-10-11)
+
+
+### Documentation
+
+* add installation from source option ([#40](https://github.com/LeeeeT/valtypes/issues/40)) ([32f72e3](https://github.com/LeeeeT/valtypes/commit/32f72e3cc2aaf4cc151f07754bfeeea25a3bf4f2))
+* fix outdated example ([cf9f950](https://github.com/LeeeeT/valtypes/commit/cf9f950ca8fb3181b0e407b508c652f8f1d75c1e))
+
 ## [5.0.1](https://github.com/LeeeeT/valtypes/compare/v5.0.0...v5.0.1) (2022-10-10)
 
 
