@@ -79,8 +79,20 @@ User(id=1, name='Fred', hobbies=['origami', 'curling', 'programming'])
 
 ## Installation
 
+Install from [PyPI][pypi]:
+
 ```console
 pip install valtypes
 ```
 
+Build the latest version from [source][source]:
+
+```console
+pip install git+https://github.com/LeeeeT/valtypes
+```
+
 [parse-dont-validate]: https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate
+
+[pypi]: https://pypi.org/project/valtypes
+
+[source]: https://github.com/LeeeeT/valtypes
