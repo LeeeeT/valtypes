@@ -38,16 +38,20 @@
 Create constrained types:
 
 ```python
-from valtypes.type.str import NonEmpty
+from valtypes.type.str import NonEmpty, MaximumLength
+
+
+class Name(NonEmpty, MaximumLength):
+    __maximum_length__ = 20
 
     
-def initials(name: NonEmpty) -> str:
+def initials(name: Name) -> str:
     # name is guaranteed to be a non-empty string of maximum length 20
     return f"{name[0]}."
 
 
-initials(NonEmpty("Fred"))  # passes
-initials(NonEmpty(""))  # parsing error
+initials(Name("Fred"))  # passes
+initials(Name(""))  # parsing error
 initials("")  # fails at static type checking
 ```
 
@@ -64,7 +68,7 @@ from valtypes.type import int, list, str
 @dataclass
 class User:
     id: int.Positive
-    name: str.NonEmpty
+    name: Name
     hobbies: list.NonEmpty[str.NonEmpty]
 
     
