@@ -22,7 +22,7 @@ classifiers = [
 [tool.poetry.dependencies]
 python = "^3.10"
 
-[tool.poetry.group.dev.dependencies]
+[tool.poetry.dev-dependencies]
 pre-commit = "^2.20.0"
 isort = "^5.10.1"
 sort-all = "^1.2.0"
