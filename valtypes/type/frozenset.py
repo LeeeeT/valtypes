@@ -1,9 +1,9 @@
-from collections.abc import Iterable, Sized
+from collections.abc import Iterable
 from typing import Generic, TypeVar
 
 from . import generic, sized
 
-__all__ = ["NonEmpty"]
+__all__ = ["InitHook", "MaximumLength", "MinimumLength", "NonEmpty"]
 
 
 T_co = TypeVar("T_co", covariant=True)
@@ -14,5 +14,13 @@ class InitHook(generic.InitHook, frozenset[T_co], Generic[T_co]):
         super().__init__()
 
 
-class NonEmpty(sized.NonEmpty, InitHook[T_co], frozenset[T_co], Sized, Generic[T_co]):
+class MinimumLength(InitHook[T_co], sized.MinimumLength, Generic[T_co]):
+    pass
+
+
+class MaximumLength(InitHook[T_co], sized.MaximumLength, Generic[T_co]):
+    pass
+
+
+class NonEmpty(MinimumLength[T_co], sized.NonEmpty, Generic[T_co]):
     pass
