@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING, Annotated, TypeVar
 from .collection import Collection
 from .parsing import parse
 
-__version__ = "5.0.2"
+__version__ = "6.0.0"
 
 __all__ = [
     "Collection",
