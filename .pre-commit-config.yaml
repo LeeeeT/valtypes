@@ -1,63 +1,61 @@
-repos:
-  - repo: local
+ci:
+  autofix_commit_msg: 'refactor: auto fixes from pre-commit hooks'
+  autoupdate_commit_msg: 'build(deps): update pre-commit hooks'
+  skip: [pytest]  # tests are run in a GitHub workflow
 
+repos:
+  - repo: https://github.com/pycqa/isort
+    rev: 5.10.1
     hooks:
       - id: isort
-        name: isort
-        entry: isort
-        language: python
-        pass_filenames: false
-        args: [ . ]
         stages: [ commit ]
 
+  - repo: https://github.com/aio-libs/sort-all
+    rev: v1.2.0
+    hooks:
       - id: sort-all
         name: sort-all
-        entry: sort-all
-        language: python
-        types: [ python ]
         stages: [ commit ]
 
+  - repo: https://github.com/psf/black
+    rev: 22.10.0
+    hooks:
       - id: black
-        name: black
-        entry: black
-        language: python
-        pass_filenames: false
-        args: [ . ]
         stages: [ commit ]
 
-      - id: flake8
+  - repo: https://github.com/csachs/pyproject-flake8
+    rev: 0b61f25
+    hooks:
+      - id: pyproject-flake8
         name: flake8
-        entry: pflake8
-        language: python
-        pass_filenames: false
-        args: [ valtypes, tests ]
         stages: [ commit ]
 
+  - repo: local
+    hooks:
       - id: mypy
         name: mypy
-        entry: mypy
-        language: python
+        entry: python scripts/mypy.py
+        language: system
         pass_filenames: false
         stages: [ commit ]
 
       - id: pyright
         name: pyright
-        entry: pyright
-        language: node
+        entry: python scripts/pyright.py
+        language: system
         pass_filenames: false
         stages: [ commit ]
 
       - id: pyright-verify
-        name: pyright verify
-        entry: pyright
-        language: node
+        name: pyright-verify
+        entry: python scripts/pyright-verify.py
+        language: system
         pass_filenames: false
-        args: [ --verifytypes, valtypes ]
         stages: [ commit ]
 
       - id: pytest
         name: pytest
-        entry: pytest
-        language: python
+        entry: python scripts/pytest.py
+        language: system
         pass_filenames: false
         stages: [ commit ]

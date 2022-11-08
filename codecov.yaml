@@ -1,0 +1,10 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 100%
+
+comment:
+  layout: "header, diff, footer"
+  require_changes: true
+  after_n_builds: 3  # keep in sync with .github/workflows/test.yaml

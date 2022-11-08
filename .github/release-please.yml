@@ -1,3 +1,1 @@
 handleGHRelease: true
-releaseType: python
-packageName: valtypes
