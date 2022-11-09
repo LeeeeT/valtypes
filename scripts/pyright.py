@@ -1,5 +1,3 @@
-import os
+from subprocess import call
 
-os.system("pip install poetry")
-os.system("poetry install --with pyright")
-os.system("pyright")
+exit(call(["pip", "install", "poetry"]) or call(["poetry", "install", "--with", "pyright"]) or call(["pyright"]))

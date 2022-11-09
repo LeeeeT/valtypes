@@ -1,5 +1,3 @@
-import os
+from subprocess import call
 
-os.system("pip install poetry")
-os.system("poetry install --with mypy")
-os.system("mypy")
+exit(call(["pip", "install", "poetry"]) or call(["poetry", "install", "--with", "mypy"]) or call(["mypy"]))

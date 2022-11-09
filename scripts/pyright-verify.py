@@ -1,5 +1,3 @@
-import os
+from subprocess import call
 
-os.system("pip install poetry")
-os.system("poetry install --with pyright-verify")
-os.system("pyright --verifytypes valtypes")
+exit(call(["pip", "install", "poetry"]) or call(["poetry", "install", "--with", "pyright-verify"]) or call(["pyright", "--verifytypes", "valtypes"]))
