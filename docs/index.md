@@ -16,9 +16,7 @@
     <a href="https://pepy.tech/project/valtypes">
         <img src="https://img.shields.io/pypi/dm/valtypes" />
     </a>
-    <a href="https://github.com/LeeeeT/valtypes/actions/workflows/ci.yaml">
-        <img src="https://img.shields.io/github/workflow/status/LeeeeT/valtypes/CI" />
-    </a>
+    <img src="https://img.shields.io/github/checks-status/LeeeeT/valtypes/main" />
     <a href="https://valtypes.readthedocs.io/en/latest/?badge=latest">
         <img src="https://img.shields.io/readthedocs/valtypes" />
     </a>
@@ -83,13 +81,13 @@ User(id=1, name='Fred', hobbies=['origami', 'curling', 'programming'])
 
 ## Installation
 
-Install from [PyPI][pypi]:
+Install from [PyPI]:
 
 ```console
 pip install valtypes
 ```
 
-Build the latest version from [source][source]:
+Build the latest version from [source]:
 
 ```console
 pip install git+https://github.com/LeeeeT/valtypes
