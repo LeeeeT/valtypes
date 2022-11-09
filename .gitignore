@@ -95,6 +95,4 @@ dmypy.json
 
 .pyre/
 
-poetry.lock
-
 .idea/
