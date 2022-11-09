@@ -24,7 +24,12 @@ jobs:
       - uses: snok/install-poetry@v1.3.3
         with:
           virtualenvs-create: false
-      - run: poetry install
+      - id: cached-pip-wheels
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+      - run: poetry install --with pytest
       - run: pre-commit run --all-files pytest || true
       - uses: codecov/codecov-action@v3
         with:
