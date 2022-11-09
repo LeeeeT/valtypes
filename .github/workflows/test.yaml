@@ -18,17 +18,11 @@ jobs:
         python-version: [ '3.11' ]
     steps:
       - uses: actions/checkout@v3
+      - run: pipx install poetry
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - uses: snok/install-poetry@v1.3.3
-        with:
-          virtualenvs-create: false
-      - id: cached-pip-wheels
-        uses: actions/cache@v3
-        with:
-          path: ~/.cache
-          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+          cache: poetry
       - run: poetry install --with pytest
       - run: pre-commit run --all-files pytest || true
       - uses: codecov/codecov-action@v3
