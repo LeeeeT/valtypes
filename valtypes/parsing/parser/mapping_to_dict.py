@@ -7,19 +7,19 @@ __all__ = ["MappingToDict"]
 
 
 T = TypeVar("T")
-T_co = TypeVar("T_co", covariant=True)
+T_contra = TypeVar("T_contra", contravariant=True)
 
 F = TypeVar("F")
 
 S = TypeVar("S")
 
 
-class MappingToDict(ABC[Mapping[S, T_co], dict[T, F]], Generic[S, T_co, T, F]):
-    def __init__(self, key_parser: ABC[S, T], value_parser: ABC[T_co, F]):
+class MappingToDict(ABC[Mapping[S, T_contra], dict[T, F]], Generic[S, T_contra, T, F]):
+    def __init__(self, key_parser: ABC[S, T], value_parser: ABC[T_contra, F]):
         self._key_parser = key_parser
         self._value_parser = value_parser
 
-    def parse(self, source: Mapping[S, T_co], /) -> dict[T, F]:
+    def parse(self, source: Mapping[S, T_contra], /) -> dict[T, F]:
         return {self._key_parser.parse(key): self._value_parser.parse(value) for key, value in source.items()}
 
     def __eq__(self, other: object, /) -> bool:

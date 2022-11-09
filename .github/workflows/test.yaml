@@ -1,0 +1,32 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        python-version: [ '3.11' ]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: snok/install-poetry@v1.3.3
+        with:
+          virtualenvs-create: false
+      - run: poetry install
+      - run: pre-commit run --all-files pytest || true
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true

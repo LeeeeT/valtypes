@@ -15,18 +15,19 @@ from .abc import ABC
 __all__ = ["Composite"]
 
 
-T_co = TypeVar("T_co", covariant=True)
-T_contra = TypeVar("T_contra", contravariant=True)
+T = TypeVar("T")
+
+F = TypeVar("F")
 
 
-class Composite(ABC[object, T_contra, T_co], Collection["rule.ABC[T_contra, T_co]"], Generic[T_contra, T_co]):
+class Composite(ABC[object, T, F], Collection["rule.ABC[T, F]"], Generic[T, F]):
     @cached_method
-    def get_parser_for(self, type: object, /) -> parser.ABC[T_contra, T_co]:  # type: ignore
+    def get_parser_for(self, type: object, /) -> parser.ABC[T, F]:  # type: ignore
         for rule in self:
             if rule.is_suitable_for(type):
                 return rule.get_parser_for(type)
         raise error.NoParser(type)
 
-    def add_to_top(self, *rules: rule.ABC[T_contra, T_co]) -> None:
+    def add_to_top(self, *rules: rule.ABC[T, F]) -> None:
         self.get_parser_for.cache_clear()
         super().add_to_top(*rules)

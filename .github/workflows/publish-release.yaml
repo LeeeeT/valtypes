@@ -1,20 +1,19 @@
-name: CD
+name: Publish release
 
 on:
   release:
     types: [created]
 
 jobs:
-  deploy-release:
+  publish-release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@main
-      - uses: actions/setup-python@main
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
-      - uses: snok/install-poetry@main
+          python-version: '3.11'
+      - uses: snok/install-poetry@v1.3.3
         with:
-          version: latest
           virtualenvs-create: false
       - run: poetry build
       - uses: pypa/gh-action-pypi-publish@master
