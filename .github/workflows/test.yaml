@@ -21,17 +21,29 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - uses: snok/install-poetry@v1.3.3
-        with:
-          virtualenvs-create: false
-      - id: cached-pip-wheels
+      - id: cache
         uses: actions/cache@v3
         with:
-          path: ~/.cache
-          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
-      - run: poetry install --with pytest
-      - run: pre-commit run --all-files pytest || true
+          path: |
+            ~/.cache
+            .venv
+          key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}-cache
+      - if: steps.cache.outputs.cache-hit != 'true'
+        uses: snok/install-poetry@v1.3.3
+        with:
+          virtualenvs-in-project: true
+      - if: steps.cache.outputs.cache-hit != 'true'
+        run: poetry install --with pytest
+      - if: runner.os == 'Windows'
+        run: |
+          source .venv/scripts/activate
+          pre-commit run --all-files pytest || true
+      - if: runner.os != 'Windows'
+        run: |
+          source .venv/bin/activate
+          pre-commit run --all-files pytest || true
       - uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage.xml
           fail_ci_if_error: true
