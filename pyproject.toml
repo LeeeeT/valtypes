@@ -7,6 +7,8 @@ license = "Unlicense"
 readme = "README.md"
 homepage = "https://github.com/LeeeeT/valtypes"
 repository = "https://github.com/LeeeeT/valtypes"
+documentation = "https://valtypes.readthedocs.io"
+keywords = ["python", "parsing"]
 classifiers = [
     "Intended Audience :: Developers",
     "Intended Audience :: Information Technology",
