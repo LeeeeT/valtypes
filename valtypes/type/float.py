@@ -1,5 +1,7 @@
+from typing import ClassVar, SupportsFloat, SupportsIndex
+
 import valtypes.error.parsing.type.numeric as error
-from valtypes.typing import Floatable
+from valtypes.typing import ReadableBuffer
 
 from . import generic
 
@@ -18,12 +20,12 @@ __all__ = [
 
 
 class InitHook(generic.InitHook, float):
-    def __init__(self, value: Floatable = 0.0, /):  # type: ignore
+    def __init__(self, x: SupportsFloat | SupportsIndex | str | ReadableBuffer = 0.0, /):
         super().__init__()
 
 
 class ExclusiveMaximum(InitHook):
-    __exclusive_maximum__: float
+    __exclusive_maximum__: ClassVar[float]
 
     def __init_hook__(self) -> None:
         if self >= self.__exclusive_maximum__:
@@ -31,7 +33,7 @@ class ExclusiveMaximum(InitHook):
 
 
 class Maximum(InitHook):
-    __maximum__: float
+    __maximum__: ClassVar[float]
 
     def __init_hook__(self) -> None:
         if self > self.__maximum__:
@@ -39,7 +41,7 @@ class Maximum(InitHook):
 
 
 class ExclusiveMinimum(InitHook):
-    __exclusive_minimum__: float
+    __exclusive_minimum__: ClassVar[float]
 
     def __init_hook__(self) -> None:
         if self <= self.__exclusive_minimum__:
@@ -47,7 +49,7 @@ class ExclusiveMinimum(InitHook):
 
 
 class Minimum(InitHook):
-    __minimum__: float
+    __minimum__: ClassVar[float]
 
     def __init_hook__(self) -> None:
         if self < self.__minimum__:
@@ -55,21 +57,21 @@ class Minimum(InitHook):
 
 
 class Positive(ExclusiveMinimum):
-    __exclusive_minimum__: float = 0.0
+    __exclusive_minimum__: ClassVar[float] = 0.0
 
 
 class NonPositive(Maximum):
-    __maximum__: float = 0.0
+    __maximum__: ClassVar[float] = 0.0
 
 
 class Negative(ExclusiveMaximum):
-    __exclusive_maximum__: float = 0.0
+    __exclusive_maximum__: ClassVar[float] = 0.0
 
 
 class NonNegative(Minimum):
-    __minimum__: float = 0.0
+    __minimum__: ClassVar[float] = 0.0
 
 
 class Portion(Minimum, Maximum):
-    __minimum__: float = 0.0
-    __maximum__: float = 1.0
+    __minimum__: ClassVar[float] = 0.0
+    __maximum__: ClassVar[float] = 1.0

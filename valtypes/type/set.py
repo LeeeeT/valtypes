@@ -1,5 +1,5 @@
 from collections.abc import Iterable, Set
-from typing import Any, Generic, TypeVar
+from typing import Any, Self, TypeVar
 
 from valtypes.util import ensure_iterable_not_iterator
 
@@ -10,15 +10,13 @@ __all__ = ["InitHook", "LengthHook", "MaximumLength", "MinimumLength", "NonEmpty
 
 T = TypeVar("T")
 
-T_LengthHook = TypeVar("T_LengthHook", bound="LengthHook[Any]")
 
-
-class InitHook(generic.InitHook, set[T], Generic[T]):
+class InitHook(generic.InitHook, set[T]):
     def __init__(self, iterable: Iterable[T] = set(), /):
         super().__init__(iterable)
 
 
-class LengthHook(InitHook[T], sized.LengthHook, Generic[T]):
+class LengthHook(InitHook[T], sized.LengthHook):
     def add(self, element: T, /) -> None:
         if element not in self:
             self.__notify_length_increments__()
@@ -61,30 +59,30 @@ class LengthHook(InitHook[T], sized.LengthHook, Generic[T]):
         self.__length_hook__(len(self.union(*iterables)))
         super().update(*iterables)
 
-    def __iand__(self: T_LengthHook, other: Set[object], /) -> T_LengthHook:
+    def __iand__(self, other: Set[object], /) -> Self:
         self.__length_hook__(len(self & other))
         return super().__iand__(other)
 
-    def __ior__(self: T_LengthHook, other: Set[T], /) -> T_LengthHook:  # type: ignore
+    def __ior__(self, other: Set[T], /) -> Self:
         self.__length_hook__(len(self | other))
         return super().__ior__(other)
 
-    def __isub__(self: T_LengthHook, other: Set[object], /) -> T_LengthHook:
+    def __isub__(self, other: Set[Any], /) -> Self:
         self.__length_hook__(len(self - other))
         return super().__isub__(other)
 
-    def __ixor__(self: T_LengthHook, other: Set[T], /) -> T_LengthHook:  # type: ignore
+    def __ixor__(self, other: Set[T], /) -> Self:
         self.__length_hook__(len(self ^ other))
         return super().__ixor__(other)
 
 
-class MinimumLength(LengthHook[T], sized.MinimumLength, Generic[T]):
+class MinimumLength(LengthHook[T], sized.MinimumLength):
     pass
 
 
-class MaximumLength(LengthHook[T], sized.MaximumLength, Generic[T]):
+class MaximumLength(LengthHook[T], sized.MaximumLength):
     pass
 
 
-class NonEmpty(LengthHook[T], sized.NonEmpty, Generic[T]):
+class NonEmpty(LengthHook[T], sized.NonEmpty):
     pass

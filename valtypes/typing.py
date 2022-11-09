@@ -1,27 +1,32 @@
-import functools
 import types
-import typing
+from array import array
 from mmap import mmap
 from pickle import PickleBuffer
 from types import UnionType
-from typing import TYPE_CHECKING, Generic, Protocol, SupportsFloat, SupportsIndex, SupportsInt, TypeVar, runtime_checkable
+from typing import TYPE_CHECKING, Any, Protocol, TypeVar, Union
+from typing import _AnnotatedAlias as TypingAnnotatedAlias  # type: ignore
+from typing import _GenericAlias as TypingGenericAlias  # type: ignore
+from typing import _LiteralGenericAlias as LiteralGenericAlias  # type: ignore
+from typing import _UnionGenericAlias as UnionGenericAlias  # type: ignore
+from typing import runtime_checkable
+
+if TYPE_CHECKING:
+    from ctypes import _CData as CData  # type: ignore
+
 
 __all__ = [
     "AnnotatedAlias",
+    "Dataclass",
     "Descriptor",
-    "Floatable",
     "GenericAlias",
-    "Intable",
     "LiteralAlias",
-    "LruCacheWrapper",
     "ReadableBuffer",
     "SupportsTrunc",
     "UnionAlias",
 ]
 
-T = TypeVar("T")
+
 T_co = TypeVar("T_co", covariant=True)
-T_contra = TypeVar("T_contra", contravariant=True)
 
 
 class SupportsTrunc(Protocol):
@@ -35,42 +40,37 @@ class Descriptor(Protocol[T_co]):
         ...
 
 
-ReadableBuffer = bytes | bytearray | memoryview | mmap | PickleBuffer
+ReadOnlyBuffer = bytes
 
 
-Intable = SupportsInt | SupportsIndex | SupportsTrunc | ReadableBuffer | str
+WritableBuffer = Union[bytearray, memoryview, "array[Any]", mmap, "CData", PickleBuffer]
 
 
-Floatable = SupportsIndex | SupportsFloat | ReadableBuffer | str
+ReadableBuffer = ReadOnlyBuffer | WritableBuffer
+
+
+Dataclass = Any
 
 
 if TYPE_CHECKING:
-    GenericAlias = types.GenericAlias
+    GenericAlias = Any
 else:
-    GenericAlias = typing._GenericAlias | types.GenericAlias
+    GenericAlias = TypingGenericAlias | types.GenericAlias
 
 
 if TYPE_CHECKING:
     UnionAlias = UnionType
 else:
-    UnionAlias = typing._UnionGenericAlias | UnionType
+    UnionAlias = UnionGenericAlias | UnionType
 
 
 if TYPE_CHECKING:
     LiteralAlias = UnionType
 else:
-    LiteralAlias = typing._LiteralGenericAlias
+    LiteralAlias = LiteralGenericAlias
 
 
 if TYPE_CHECKING:
     AnnotatedAlias = UnionType
 else:
-    AnnotatedAlias = typing._AnnotatedAlias
-
-
-if TYPE_CHECKING:
-    LruCacheWrapper = functools._lru_cache_wrapper  # type: ignore
-else:
-
-    class LruCacheWrapper(Generic[T]):
-        pass
+    AnnotatedAlias = TypingAnnotatedAlias

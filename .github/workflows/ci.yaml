@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    types: [opened, synchronize]
+    types: [ opened, synchronize ]
 
 jobs:
   flake8:
@@ -13,57 +13,70 @@ jobs:
       matrix:
         python-version: [ '3.11' ]
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - id: cache
+      - name: Restore cache and venv
+        id: cache
         uses: actions/cache@v3
         with:
           path: |
             ~/.cache
             .venv
           key: ${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
-      - if: steps.cache.outputs.cache-hit != 'true'
+      - name: Install Poetry
+        if: steps.cache.outputs.cache-hit != 'true'
         uses: snok/install-poetry@v1.3.3
         with:
           virtualenvs-in-project: true
-      - if: steps.cache.outputs.cache-hit != 'true'
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: poetry install --with dev
-      - run: |
+      - name: Run flake8
+        run: |
           source .venv/bin/activate
           pre-commit run --all-files flake8
 
-  mypy:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [ '3.11' ]
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-      - id: cache
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache
-            .venv
-          key: ${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
-      - uses: actions/cache@v3
-        with:
-          path: .mypy_cache
-          key: ${{ matrix.python-version }}
-      - if: steps.cache.outputs.cache-hit != 'true'
-        uses: snok/install-poetry@v1.3.3
-        with:
-          virtualenvs-in-project: true
-      - if: steps.cache.outputs.cache-hit != 'true'
-        run: poetry install --with dev
-      - run: |
-          source .venv/bin/activate
-          pre-commit run --all-files mypy
+#  mypy:
+#    runs-on: ubuntu-latest
+#    strategy:
+#      matrix:
+#        python-version: [ '3.11' ]
+#    steps:
+#      - name: Checkout
+#        uses: actions/checkout@v3
+#      - name: Setup Python
+#        uses: actions/setup-python@v4
+#        with:
+#          python-version: ${{ matrix.python-version }}
+#      - name: Restore cache and venv
+#        id: cache
+#        uses: actions/cache@v3
+#        with:
+#          path: |
+#            ~/.cache
+#            .venv
+#          key: ${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
+#      - name: Restore mypy cache
+#        uses: actions/cache@v3
+#        with:
+#          path: .mypy_cache
+#          key: ${{ matrix.python-version }}
+#      - name: Install Poetry
+#        if: steps.cache.outputs.cache-hit != 'true'
+#        uses: snok/install-poetry@v1.3.3
+#        with:
+#          virtualenvs-in-project: true
+#      - name: Install dependencies
+#        if: steps.cache.outputs.cache-hit != 'true'
+#        run: poetry install --with dev
+#      - name: Run mypy
+#        run: |
+#          source .venv/bin/activate
+#          pre-commit run --all-files mypy
 
   pyright:
     runs-on: ubuntu-latest
@@ -71,24 +84,30 @@ jobs:
       matrix:
         python-version: [ '3.11' ]
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - id: cache
+      - name: Restore cache and venv
+        id: cache
         uses: actions/cache@v3
         with:
           path: |
             ~/.cache
             .venv
           key: ${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
-      - if: steps.cache.outputs.cache-hit != 'true'
+      - name: Install Poetry
+        if: steps.cache.outputs.cache-hit != 'true'
         uses: snok/install-poetry@v1.3.3
         with:
           virtualenvs-in-project: true
-      - if: steps.cache.outputs.cache-hit != 'true'
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: poetry install --with dev
-      - run: |
+      - name: Run pyright
+        run: |
           source .venv/bin/activate
           pre-commit run --all-files pyright
 
@@ -98,24 +117,30 @@ jobs:
       matrix:
         python-version: [ '3.11' ]
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - id: cache
+      - name: Restore cache and venv
+        id: cache
         uses: actions/cache@v3
         with:
           path: |
             ~/.cache
             .venv
           key: ${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
-      - if: steps.cache.outputs.cache-hit != 'true'
+      - name: Install Poetry
+        if: steps.cache.outputs.cache-hit != 'true'
         uses: snok/install-poetry@v1.3.3
         with:
           virtualenvs-in-project: true
-      - if: steps.cache.outputs.cache-hit != 'true'
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: poetry install --with dev
-      - run: |
+      - name: Run pyright-verify
+        run: |
           source .venv/bin/activate
           pre-commit run --all-files pyright-verify
 
@@ -129,36 +154,45 @@ jobs:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
         python-version: [ '3.11' ]
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
-      - id: cache
+      - name: Restore cache and venv
+        id: cache
         uses: actions/cache@v3
         with:
           path: |
             ~/.cache
             .venv
           key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
-      - uses: actions/cache@v3
+      - name: Restore pytest cache
+        uses: actions/cache@v3
         with:
           path: .pytest_cache
           key: ${{ runner.os }}-${{ matrix.python-version }}
-      - if: steps.cache.outputs.cache-hit != 'true'
+      - name: Install Poetry
+        if: steps.cache.outputs.cache-hit != 'true'
         uses: snok/install-poetry@v1.3.3
         with:
           virtualenvs-in-project: true
-      - if: steps.cache.outputs.cache-hit != 'true'
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
         run: poetry install --with dev
-      - if: runner.os == 'Windows'
+      - name: Run pytest on Windows
+        if: runner.os == 'Windows'
         run: |
           source .venv/scripts/activate
           pre-commit run --all-files pytest
-      - if: runner.os != 'Windows'
+      - name: Run pytest on normal OS
+        if: runner.os != 'Windows'
         run: |
           source .venv/bin/activate
           pre-commit run --all-files pytest
-      - uses: codecov/codecov-action@v3
+      - name: Upload coverage report to Codecov
+        uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: coverage.xml

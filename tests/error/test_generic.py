@@ -1,6 +1,5 @@
-from valtypes import error
+from valtypes.error import NoParser
 
 
 def test_no_parser() -> None:
-    e = error.NoParser(list)
-    assert str(e) == "there's no parser for list"
+    assert str(NoParser(list[int])) == "there's no parser for list[int]"

@@ -5,14 +5,12 @@ from .misc import (
     CompositeBinder,
     CompositeCallable,
     CompositeCallableDescriptor,
-    ErrorsCollector,
-    cached_method,
     ensure_iterable_not_iterator,
     ensure_sequence,
     get_slice_length,
-    pretty_type_repr,
+    type_repr,
 )
-from .resolve_type_args import resolve_type_args
+from .resolve_type_args import resolve_type_arguments
 
 __all__ = [
     "AutoCallSuper",
@@ -20,14 +18,12 @@ __all__ = [
     "CompositeBinder",
     "CompositeCallable",
     "CompositeCallableDescriptor",
-    "ErrorsCollector",
-    "cached_method",
     "ensure_iterable_not_iterator",
     "ensure_sequence",
     "get_caller_frame",
     "get_frame",
     "get_slice_length",
-    "pretty_type_repr",
-    "resolve_type_args",
+    "resolve_type_arguments",
     "super_endpoint",
+    "type_repr",
 ]

@@ -2,9 +2,10 @@ from collections.abc import Iterator
 from dataclasses import _FIELD_CLASSVAR as FIELD_CLASSVAR_MARKER  # type: ignore
 from dataclasses import MISSING, Field
 from functools import cached_property
-from typing import Any, Generic, TypeVar, cast
+from typing import Any, Generic, TypeVar
 
 from valtypes.parsing import parser
+from valtypes.typing import Dataclass
 
 from .abc import ABC
 
@@ -16,7 +17,7 @@ T = TypeVar("T")
 F = TypeVar("F")
 
 
-class DictToDataclass(ABC[type, dict[str, F], Any], Generic[F]):
+class DictToDataclass(ABC[type, dict[str, F], Any]):
     def __init__(self, factory: ABC[object, F, Any]):
         self._factory = factory
 
@@ -27,7 +28,7 @@ class DictToDataclass(ABC[type, dict[str, F], Any], Generic[F]):
 class Factory(Generic[F, T]):
     def __init__(self, factory: ABC[object, F, Any], type: type[T]):
         self._factory = factory
-        self._type = type
+        self._type: Dataclass = type
 
     def get_parser(self) -> parser.DictToDataclass[F, T]:
         self._collect_parsers()
@@ -42,7 +43,7 @@ class Factory(Generic[F, T]):
 
     @property
     def _fields(self) -> Iterator[Field[object]]:
-        for field in cast(Any, self._type).__dataclass_fields__.values():
+        for field in self._type.__dataclass_fields__.values():
             if field.init and field._field_type is not FIELD_CLASSVAR_MARKER:
                 yield field
 

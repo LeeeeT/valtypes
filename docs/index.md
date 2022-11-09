@@ -27,9 +27,15 @@
 
 ---
 
+**Documentation**: [valtypes.readthedocs.io][docs]
+
+**Source code**: [github.com/LeeeeT/valtypes][source]
+
+---
+
 ## What is valtypes
 
-**Valtypes** is a flexible data parsing library which will help you make illegal states unrepresentable and enable you to practice ["Parse, don’t validate"][parse-dont-validate] in Python. It has many features that might interest you, so let's dive into some examples.
+**Valtypes** is a flexible data parsing library which will help you make illegal states unrepresentable and enable you to practice ["Parse, don’t validate"](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate) in Python. It has many features that might interest you, so let's dive into some examples.
 
 ## Examples
 
@@ -58,8 +64,7 @@ Parse complex data structures:
 ```python
 from dataclasses import dataclass
 
-
-from valtypes import parse
+from valtypes import parse_json
 from valtypes.type import int, list, str
 
 
@@ -69,14 +74,42 @@ class User:
     name: Name
     hobbies: list.NonEmpty[str.NonEmpty]
 
-    
+
 raw = {"id": 1, "name": "Fred", "hobbies": ["origami", "curling", "programming"]}
 
-print(parse(User, raw))
+print(parse_json(User, raw))
 ```
 
 ```
 User(id=1, name='Fred', hobbies=['origami', 'curling', 'programming'])
+```
+
+Get a nice error message if something went wrong (traceback omitted):
+
+```python
+raw = {"id": 0, "hobbies": [""]}
+
+parse_json(User, raw)
+```
+
+```
+| valtypes.error.parsing.dataclass.Composite: dataclass parsing error (3 sub-exceptions)
++-+---------------- 1 ----------------
+  | valtypes.error.parsing.dataclass.WrongFieldValue: can't parse field 'id' (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | valtypes.error.parsing.type.numeric.Minimum: the value must be greater than or equal to 1, got: 0
+    +------------------------------------
+  +---------------- 2 ----------------
+  | valtypes.error.parsing.dataclass.MissingField: required field 'name' is missing
+  +---------------- 3 ----------------
+  | valtypes.error.parsing.dataclass.WrongFieldValue: can't parse field 'hobbies' (1 sub-exception)
+  +-+---------------- 1 ----------------
+    | valtypes.error.parsing.sequence.Composite: sequence parsing error (1 sub-exception)
+    +-+---------------- 1 ----------------
+      | valtypes.error.parsing.sequence.WrongItem: can't parse item at index 0 (1 sub-exception)
+      +-+---------------- 1 ----------------
+        | valtypes.error.parsing.type.sized.MinimumLength: length 0 is less than the allowed minimum of 1
+        +------------------------------------
 ```
 
 ## Installation
@@ -93,8 +126,8 @@ Build the latest version from [source]:
 pip install git+https://github.com/LeeeeT/valtypes
 ```
 
-[parse-dont-validate]: https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate
-
-[pypi]: https://pypi.org/project/valtypes
+[docs]: https://valtypes.readthedocs.io
 
 [source]: https://github.com/LeeeeT/valtypes
+
+[PyPI]: https://pypi.org/project/valtypes

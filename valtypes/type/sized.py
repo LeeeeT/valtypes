@@ -1,6 +1,6 @@
 from abc import ABC
 from collections.abc import Sized
-from typing import TypeVar
+from typing import ClassVar, TypeVar
 
 import valtypes.error.parsing.type.sized as error
 from valtypes.util import super_endpoint
@@ -37,7 +37,7 @@ class LengthHook(generic.InitHook, Sized, ABC):
 
 
 class MinimumLength(LengthHook, ABC):
-    __minimum_length__: int
+    __minimum_length__: ClassVar[int]
 
     def __length_hook__(self, length: int) -> None:
         if length < self.__minimum_length__:
@@ -45,7 +45,7 @@ class MinimumLength(LengthHook, ABC):
 
 
 class MaximumLength(LengthHook, ABC):
-    __maximum_length__: int
+    __maximum_length__: ClassVar[int]
 
     def __length_hook__(self, length: int) -> None:
         if length > self.__maximum_length__:
@@ -53,4 +53,4 @@ class MaximumLength(LengthHook, ABC):
 
 
 class NonEmpty(MinimumLength, ABC):
-    __minimum_length__ = 1
+    __minimum_length__: ClassVar[int] = 1

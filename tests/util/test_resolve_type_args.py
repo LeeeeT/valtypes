@@ -1,47 +1,97 @@
-from typing import Any, Generic, TypeVar, cast
+from typing import Generic, ParamSpec, TypeVar, TypeVarTuple
 
-import pytest
+from valtypes.util import resolve_type_arguments
 
-from valtypes.util import resolve_type_args
+T = TypeVar("T")
 
+F = TypeVar("F")
 
-def test_returns_type_arguments_of_parameterized_builtin_type() -> None:
-    assert resolve_type_args(list[int], list) == (int,)
-    assert resolve_type_args(cast(Any, tuple)[int, bytes, str], tuple) == (int, bytes, str)
+Ts = TypeVarTuple("Ts")
 
-
-def test_finds_parameterized_builtin_types_in_bases_of_class() -> None:
-    class Tuple(tuple[float, bytes, None]):
-        pass
-
-    class TupleSubclass(Tuple):
-        pass
-
-    assert resolve_type_args(Tuple, tuple) == (float, bytes, None)
-    assert resolve_type_args(TupleSubclass, tuple) == (float, bytes, None)
+P = ParamSpec("P")
 
 
-def test_propagates_type_arguments_to_bases_of_generic_class() -> None:
-    T = TypeVar("T", bound=float)
-    F = TypeVar("F", str, bytes)
-    S = TypeVar("S")
-
-    class Tuple(tuple[T, ...], Generic[F, T]):
-        pass
-
-    class TupleSubclass(Tuple[str, T], Generic[T, S]):
-        pass
-
-    assert resolve_type_args(Tuple[str, int], tuple) == (int, ...)
-    assert resolve_type_args(TupleSubclass[int, bytes], Tuple) == (str, int)
-    assert resolve_type_args(TupleSubclass[bool, None], tuple) == (bool, ...)
+class Base:
+    pass
 
 
-def test_raises_error_if_target_class_isnt_generic() -> None:
-    with pytest.raises(TypeError):
-        resolve_type_args(tuple, tuple)
+class ParameterizedList(list[int]):
+    pass
 
 
-def test_raises_error_if_target_class_isnt_in_bases_of_origin_class() -> None:
-    with pytest.raises(TypeError):
-        resolve_type_args(list[int], tuple)
+class SubclassOfParameterizedList(Base, ParameterizedList):
+    pass
+
+
+class NonParameterizedList(Base, list[T]):
+    pass
+
+
+class NonParameterizedListRedundantGeneric(Base, list[F], Generic[F]):
+    pass
+
+
+class GenericClass1(Generic[T, P]):
+    pass
+
+
+class GenericClass2(Generic[T]):
+    pass
+
+
+class ParameterizedGenericClass(GenericClass2[int], GenericClass1[bytes, [str]]):
+    pass
+
+
+class SubclassOfParameterizedGenericClass(Base, ParameterizedGenericClass):
+    pass
+
+
+class NonParameterizedGenericClass(Base, GenericClass1[T, P]):
+    pass
+
+
+class NonParameterizedGenericClassRedundantGeneric(Base, GenericClass1[F, P], Generic[F, P]):
+    pass
+
+
+class PartiallyParameterizedGenericClass(Base, GenericClass1[T, [int]]):
+    pass
+
+
+class PartiallyParameterizedGenericClassRedundantGeneric(Base, GenericClass1[F, [F]], Generic[F]):
+    pass
+
+
+class VariadicGeneric(Base, tuple[*Ts], Generic[T, *Ts, F]):
+    pass
+
+
+def test_returns_alias_unchanged_if_origin_matches_target() -> None:
+    assert resolve_type_arguments(list[int], list) == list[int]
+    assert resolve_type_arguments(tuple[int, *tuple[None, ...]], tuple) == tuple[int, *tuple[None, ...]]
+
+
+def test_finds_target_in_bases() -> None:
+    assert resolve_type_arguments(ParameterizedList, list) == list[int]
+    assert resolve_type_arguments(ParameterizedGenericClass, GenericClass1) == GenericClass1[bytes, [str]]
+
+    assert resolve_type_arguments(SubclassOfParameterizedList, list) == list[int]
+    assert resolve_type_arguments(SubclassOfParameterizedGenericClass, GenericClass1) == GenericClass1[bytes, [str]]
+
+
+def test_propagates_type_args_to_bases() -> None:
+    assert resolve_type_arguments(NonParameterizedList[float], list) == list[float]
+    assert resolve_type_arguments(NonParameterizedGenericClass[float, [int]], GenericClass1) == GenericClass1[float, [int]]
+
+    assert resolve_type_arguments(NonParameterizedListRedundantGeneric[float], list) == list[float]
+    assert resolve_type_arguments(NonParameterizedGenericClassRedundantGeneric[float, [int]], GenericClass1) == GenericClass1[float, [int]]
+
+    assert resolve_type_arguments(PartiallyParameterizedGenericClass[float], GenericClass1) == GenericClass1[float, [int]]
+
+    # uncomment when python/cpython#88965 is fixed
+    # assert resolve_type_args(PartiallyParameterizedGenericClassRedundantGeneric[float], GenericClass1) == GenericClass1[float, [float]]
+
+
+def test_properly_assigns_type_var_tuple() -> None:
+    assert resolve_type_arguments(VariadicGeneric[int, str, bytes, float], tuple) == tuple[str, bytes]

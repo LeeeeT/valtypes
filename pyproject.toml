@@ -2,7 +2,7 @@
 name = "valtypes"
 version = "6.0.1"
 description = "Parsing in Python has never been easier"
-authors = ["LeeeeT <leeeet@inbox.ru>"]
+authors = ["LeeeeT <leeeet@inbox.ru>", "GitHub Copilot"]
 license = "Unlicense"
 readme = "README.md"
 homepage = "https://github.com/LeeeeT/valtypes"
@@ -14,7 +14,7 @@ classifiers = [
     "Intended Audience :: Information Technology",
     "License :: OSI Approved :: The Unlicense (Unlicense)",
     "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3 :: Only",
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Topic :: Internet",
@@ -22,7 +22,7 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^2.20.0"
@@ -60,7 +60,7 @@ profile = "black"
 line_length = 151
 
 [tool.black]
-target-version = ["py310"]
+target-version = ["py311"]
 line-length = 151
 
 [tool.flake8]
@@ -68,7 +68,7 @@ max-line-length = 151
 ignore = "E203, W503, F402"
 
 [tool.mypy]
-files = ["valtypes", "tests"]
+files = ["valtypes", "tests", "testing"]
 strict = true
 strict_equality = false
 warn_return_any = false
@@ -76,9 +76,9 @@ warn_no_return = false
 no_warn_unused_ignores = true
 
 [tool.pyright]
-include = ["valtypes", "tests"]
+include = ["valtypes", "tests", "testing"]
 typeCheckingMode = "strict"
-reportUnnecessaryTypeIgnoreComment = false
+reportUnnecessaryTypeIgnoreComment = true
 reportImportCycles = false
 reportUnknownArgumentType = false
 reportUnknownLambdaType = false
@@ -98,7 +98,7 @@ source = ["valtypes"]
 [tool.coverage.report]
 fail_under = 100
 skip_covered = true
-exclude_lines = ["^\\s*\\.\\.\\.$", "^\\s*if TYPE_CHECKING:$", "^\\s*pass$"]
+exclude_lines = ["^\\s*\\.\\.\\.$", "^\\s*if TYPE_CHECKING:$", "^\\s*pass$", "# pragma: no cover$"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

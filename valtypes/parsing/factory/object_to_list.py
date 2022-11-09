@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar
+from typing import TypeVar
 
 from valtypes.parsing import parser
 
@@ -12,6 +12,6 @@ __all__ = ["ObjectToList"]
 T = TypeVar("T")
 
 
-class ObjectToList(Shortcut[type[list[T]], object, list[T]], Generic[T]):
+class ObjectToList(Shortcut[type[list[T]], object, list[T]]):
     def __init__(self, factory: ABC[object, object, T]):
         super().__init__(parser.ObjectToType(list) >> IterableToList(factory))

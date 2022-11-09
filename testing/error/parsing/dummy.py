@@ -1,10 +1,8 @@
-from dataclasses import dataclass
-
-from valtypes.error.parsing import Base
+from testing.error.dummy import Dummy as BaseDummy
+from valtypes.error.parsing import Base as BaseParsing
 
 __all__ = ["Dummy"]
 
 
-@dataclass
-class Dummy(Base):
-    message: str
+class Dummy(BaseParsing, BaseDummy):
+    pass

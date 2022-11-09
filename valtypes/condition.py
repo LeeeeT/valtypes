@@ -2,12 +2,12 @@ from __future__ import annotations
 
 import abc
 from collections.abc import Callable
-from dataclasses import is_dataclass
+from dataclasses import InitVar, dataclass, is_dataclass
 from types import UnionType
-from typing import Any, Generic, TypeVar, cast
+from typing import Any, Generic, TypeVar
 
-from valtypes.typing import GenericAlias
-from valtypes.util import resolve_type_args
+from valtypes.typing import Dataclass, GenericAlias, LiteralAlias, UnionAlias
+from valtypes.util import resolve_type_arguments
 
 from . import decorator
 
@@ -19,22 +19,32 @@ __all__ = [
     "FromCallable",
     "InstanceOf",
     "Is",
-    "LenientAliasOf",
-    "LenientStrictAliasOf",
-    "LenientStrictSubclassOf",
-    "LenientSubclassOf",
     "Not",
+    "ObjectIsAliasOf",
+    "ObjectIsStrictAliasOf",
+    "ObjectIsStrictSubclassOf",
+    "ObjectIsSubclassOf",
     "Or",
     "Shortcut",
     "Shortcut",
     "StrictAliasOf",
     "SubclassOf",
+    "builtin_type",
     "dataclass_with_init",
     "fixed_length_tuple_alias",
     "generic_alias",
-    "lenient_fixed_length_tuple_alias",
-    "lenient_tuple_alias",
-    "lenient_variable_length_tuple_alias",
+    "init_var",
+    "object_is_alias_of_list",
+    "object_is_fixed_length_tuple_alias",
+    "object_is_strict_alias_of_list",
+    "object_is_strict_subclass_of_bytearray",
+    "object_is_strict_subclass_of_bytes",
+    "object_is_strict_subclass_of_float",
+    "object_is_strict_subclass_of_int",
+    "object_is_strict_subclass_of_str",
+    "object_is_tuple_alias",
+    "object_is_variable_length_tuple_alias",
+    "union_alias",
     "variable_length_tuple_alias",
 ]
 
@@ -67,7 +77,11 @@ class ABC(abc.ABC, Generic[T_contra]):
         return Not(self)
 
 
-class And(ABC[T_contra], Generic[T_contra]):
+@dataclass(init=False, repr=False)
+class And(ABC[T_contra]):
+    _first: ABC[T_contra]
+    _second: ABC[Any]
+
     def __init__(self, first: ABC[T_contra], second: ABC[Any]):
         self._first = first
         self._second = second
@@ -75,13 +89,12 @@ class And(ABC[T_contra], Generic[T_contra]):
     def check(self, value: T_contra, /) -> bool:
         return self._first.check(value) and self._second.check(value)
 
-    def __eq__(self, other: object, /) -> bool:
-        if isinstance(other, And):
-            return self._first == other._first and self._second == other._second
-        return NotImplemented
 
+@dataclass(init=False, repr=False)
+class Or(ABC[T_contra]):
+    _first: ABC[T_contra]
+    _second: ABC[Any]
 
-class Or(ABC[T_contra], Generic[T_contra]):
     def __init__(self, first: ABC[T_contra], second: ABC[Any]):
         self._first = first
         self._second = second
@@ -89,13 +102,12 @@ class Or(ABC[T_contra], Generic[T_contra]):
     def check(self, value: T_contra, /) -> bool:
         return self._first.check(value) or self._second.check(value)
 
-    def __eq__(self, other: object, /) -> bool:
-        if isinstance(other, Or):
-            return self._first == other._first and self._second == other._second
-        return NotImplemented
 
-
+@dataclass(init=False, repr=False)
 class Decorated(ABC[T_contra]):
+    _decorator: decorator.ABC[T_contra, Any]
+    _condition: ABC[Any]
+
     def __init__(self, decorator: decorator.ABC[T_contra, T], condition: ABC[T]):
         self._decorator = decorator
         self._condition = condition
@@ -103,26 +115,22 @@ class Decorated(ABC[T_contra]):
     def check(self, value: T_contra, /) -> bool:
         return self._condition.check(self._decorator.decorate(value))
 
-    def __eq__(self, other: object, /) -> bool:
-        if isinstance(other, Decorated):
-            return self._decorator == other._decorator and self._condition == other._condition
-        return NotImplemented
 
+@dataclass(init=False, repr=False)
+class Not(ABC[T_contra]):
+    _condition: ABC[T_contra]
 
-class Not(ABC[T_contra], Generic[T_contra]):
     def __init__(self, condition: ABC[T_contra]):
         self._condition = condition
 
     def check(self, value: T_contra, /) -> bool:
         return not self._condition.check(value)
 
-    def __eq__(self, other: object, /) -> bool:
-        if isinstance(other, Not):
-            return self._condition == other._condition
-        return NotImplemented
 
+@dataclass(init=False, repr=False)
+class Shortcut(ABC[T_contra]):
+    _condition: ABC[T_contra]
 
-class Shortcut(ABC[T_contra], Generic[T_contra]):
     def __init__(self, condition: ABC[T_contra]):
         self._condition = condition
 
@@ -130,7 +138,10 @@ class Shortcut(ABC[T_contra], Generic[T_contra]):
         return self._condition.check(value)
 
 
-class FromCallable(ABC[T_contra], Generic[T_contra]):
+@dataclass(init=False, repr=False)
+class FromCallable(ABC[T_contra]):
+    _callable: Callable[[T_contra], bool]
+
     def __init__(self, callable: Callable[[T_contra], bool]):
         self._callable = callable
 
@@ -138,7 +149,10 @@ class FromCallable(ABC[T_contra], Generic[T_contra]):
         return self._callable(value)
 
 
+@dataclass(init=False, repr=False)
 class InstanceOf(ABC[object]):
+    _type: type | UnionType
+
     def __init__(self, type: type | UnionType):
         self._type = type
 
@@ -146,20 +160,21 @@ class InstanceOf(ABC[object]):
         return isinstance(value, self._type)
 
 
+@dataclass(init=False, repr=False)
 class Is(ABC[object]):
+    _object: object
+
     def __init__(self, object: object):
         self._object = object
 
     def check(self, value: object, /) -> bool:
         return value is self._object
 
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, Is):
-            return self._object == other._object
-        return NotImplemented
 
-
+@dataclass(init=False, repr=False)
 class SubclassOf(ABC[type]):
+    _type: type | UnionType
+
     def __init__(self, type: type | UnionType):
         self._type = type
 
@@ -167,22 +182,22 @@ class SubclassOf(ABC[type]):
         return issubclass(value, self._type)
 
 
-class LenientSubclassOf(Shortcut[object]):
+class ObjectIsSubclassOf(Shortcut[object]):
     def __init__(self, type: type | UnionType):
         super().__init__(is_class & SubclassOf(type))
 
 
-class LenientStrictSubclassOf(Shortcut[object]):
+class ObjectIsStrictSubclassOf(Shortcut[object]):
     def __init__(self, type: type):
-        super().__init__(~Is(type) & LenientSubclassOf(type))
+        super().__init__(~Is(type) & ObjectIsSubclassOf(type))
 
 
 class AliasOf(Shortcut[GenericAlias]):
     def __init__(self, type: type):
-        super().__init__(decorator.origin >> LenientSubclassOf(type))
+        super().__init__(decorator.origin >> ObjectIsSubclassOf(type))
 
 
-class LenientAliasOf(Shortcut[object]):
+class ObjectIsAliasOf(Shortcut[object]):
     def __init__(self, type: type):
         super().__init__(generic_alias & AliasOf(type))
 
@@ -192,38 +207,52 @@ class StrictAliasOf(Shortcut[GenericAlias]):
         super().__init__(decorator.origin >> Is(type))
 
 
-class LenientStrictAliasOf(Shortcut[object]):
+class ObjectIsStrictAliasOf(Shortcut[object]):
     def __init__(self, type: type):
         super().__init__(generic_alias & StrictAliasOf(type))
 
 
+generic_alias: InstanceOf = InstanceOf(GenericAlias)
+union_alias: InstanceOf = InstanceOf(UnionAlias)
+literal_alias: InstanceOf = InstanceOf(LiteralAlias)
+
+
+is_class: And[object] = InstanceOf(type) & ~generic_alias
+
+
+builtin_type: Or[object] = Is(int) | Is(float) | Is(str) | Is(bytes) | Is(bytearray) | Is(object)
+
+
 @FromCallable
-def variable_length_tuple_alias(value: GenericAlias, /) -> bool:  # type: ignore
-    match resolve_type_args(value, tuple):
+def variable_length_tuple_alias(value: GenericAlias, /) -> bool:
+    match resolve_type_arguments(value, tuple).__args__:
         case (_, second_argument) if second_argument is ...:
             return True
         case _:
             return False
 
 
-@FromCallable
-def dataclass_with_init(value: object, /) -> bool:
-    return is_class.check(value) and is_dataclass(value) and cast(Any, value).__dataclass_params__.init
-
-
 fixed_length_tuple_alias: Not[GenericAlias] = ~variable_length_tuple_alias
 
-
-generic_alias: InstanceOf = InstanceOf(GenericAlias)
-
-
-is_class: And[object] = InstanceOf(type) & ~generic_alias
+object_is_tuple_alias: ObjectIsAliasOf = ObjectIsAliasOf(tuple)
+object_is_variable_length_tuple_alias: And[object] = object_is_tuple_alias & variable_length_tuple_alias
+object_is_fixed_length_tuple_alias: And[object] = object_is_tuple_alias & fixed_length_tuple_alias
 
 
-lenient_tuple_alias: LenientAliasOf = LenientAliasOf(tuple)
+@FromCallable
+def dataclass_with_init(value: Dataclass, /) -> bool:
+    return is_class.check(value) and is_dataclass(value) and value.__dataclass_params__.init
 
 
-lenient_variable_length_tuple_alias: And[object] = lenient_tuple_alias & variable_length_tuple_alias
+init_var: InstanceOf = InstanceOf(InitVar)
 
 
-lenient_fixed_length_tuple_alias: And[object] = lenient_tuple_alias & fixed_length_tuple_alias
+object_is_strict_subclass_of_int: ObjectIsStrictSubclassOf = ObjectIsStrictSubclassOf(int)
+object_is_strict_subclass_of_float: ObjectIsStrictSubclassOf = ObjectIsStrictSubclassOf(float)
+object_is_strict_subclass_of_str: ObjectIsStrictSubclassOf = ObjectIsStrictSubclassOf(str)
+object_is_strict_subclass_of_bytes: ObjectIsStrictSubclassOf = ObjectIsStrictSubclassOf(bytes)
+object_is_strict_subclass_of_bytearray: ObjectIsStrictSubclassOf = ObjectIsStrictSubclassOf(bytearray)
+
+
+object_is_alias_of_list: ObjectIsAliasOf = ObjectIsAliasOf(list)
+object_is_strict_alias_of_list: ObjectIsStrictAliasOf = ObjectIsStrictAliasOf(list)

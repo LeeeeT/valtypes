@@ -1,4 +1,5 @@
 import re
+from typing import ClassVar
 
 import valtypes.error.parsing.type.str as error
 
@@ -8,7 +9,7 @@ __all__ = ["InitHook", "MaximumLength", "MinimumLength", "NonEmpty", "Pattern"]
 
 
 class InitHook(generic.InitHook, str):
-    def __init__(self, value: object = "", /):
+    def __init__(self, object: object = "", /):
         super().__init__()
 
 
@@ -25,7 +26,7 @@ class NonEmpty(MinimumLength, sized.NonEmpty):
 
 
 class Pattern(InitHook):
-    __pattern__: re.Pattern[str]
+    __pattern__: ClassVar[re.Pattern[str]]
 
     def __init_hook__(self) -> None:
         if not self.__pattern__.fullmatch(self):

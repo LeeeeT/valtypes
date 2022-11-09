@@ -1,11 +1,15 @@
 from dataclasses import dataclass
 
-from .generic import Base
+from . import generic
 
-__all__ = ["FractionalNumber"]
+__all__ = ["Base", "FractionalNumber"]
 
 
-@dataclass
+class Base(generic.Base):
+    pass
+
+
+@dataclass(repr=False, frozen=True)
 class FractionalNumber(Base):
     number: float
 

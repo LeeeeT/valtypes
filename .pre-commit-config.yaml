@@ -1,7 +1,7 @@
 ci:
   autofix_commit_msg: 'refactor: auto fixes from pre-commit hooks'
   autoupdate_commit_msg: 'build(deps): update pre-commit hooks'
-  skip: [ pyproject-flake8, mypy, pyright, pyright-verify, pytest ]
+  skip: [ pyproject-flake8, pyright, pyright-verify, pytest ]
 
 repos:
   - repo: https://github.com/pycqa/isort
@@ -33,12 +33,12 @@ repos:
 
   - repo: local
     hooks:
-      - id: mypy
-        name: mypy
-        entry: bash -c "pip install poetry && poetry install --with mypy && mypy"
-        language: system
-        pass_filenames: false
-        stages: [ commit ]
+#      - id: mypy
+#        name: mypy
+#        entry: bash -c "pip install poetry && poetry install --with mypy && mypy"
+#        language: system
+#        pass_filenames: false
+#        stages: [ commit ]
 
       - id: pyright
         name: pyright
