@@ -1,7 +1,7 @@
 ci:
   autofix_commit_msg: 'refactor: auto fixes from pre-commit hooks'
   autoupdate_commit_msg: 'build(deps): update pre-commit hooks'
-  skip: [pytest]  # tests are run in a GitHub workflow
+  skip: [ pyproject-flake8, mypy, pyright, pyright-verify, pytest ]
 
 repos:
   - repo: https://github.com/pycqa/isort
@@ -28,34 +28,35 @@ repos:
     hooks:
       - id: pyproject-flake8
         name: flake8
+        alias: flake8
         stages: [ commit ]
 
   - repo: local
     hooks:
       - id: mypy
         name: mypy
-        entry: python scripts/mypy.py
+        entry: bash -c "pip install poetry && poetry install --with mypy && mypy"
         language: system
         pass_filenames: false
         stages: [ commit ]
 
       - id: pyright
         name: pyright
-        entry: python scripts/pyright.py
+        entry: bash -c "pip install poetry && poetry install --with pyright && pyright"
         language: system
         pass_filenames: false
         stages: [ commit ]
 
       - id: pyright-verify
         name: pyright-verify
-        entry: python scripts/pyright-verify.py
+        entry: bash -c "pip install poetry && poetry install --with pyright-verify && pyright --verifytypes valtypes"
         language: system
         pass_filenames: false
         stages: [ commit ]
 
       - id: pytest
         name: pytest
-        entry: python scripts/pytest.py
+        entry: bash -c "pip install poetry && poetry install --with pytest && pytest"
         language: system
         pass_filenames: false
         stages: [ commit ]

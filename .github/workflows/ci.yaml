@@ -1,0 +1,165 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  flake8:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ '3.11' ]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - id: cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache
+            .venv
+          key: ${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
+      - if: steps.cache.outputs.cache-hit != 'true'
+        uses: snok/install-poetry@v1.3.3
+        with:
+          virtualenvs-in-project: true
+      - if: steps.cache.outputs.cache-hit != 'true'
+        run: poetry install --with dev
+      - run: |
+          source .venv/bin/activate
+          pre-commit run --all-files flake8
+
+  mypy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ '3.11' ]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - id: cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache
+            .venv
+          key: ${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
+      - uses: actions/cache@v3
+        with:
+          path: .mypy_cache
+          key: ${{ matrix.python-version }}
+      - if: steps.cache.outputs.cache-hit != 'true'
+        uses: snok/install-poetry@v1.3.3
+        with:
+          virtualenvs-in-project: true
+      - if: steps.cache.outputs.cache-hit != 'true'
+        run: poetry install --with dev
+      - run: |
+          source .venv/bin/activate
+          pre-commit run --all-files mypy
+
+  pyright:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ '3.11' ]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - id: cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache
+            .venv
+          key: ${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
+      - if: steps.cache.outputs.cache-hit != 'true'
+        uses: snok/install-poetry@v1.3.3
+        with:
+          virtualenvs-in-project: true
+      - if: steps.cache.outputs.cache-hit != 'true'
+        run: poetry install --with dev
+      - run: |
+          source .venv/bin/activate
+          pre-commit run --all-files pyright
+
+  pyright-verify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [ '3.11' ]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - id: cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache
+            .venv
+          key: ${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
+      - if: steps.cache.outputs.cache-hit != 'true'
+        uses: snok/install-poetry@v1.3.3
+        with:
+          virtualenvs-in-project: true
+      - if: steps.cache.outputs.cache-hit != 'true'
+        run: poetry install --with dev
+      - run: |
+          source .venv/bin/activate
+          pre-commit run --all-files pyright-verify
+
+  pytest:
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        python-version: [ '3.11' ]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - id: cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache
+            .venv
+          key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
+      - uses: actions/cache@v3
+        with:
+          path: .pytest_cache
+          key: ${{ runner.os }}-${{ matrix.python-version }}
+      - if: steps.cache.outputs.cache-hit != 'true'
+        uses: snok/install-poetry@v1.3.3
+        with:
+          virtualenvs-in-project: true
+      - if: steps.cache.outputs.cache-hit != 'true'
+        run: poetry install --with dev
+      - if: runner.os == 'Windows'
+        run: |
+          source .venv/scripts/activate
+          pre-commit run --all-files pytest
+      - if: runner.os != 'Windows'
+        run: |
+          source .venv/bin/activate
+          pre-commit run --all-files pytest
+      - uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage.xml
+          fail_ci_if_error: true
