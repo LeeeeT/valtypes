@@ -1,15 +1,19 @@
 from dataclasses import dataclass
 from typing import TypeVar
 
-from valtypes.error.generic import Base
+from . import generic
 
-__all__ = ["ExclusiveMaximum", "ExclusiveMinimum", "Maximum", "Minimum"]
+__all__ = ["Base", "ExclusiveMaximum", "ExclusiveMinimum", "Maximum", "Minimum"]
 
 
 T = TypeVar("T")
 
 
-@dataclass
+class Base(generic.Base):
+    pass
+
+
+@dataclass(repr=False, frozen=True)
 class Maximum(Base):
     maximum: float
     got: float
@@ -18,7 +22,7 @@ class Maximum(Base):
         return f"the value must be less than or equal to {self.maximum}, got: {self.got}"
 
 
-@dataclass
+@dataclass(repr=False, frozen=True)
 class Minimum(Base):
     minimum: float
     got: float
@@ -27,7 +31,7 @@ class Minimum(Base):
         return f"the value must be greater than or equal to {self.minimum}, got: {self.got}"
 
 
-@dataclass
+@dataclass(repr=False, frozen=True)
 class ExclusiveMaximum(Base):
     exclusive_maximum: float
     got: float
@@ -36,7 +40,7 @@ class ExclusiveMaximum(Base):
         return f"the value must be less than {self.exclusive_maximum}, got: {self.got}"
 
 
-@dataclass
+@dataclass(repr=False, frozen=True)
 class ExclusiveMinimum(Base):
     exclusive_minimum: float
     got: float

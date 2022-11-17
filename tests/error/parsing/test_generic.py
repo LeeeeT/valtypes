@@ -1,29 +1,10 @@
-import valtypes.error.parsing as error
+from testing.error.parsing import Dummy
+from valtypes.error.parsing import Union, WrongType
 
 
 def test_wrong_type() -> None:
-    e = error.WrongType(..., "type")
-    assert str(e) == "not an instance of 'type'"
+    assert str(WrongType("type", ...)) == "not an instance of 'type'"
 
 
-def test_composite() -> None:
-    e = error.Composite(
-        (
-            error.WrongType(..., int),
-            error.Composite(
-                (
-                    error.Base("nested cause 1"),
-                    error.Base("nested cause 2"),
-                ),
-            ),
-            error.WrongType(..., list[str]),
-        )
-    )
-    assert str(e) == (
-        "composite error"
-        "\n├ not an instance of int"
-        "\n├ composite error"
-        "\n│ ├ nested cause 1"
-        "\n│ ╰ nested cause 2"
-        "\n╰ not an instance of list[str]"
-    )
+def test_union_derive_returns_union_with_new_errors() -> None:
+    assert Union([Dummy("cause")], 1).derive([Dummy("new cause")]) == Union([Dummy("new cause")], 1)

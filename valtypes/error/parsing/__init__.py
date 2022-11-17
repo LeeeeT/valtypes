@@ -1,3 +1,3 @@
-from .generic import Base, Composite, WrongType
+from .generic import Base, Union, WrongType
 
-__all__ = ["Base", "Composite", "WrongType"]
+__all__ = ["Base", "Union", "WrongType"]

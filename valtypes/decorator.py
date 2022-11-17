@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import abc
 from collections.abc import Callable
-from types import GenericAlias
-from typing import Generic, TypeVar
+from dataclasses import dataclass
+from typing import Any, Generic, TypeVar
+
+from valtypes.typing import GenericAlias
 
 __all__ = ["ABC", "Chain", "FromCallable", "origin"]
 
@@ -24,7 +26,11 @@ class ABC(abc.ABC, Generic[T_contra, T_co]):
         return NotImplemented
 
 
-class Chain(ABC[T_contra, T_co], Generic[T_contra, T_co]):
+@dataclass(init=False, repr=False)
+class Chain(ABC[T_contra, T_co]):
+    _first: ABC[T_contra, Any]
+    _second: ABC[Any, T_co]
+
     def __init__(self, first: ABC[T_contra, T], second: ABC[T, T_co]):
         self._first = first
         self._second = second
@@ -32,23 +38,16 @@ class Chain(ABC[T_contra, T_co], Generic[T_contra, T_co]):
     def decorate(self, value: T_contra, /) -> T_co:
         return self._second.decorate(self._first.decorate(value))
 
-    def __eq__(self, other: object, /) -> bool:
-        if isinstance(other, Chain):
-            return self._first == other._first and self._second == other._second
-        return NotImplemented
 
+@dataclass(init=False, repr=False)
+class FromCallable(ABC[T_contra, T_co]):
+    _callable: Callable[[T_contra], T_co]
 
-class FromCallable(ABC[T_contra, T_co], Generic[T_contra, T_co]):
     def __init__(self, callable: Callable[[T_contra], T_co]):
         self._callable = callable
 
     def decorate(self, value: T_contra, /) -> T_co:
         return self._callable(value)
-
-    def __eq__(self, other: object) -> bool:
-        if isinstance(other, FromCallable):
-            return self._callable == other._callable
-        return NotImplemented
 
 
 @FromCallable

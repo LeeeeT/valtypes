@@ -1,14 +1,14 @@
 from typing import TYPE_CHECKING, Annotated, TypeVar
 
 from .collection import Collection
-from .parsing import parse
+from .parsing import parse_json
 
 __version__ = "6.0.1"
 
 __all__ = [
     "Collection",
     "Ref",
-    "parse",
+    "parse_json",
 ]
 
 

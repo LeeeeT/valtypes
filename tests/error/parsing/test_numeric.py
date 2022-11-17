@@ -1,6 +1,5 @@
-import valtypes.error.parsing.numeric as error
+from valtypes.error.parsing.numeric import FractionalNumber
 
 
 def test_fractional_number() -> None:
-    e = error.FractionalNumber(1.5)
-    assert str(e) == "got fractional number: 1.5"
+    assert str(FractionalNumber(1.5)) == "got fractional number: 1.5"

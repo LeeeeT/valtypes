@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import abc
-from typing import Generic, TypeVar
+from dataclasses import dataclass
+from typing import Any, Generic, TypeVar
 
 __all__ = ["ABC", "Chain"]
 
@@ -22,15 +23,14 @@ class ABC(abc.ABC, Generic[T_contra, T_co]):
         return NotImplemented
 
 
-class Chain(ABC[T_contra, T_co], Generic[T_contra, T_co]):
+@dataclass(init=False, repr=False)
+class Chain(ABC[T_contra, T_co]):
+    _first: ABC[T_contra, Any]
+    _second: ABC[Any, T_co]
+
     def __init__(self, first: ABC[T_contra, T], second: ABC[T, T_co]):
         self._first = first
         self._second = second
 
     def parse(self, source: T_contra, /) -> T_co:
         return self._second.parse(self._first.parse(source))
-
-    def __eq__(self, other: object, /) -> bool:
-        if isinstance(other, Chain):
-            return self._first == other._first and self._second == other._second
-        return NotImplemented

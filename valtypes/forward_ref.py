@@ -51,4 +51,4 @@ else:
             return self.__args__[1]
 
         def __repr__(self) -> str:
-            return repr(self._code)
+            return f"{self._code!r}"

@@ -1,11 +1,11 @@
-from valtypes.condition import LenientSubclassOf
+from valtypes.condition import ObjectIsSubclassOf
 
 
 def test_returns_true_if_value_is_subclass_of_type() -> None:
-    assert LenientSubclassOf(int).check(int)
-    assert LenientSubclassOf(object).check(int)
+    assert ObjectIsSubclassOf(int).check(int)
+    assert ObjectIsSubclassOf(object).check(int)
 
 
 def test_returns_false_if_value_is_not_subclass_of_type() -> None:
-    assert not LenientSubclassOf(int).check(1)
-    assert not LenientSubclassOf(float).check(int)
+    assert not ObjectIsSubclassOf(int).check(1)
+    assert not ObjectIsSubclassOf(float).check(int)

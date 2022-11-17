@@ -1,7 +1,6 @@
 site_name: valtypes
 site_description: Parsing in Python has never been easier
 site_url: https://valtypes.readthedocs.io
-site_author: LeeeeT
 
 repo_name: LeeeeT/valtypes
 repo_url: https://github.com/LeeeeT/valtypes
@@ -11,17 +10,37 @@ edit_uri: edit/main/docs
 theme:
   name: material
   palette:
-    - scheme: default
-      primary: blue
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
       toggle:
         icon: material/lightbulb
-    - scheme: slate
-      primary: blue
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
       toggle:
         icon: material/lightbulb-outline
+        name: Switch to light mode
+  logo: icon.svg
+  favicon: favicon.svg
 
 nav:
   - Overview: index.md
+  - Usage:
+    - Constrained types:
+      - usage/constrained_types/float.md
+      - usage/constrained_types/frozenset.md
+      - usage/constrained_types/generic.md
+      - usage/constrained_types/int.md
+      - usage/constrained_types/list.md
+      - usage/constrained_types/set.md
+      - usage/constrained_types/sized.md
+      - usage/constrained_types/str.md
+      - usage/constrained_types/tuple.md
+    - Parsing:
+      - 'From JSON': usage/parsing/from_json.md
+      - 'To JSON': usage/parsing/to_json.md
 
 markdown_extensions:
   - admonition

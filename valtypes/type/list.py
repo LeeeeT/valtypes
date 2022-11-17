@@ -1,5 +1,5 @@
 from collections.abc import Iterable
-from typing import Any, Generic, SupportsIndex, TypeVar, cast, overload
+from typing import Any, Self, SupportsIndex, TypeVar, cast, overload
 
 from valtypes.util import ensure_sequence, get_slice_length
 
@@ -10,15 +10,13 @@ __all__ = ["InitHook", "LengthHook", "MaximumLength", "MinimumLength", "NonEmpty
 
 T = TypeVar("T")
 
-T_LengthHook = TypeVar("T_LengthHook", bound="LengthHook[Any]")
 
-
-class InitHook(generic.InitHook, list[T], Generic[T]):
+class InitHook(generic.InitHook, list[T]):
     def __init__(self, iterable: Iterable[T] = [], /):
         super().__init__(iterable)
 
 
-class LengthHook(InitHook[T], sized.LengthHook, Generic[T]):
+class LengthHook(InitHook[T], sized.LengthHook):
     def clear(self) -> None:
         self.__length_hook__(0)
         super().clear()
@@ -65,23 +63,23 @@ class LengthHook(InitHook[T], sized.LengthHook, Generic[T]):
             self.__notify_length_decrements__()
         super().__delitem__(item)
 
-    def __iadd__(self: T_LengthHook, iterable: Iterable[T], /) -> T_LengthHook:  # type: ignore
+    def __iadd__(self, iterable: Iterable[T], /) -> Self:
         sequence = ensure_sequence(iterable)
         self.__notify_length_delta__(len(sequence))
         return super().__iadd__(sequence)
 
-    def __imul__(self: T_LengthHook, multiplier: SupportsIndex, /) -> T_LengthHook:
+    def __imul__(self, multiplier: SupportsIndex, /) -> Self:
         self.__length_hook__(len(self) * int(multiplier))
         return super().__imul__(multiplier)
 
 
-class MinimumLength(LengthHook[T], sized.MinimumLength, Generic[T]):
+class MinimumLength(LengthHook[T], sized.MinimumLength):
     pass
 
 
-class MaximumLength(LengthHook[T], sized.MaximumLength, Generic[T]):
+class MaximumLength(LengthHook[T], sized.MaximumLength):
     pass
 
 
-class NonEmpty(MinimumLength[T], sized.NonEmpty, Generic[T]):
+class NonEmpty(MinimumLength[T], sized.NonEmpty):
     pass

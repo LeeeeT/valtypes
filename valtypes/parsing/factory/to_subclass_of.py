@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar
+from typing import TypeVar
 
 from valtypes.parsing import parser
 
@@ -11,7 +11,7 @@ T = TypeVar("T")
 T_contra = TypeVar("T_contra", contravariant=True)
 
 
-class ToSubclassOf(ABC[type[T], T_contra, T], Generic[T, T_contra]):
+class ToSubclassOf(ABC[type[T], T_contra, T]):
     def __init__(self, base: type[T], factory: ABC[type[T], T_contra, T]):
         self._base = base
         self._factory = factory

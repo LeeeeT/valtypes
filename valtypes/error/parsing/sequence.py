@@ -1,23 +1,45 @@
+from collections.abc import Sequence
 from dataclasses import dataclass
+from typing import Self
 
-from .generic import Base
+from . import generic
 
-__all__ = ["WrongItem", "WrongItemsCount"]
+__all__ = ["Base", "Composite", "WrongItem", "WrongItemsCount"]
 
 
-@dataclass
-class WrongItem(Base):
+class Base(generic.Base):
+    pass
+
+
+@dataclass(repr=False, frozen=True)
+class Composite(ExceptionGroup[Base], generic.Base):
+    errors: Sequence[Base]
+    got: object
+
+    def __new__(cls, errors: Sequence[Base], got: object) -> Self:
+        return super().__new__(cls, "sequence parsing error", errors)
+
+    def derive(self, errors: Sequence[Base]) -> Self:
+        return self.__class__(errors, self.got)
+
+
+@dataclass(repr=False, frozen=True)
+class WrongItem(ExceptionGroup[generic.Base], Base):
     index: int
-    cause: Base
+    cause: generic.Base
+    got: object
 
-    def __str__(self) -> str:
-        return f"[{self.index}]: {self.cause}"
+    def __new__(cls, index: int, cause: generic.Base, got: object) -> Self:
+        return super().__new__(cls, f"can't parse item at index {index}", [cause])
+
+    def derive(self, errors: Sequence[generic.Base]) -> Self:
+        return self.__class__(self.index, errors[0], self.got)
 
 
-@dataclass
+@dataclass(repr=False, frozen=True)
 class WrongItemsCount(Base):
     expected: int
-    actual: int
+    got: int
 
     def __str__(self) -> str:
-        return f"{self.expected} item(s) expected, got {self.actual}"
+        return f"{self.expected} item(s) expected, got {self.got}"

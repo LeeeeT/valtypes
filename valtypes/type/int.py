@@ -1,11 +1,12 @@
-from typing import SupportsIndex, overload
+from typing import ClassVar, SupportsIndex, SupportsInt, overload
 
 import valtypes.error.parsing.type.numeric as error
-from valtypes.typing import Intable
+from valtypes.typing import ReadableBuffer, SupportsTrunc
 
 from . import generic
 
 __all__ = [
+    "InitHook",
     "Maximum",
     "Minimum",
     "Negative",
@@ -17,19 +18,19 @@ __all__ = [
 
 class InitHook(generic.InitHook, int):
     @overload
-    def __init__(self, value: Intable = ..., /):
+    def __init__(self, x: str | ReadableBuffer | SupportsInt | SupportsIndex | SupportsTrunc = ..., /):
         ...
 
     @overload
-    def __init__(self, value: bytes | bytearray | str, /, base: SupportsIndex):
+    def __init__(self, x: str | bytes | bytearray, /, base: SupportsIndex):
         ...
 
-    def __init__(self, value: Intable = 0, /, base: SupportsIndex = 10):
+    def __init__(self, x: str | ReadableBuffer | SupportsInt | SupportsIndex | SupportsTrunc = 0, /, base: SupportsIndex = 10):
         super().__init__()
 
 
 class Maximum(InitHook):
-    __maximum__: int
+    __maximum__: ClassVar[int]
 
     def __init_hook__(self) -> None:
         if self > self.__maximum__:
@@ -37,7 +38,7 @@ class Maximum(InitHook):
 
 
 class Minimum(InitHook):
-    __minimum__: int
+    __minimum__: ClassVar[int]
 
     def __init_hook__(self) -> None:
         if self < self.__minimum__:
@@ -45,16 +46,16 @@ class Minimum(InitHook):
 
 
 class Positive(Minimum):
-    __minimum__ = 1
+    __minimum__: ClassVar[int] = 1
 
 
 class NonPositive(Maximum):
-    __maximum__ = 0
+    __maximum__: ClassVar[int] = 0
 
 
 class Negative(Maximum):
-    __maximum__ = -1
+    __maximum__: ClassVar[int] = -1
 
 
 class NonNegative(Minimum):
-    __minimum__ = 0
+    __minimum__: ClassVar[int] = 0
