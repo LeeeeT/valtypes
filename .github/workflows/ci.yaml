@@ -26,7 +26,7 @@ jobs:
           path: |
             ~/.cache
             .venv
-          key: ${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
+          key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Install Poetry
         if: steps.cache.outputs.cache-hit != 'true'
         uses: snok/install-poetry@v1.3.3
@@ -59,7 +59,7 @@ jobs:
 #          path: |
 #            ~/.cache
 #            .venv
-#          key: ${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
+#          key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
 #      - name: Restore mypy cache
 #        uses: actions/cache@v3
 #        with:
@@ -97,7 +97,7 @@ jobs:
           path: |
             ~/.cache
             .venv
-          key: ${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
+          key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Install Poetry
         if: steps.cache.outputs.cache-hit != 'true'
         uses: snok/install-poetry@v1.3.3
@@ -130,7 +130,7 @@ jobs:
           path: |
             ~/.cache
             .venv
-          key: ${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
+          key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Install Poetry
         if: steps.cache.outputs.cache-hit != 'true'
         uses: snok/install-poetry@v1.3.3
@@ -172,7 +172,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .pytest_cache
-          key: ${{ runner.os }}-${{ matrix.python-version }}
+          key: pytest-${{ runner.os }}-${{ matrix.python-version }}
       - name: Install Poetry
         if: steps.cache.outputs.cache-hit != 'true'
         uses: snok/install-poetry@v1.3.3
