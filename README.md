@@ -20,9 +20,6 @@
     <a href="https://valtypes.readthedocs.io/en/latest/?badge=latest">
         <img src="https://img.shields.io/readthedocs/valtypes" />
     </a>
-    <a href="https://codecov.io/gh/LeeeeT/valtypes">
-        <img src="https://img.shields.io/codecov/c/github/LeeeeT/valtypes" />
-    </a>
 </p>
 
 ---

@@ -1,9 +1,0 @@
-coverage:
-  status:
-    project:
-      default:
-        target: 100%
-
-comment:
-  layout: "header, diff, footer"
-  require_changes: true

@@ -50,11 +50,6 @@ optional = true
 pytest = "^7.2.0"
 pytest-cov = "^4.0.0"
 
-[tool.poetry.group.docs]
-optional = true
-[tool.poetry.group.docs.dependencies]
-mkdocs-material = "^8.5.9"
-
 [tool.isort]
 profile = "black"
 line_length = 151
@@ -89,7 +84,7 @@ reportUnnecessaryIsInstance = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--cov=valtypes --cov-report xml"
+addopts = "--cov=valtypes"
 
 [tool.coverage.run]
 branch = true
