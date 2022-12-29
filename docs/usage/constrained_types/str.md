@@ -62,17 +62,17 @@ NonEmpty("foo")  # passes
 NonEmpty()  # raises valtypes.error.parsing.type.sized.MinimumLength
 ```
 
-## `Pattern`
+## `RePattern`
 
 Type for representing a `str` that fully matches a given regular expression. The regular expression is stored in the `__pattern__` attribute.
 
 ```python
 import re
 
-from valtypes.type.str import Pattern
+from valtypes.type.str import RePattern
 
 
-class Numeric(Pattern):
+class Numeric(RePattern):
     __pattern__ = re.compile(r"\d+")
 
 

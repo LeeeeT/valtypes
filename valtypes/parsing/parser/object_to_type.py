@@ -3,7 +3,7 @@ from typing import TypeVar
 
 import valtypes.error.parsing as error
 
-from .abc import ABC
+from .base import ABC
 
 __all__ = ["ObjectToType"]
 

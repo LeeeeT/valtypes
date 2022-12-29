@@ -1,14 +1,18 @@
+import typing
 from collections.abc import Iterable, Set
-from typing import Any, Self, TypeVar
+from typing import Self, TypeVar
 
 from valtypes.util import ensure_iterable_not_iterator
 
 from . import generic, sized
 
-__all__ = ["InitHook", "LengthHook", "MaximumLength", "MinimumLength", "NonEmpty"]
+__all__ = ["Any", "InitHook", "LengthHook", "MaximumLength", "MinimumLength", "NonEmpty"]
 
 
 T = TypeVar("T")
+
+
+Any = Set[T]
 
 
 class InitHook(generic.InitHook, set[T]):
@@ -22,7 +26,7 @@ class LengthHook(InitHook[T], sized.LengthHook):
             self.__notify_length_increments__()
         super().add(element)
 
-    def difference_update(self, *iterables: Iterable[Any]) -> None:
+    def difference_update(self, *iterables: Iterable[typing.Any]) -> None:
         iterables = tuple(ensure_iterable_not_iterator(iterable) for iterable in iterables)
         self.__length_hook__(len(self.difference(*iterables)))
         super().difference_update(*iterables)
@@ -32,7 +36,7 @@ class LengthHook(InitHook[T], sized.LengthHook):
             self.__notify_length_decrements__()
         super().discard(element)
 
-    def intersection_update(self, *iterables: Iterable[Any]) -> None:
+    def intersection_update(self, *iterables: Iterable[typing.Any]) -> None:
         iterables = tuple(ensure_iterable_not_iterator(iterable) for iterable in iterables)
         self.__length_hook__(len(self.intersection(*iterables)))
         super().intersection_update(*iterables)
@@ -67,7 +71,7 @@ class LengthHook(InitHook[T], sized.LengthHook):
         self.__length_hook__(len(self | other))
         return super().__ior__(other)
 
-    def __isub__(self, other: Set[Any], /) -> Self:
+    def __isub__(self, other: Set[typing.Any], /) -> Self:
         self.__length_hook__(len(self - other))
         return super().__isub__(other)
 

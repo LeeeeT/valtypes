@@ -1,11 +1,12 @@
 from typing import ClassVar, SupportsIndex, SupportsInt, overload
 
-import valtypes.error.parsing.type.numeric as error
+import valtypes.error.parsing.int as error
 from valtypes.typing import ReadableBuffer, SupportsTrunc
 
 from . import generic
 
 __all__ = [
+    "Any",
     "InitHook",
     "Maximum",
     "Minimum",
@@ -16,16 +17,19 @@ __all__ = [
 ]
 
 
+Any = int
+
+
 class InitHook(generic.InitHook, int):
     @overload
-    def __init__(self, x: str | ReadableBuffer | SupportsInt | SupportsIndex | SupportsTrunc = ..., /):
+    def __init__(self, _: str | ReadableBuffer | SupportsInt | SupportsIndex | SupportsTrunc = ..., /):
         ...
 
     @overload
-    def __init__(self, x: str | bytes | bytearray, /, base: SupportsIndex):
+    def __init__(self, _: str | bytes | bytearray, /, base: SupportsIndex):
         ...
 
-    def __init__(self, x: str | ReadableBuffer | SupportsInt | SupportsIndex | SupportsTrunc = 0, /, base: SupportsIndex = 10):
+    def __init__(self, _: str | ReadableBuffer | SupportsInt | SupportsIndex | SupportsTrunc = 0, /, base: SupportsIndex = 10):
         super().__init__()
 
 

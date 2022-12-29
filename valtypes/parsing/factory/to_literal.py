@@ -3,7 +3,7 @@ from typing import Any, TypeVar
 from valtypes.parsing import parser
 from valtypes.typing import LiteralAlias
 
-from .abc import ABC
+from .base import ABC
 
 __all__ = ["ToLiteral"]
 

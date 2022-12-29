@@ -2,7 +2,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass
 from typing import TypeVar
 
-from .abc import ABC
+from .base import ABC
 
 __all__ = ["MappingToDict"]
 

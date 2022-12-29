@@ -1,6 +1,6 @@
 import pytest
 
-import valtypes.error.parsing.type.numeric as error
+import valtypes.error.parsing.int as error
 import valtypes.type.int as type
 
 

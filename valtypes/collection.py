@@ -1,12 +1,10 @@
 from collections.abc import Iterator
-from typing import Any, Generic, TypeVar
+from typing import Generic, Self, TypeVar
 
 __all__ = ["Collection"]
 
 
 T = TypeVar("T")
-
-T_Collection = TypeVar("T_Collection", bound="Collection[Any]")
 
 
 class Collection(Generic[T]):
@@ -14,7 +12,7 @@ class Collection(Generic[T]):
         self._items = items
 
     @classmethod
-    def empty(cls: type[T_Collection]) -> T_Collection:
+    def empty(cls) -> Self:
         return cls([])
 
     def add_to_top(self, *items: T) -> None:

@@ -1,4 +1,4 @@
-from valtypes.error.parsing.type.sized import MaximumLength, MinimumLength
+from valtypes.error.parsing.sized import MaximumLength, MinimumLength
 
 
 def test_maximum_length() -> None:

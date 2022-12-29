@@ -23,30 +23,16 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.11"
+regex = "^2022.10.31"
 
 [tool.poetry.group.dev.dependencies]
-pre-commit = "^2.20.0"
-
-[tool.poetry.group.mypy]
-optional = true
-[tool.poetry.group.mypy.dependencies]
-mypy = "^0.990"
-pytest = "^7.2.0"
-
-[tool.poetry.group.pyright]
-optional = true
-[tool.poetry.group.pyright.dependencies]
-pyright = "^1.1.279"
-pytest = "^7.2.0"
-
-[tool.poetry.group.pyright-verify]
-optional = true
-[tool.poetry.group.pyright-verify.dependencies]
-pyright = "^1.1.279"
-
-[tool.poetry.group.pytest]
-optional = true
-[tool.poetry.group.pytest.dependencies]
+pre-commit = "^2.21.0"
+isort = "^5.11.4"
+sort-all = "^1.2.0"
+black = "^22.12.0"
+pyproject-flake8 = "^6.0.0.post1"
+mypy = "^0.991"
+pyright = "^1.1.288"
 pytest = "^7.2.0"
 pytest-cov = "^4.0.0"
 
@@ -60,7 +46,7 @@ line-length = 151
 
 [tool.flake8]
 max-line-length = 151
-ignore = "E203, W503, F402"
+ignore = "E203, F402, W503, W504"
 
 [tool.mypy]
 files = ["valtypes", "tests", "testing"]
@@ -84,7 +70,7 @@ reportUnnecessaryIsInstance = false
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--cov=valtypes"
+addopts = "--cov=valtypes --cov-report=xml"
 
 [tool.coverage.run]
 branch = true

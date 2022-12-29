@@ -1,15 +1,20 @@
 import re
 from typing import ClassVar
 
-import valtypes.error.parsing.type.str as error
+import regex
+
+import valtypes.error.parsing.str as error
 
 from . import generic, sized
 
-__all__ = ["InitHook", "MaximumLength", "MinimumLength", "NonEmpty", "Pattern"]
+__all__ = ["Any", "InitHook", "MaximumLength", "MinimumLength", "NonEmpty", "RePattern", "RegexPattern"]
+
+
+Any = str
 
 
 class InitHook(generic.InitHook, str):
-    def __init__(self, object: object = "", /):
+    def __init__(self, _: object = "", /):
         super().__init__()
 
 
@@ -25,9 +30,17 @@ class NonEmpty(MinimumLength, sized.NonEmpty):
     pass
 
 
-class Pattern(InitHook):
+class RePattern(InitHook):
     __pattern__: ClassVar[re.Pattern[str]]
 
     def __init_hook__(self) -> None:
         if not self.__pattern__.fullmatch(self):
-            raise error.Pattern(self.__pattern__, self)
+            raise error.RePatternNoMatch(self.__pattern__, self)
+
+
+class RegexPattern(InitHook):
+    __pattern__: ClassVar[regex.Pattern[str]]
+
+    def __init_hook__(self) -> None:
+        if not self.__pattern__.fullmatch(self):
+            raise error.RegexPatternNoMatch(self.__pattern__, self)

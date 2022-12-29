@@ -2,7 +2,7 @@ from typing import Final, TypeVar
 
 import valtypes.error.parsing.literal as error
 
-from .abc import ABC
+from .base import ABC
 
 __all__ = ["ToLiteralChoice"]
 

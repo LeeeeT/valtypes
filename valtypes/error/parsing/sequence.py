@@ -12,7 +12,7 @@ class Base(generic.Base):
 
 
 @dataclass(repr=False, frozen=True)
-class Composite(ExceptionGroup[Base], generic.Base):
+class Composite(ExceptionGroup[Base], Base):
     errors: Sequence[Base]
     got: object
 

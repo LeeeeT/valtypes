@@ -1,5 +1,6 @@
-from .abc import ABC, Preparse
+from .base import ABC, Preparse
 from .composite import Composite
+from .const import Const
 from .dict_to_dataclass import DictToDataclass
 from .from_callable import FromCallable
 from .from_json import from_json
@@ -16,6 +17,7 @@ from .to_union import ToUnion
 __all__ = [
     "ABC",
     "Composite",
+    "Const",
     "DictToDataclass",
     "FromCallable",
     "IterableToList",

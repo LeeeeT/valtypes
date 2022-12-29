@@ -1,6 +1,6 @@
 import pytest
 
-import valtypes.error.parsing.type.numeric as error
+import valtypes.error.parsing.comparison as error
 from valtypes import parse_json
 from valtypes.type import int
 

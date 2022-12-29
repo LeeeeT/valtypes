@@ -138,6 +138,6 @@ from valtypes.type.float import Portion
 
 Portion(0.)  # passes
 Portion(1.)  # passes
-Portion(-1.)  # raises valtypes.error.parsing.type.numeric.Minimum
+Portion(-.1)  # raises valtypes.error.parsing.type.numeric.Minimum
 Portion(1.1)  # raises valtypes.error.parsing.type.numeric.Maximum
 ```

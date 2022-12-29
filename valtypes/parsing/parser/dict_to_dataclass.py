@@ -4,7 +4,7 @@ from typing import Any, Generic, TypeVar
 import valtypes.error.parsing as error
 import valtypes.error.parsing.dataclass as dataclass_error
 
-from .abc import ABC
+from .base import ABC
 
 __all__ = ["DictToDataclass", "Parser"]
 
@@ -56,7 +56,7 @@ class Parser(Generic[T, T_co]):
 
     def _parse_field(self, field_name: str) -> None:
         try:
-            self._fields[field_name] = self._required_fields_parsers[field_name].parse(self._source[field_name])
+            self._fields[field_name] = self._fields_parsers[field_name].parse(self._source[field_name])
         except error.Base as e:
             self._errors.append(dataclass_error.WrongFieldValue(field_name, e, self._source[field_name]))
 

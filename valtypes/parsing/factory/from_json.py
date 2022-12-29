@@ -1,9 +1,15 @@
+import re
 from typing import Any
 
+import regex
+
 from valtypes import condition
-from valtypes.parsing import parser, rule
+from valtypes.parsing import parser
+from valtypes.parsing.rule import Rule
+from valtypes.type.network import IPv4, IPv6
 
 from .composite import Composite
+from .const import Const
 from .from_callable import FromCallable
 from .object_to_dataclass import ObjectToDataclass
 from .object_to_list import ObjectToList
@@ -30,18 +36,26 @@ object_to_subclass_of_list_alias: ToSubclassOfGeneric[list[Any], object] = ToSub
 object_to_union_alias: ToUnion[object, Any] = ToUnion(from_json)
 object_to_literal: ToLiteral[object, Any] = ToLiteral(from_json)
 object_to_type: FromCallable[type, object, Any] = FromCallable(parser.ObjectToType)
+object_to_re_pattern: Const[object, re.Pattern[str]] = Const(parser.object_to_re_pattern)
+object_to_regex_pattern: Const[object, regex.Pattern[str]] = Const(parser.object_to_regex_pattern)
+object_to_ipv4: Const[object, IPv4] = Const(parser.object_to_ipv4)
+object_to_ipv6: Const[object, IPv6] = Const(parser.object_to_ipv6)
 
 from_json.add_to_top(
-    rule.Base(object_to_init_var, condition.init_var),
-    rule.Base(object_to_dataclass, condition.dataclass_with_init),
-    rule.Base(object_to_subclass_of_int, condition.object_is_strict_subclass_of_int),
-    rule.Base(object_to_subclass_of_float, condition.object_is_strict_subclass_of_float),
-    rule.Base(object_to_subclass_of_str, condition.object_is_strict_subclass_of_str),
-    rule.Base(object_to_subclass_of_bytes, condition.object_is_strict_subclass_of_bytes),
-    rule.Base(object_to_subclass_of_bytearray, condition.object_is_strict_subclass_of_bytearray),
-    rule.Base(object_to_list_alias, condition.object_is_strict_alias_of_list),
-    rule.Base(object_to_subclass_of_list_alias, condition.object_is_alias_of_list),
-    rule.Base(object_to_union_alias, condition.union_alias),
-    rule.Base(object_to_literal, condition.literal_alias),
-    rule.Base(object_to_type, condition.builtin_type),
+    Rule(object_to_init_var, condition.init_var),
+    Rule(object_to_dataclass, condition.dataclass_with_init),
+    Rule(object_to_subclass_of_int, condition.object_is_strict_subclass_of_int),
+    Rule(object_to_subclass_of_float, condition.object_is_strict_subclass_of_float),
+    Rule(object_to_subclass_of_str, condition.object_is_strict_subclass_of_str),
+    Rule(object_to_subclass_of_bytes, condition.object_is_strict_subclass_of_bytes),
+    Rule(object_to_subclass_of_bytearray, condition.object_is_strict_subclass_of_bytearray),
+    Rule(object_to_list_alias, condition.object_is_strict_alias_of_list),
+    Rule(object_to_subclass_of_list_alias, condition.object_is_alias_of_list),
+    Rule(object_to_union_alias, condition.union_alias),
+    Rule(object_to_literal, condition.literal_alias),
+    Rule(object_to_type, condition.builtin_type),
+    Rule(object_to_re_pattern, condition.re_pattern_alias),
+    Rule(object_to_regex_pattern, condition.regex_pattern_alias),
+    Rule(object_to_ipv4, condition.ipv4),
+    Rule(object_to_ipv6, condition.ipv6),
 )

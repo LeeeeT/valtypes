@@ -3,7 +3,7 @@ from typing import TypeVar
 
 from valtypes.parsing import parser
 
-from .abc import ABC
+from .base import ABC
 
 __all__ = ["FromCallable"]
 

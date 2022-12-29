@@ -17,7 +17,7 @@ def test_parses_dict_keys_and_values_to_dataclass_fields() -> None:
     assert parse_json(Foo, {"bar": 1, "baz": "2"}) == Foo(1, "2")
 
 
-def test_supports_optional_fields() -> None:
+def test_does_not_require_optional_fields() -> None:
     @dataclass
     class Foo:
         a: int
@@ -28,6 +28,16 @@ def test_supports_optional_fields() -> None:
         e: int = field(default_factory=lambda: 5)
 
     assert parse_json(Foo, {"a": 1, "c": "c"}) == Foo(1, c="c")
+
+
+def test_uses_provided_value_rather_than_default() -> None:
+    @dataclass
+    class Foo:
+        a: int = 1
+        b: int = field(default=2)
+        c: int = field(default_factory=lambda: 3)
+
+    assert parse_json(Foo, {"a": 4, "b": 5, "c": 6}) == Foo(4, 5, 6)
 
 
 def test_does_not_require_no_init_fields() -> None:

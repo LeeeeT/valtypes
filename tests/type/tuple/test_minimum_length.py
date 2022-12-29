@@ -1,6 +1,6 @@
 import pytest
 
-import valtypes.error.parsing.type.sized as error
+import valtypes.error.parsing.sized as error
 import valtypes.type.tuple as type
 
 

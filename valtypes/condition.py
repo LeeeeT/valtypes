@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 import abc
+import re
 from collections.abc import Callable
 from dataclasses import InitVar, dataclass, is_dataclass
 from types import UnionType
 from typing import Any, Generic, TypeVar
 
+import regex
+
+from valtypes.type.network import IPv4, IPv6
 from valtypes.typing import Dataclass, GenericAlias, LiteralAlias, UnionAlias
 from valtypes.util import resolve_type_arguments
 
@@ -16,6 +20,7 @@ __all__ = [
     "AliasOf",
     "And",
     "Decorated",
+    "Equals",
     "FromCallable",
     "InstanceOf",
     "Is",
@@ -34,6 +39,7 @@ __all__ = [
     "fixed_length_tuple_alias",
     "generic_alias",
     "init_var",
+    "ipv4",
     "object_is_alias_of_list",
     "object_is_fixed_length_tuple_alias",
     "object_is_strict_alias_of_list",
@@ -44,6 +50,8 @@ __all__ = [
     "object_is_strict_subclass_of_str",
     "object_is_tuple_alias",
     "object_is_variable_length_tuple_alias",
+    "re_pattern_alias",
+    "regex_pattern_alias",
     "union_alias",
     "variable_length_tuple_alias",
 ]
@@ -172,6 +180,17 @@ class Is(ABC[object]):
 
 
 @dataclass(init=False, repr=False)
+class Equals(ABC[object]):
+    _object: object
+
+    def __init__(self, object: object):
+        self._object = object
+
+    def check(self, value: object, /) -> bool:
+        return value == self._object
+
+
+@dataclass(init=False, repr=False)
 class SubclassOf(ABC[type]):
     _type: type | UnionType
 
@@ -256,3 +275,10 @@ object_is_strict_subclass_of_bytearray: ObjectIsStrictSubclassOf = ObjectIsStric
 
 object_is_alias_of_list: ObjectIsAliasOf = ObjectIsAliasOf(list)
 object_is_strict_alias_of_list: ObjectIsStrictAliasOf = ObjectIsStrictAliasOf(list)
+
+re_pattern_alias: Equals = Equals(re.Pattern[str])
+regex_pattern_alias: Equals = Equals(regex.Pattern[str])
+
+ipv4: Is = Is(IPv4)
+
+ipv6: Is = Is(IPv6)

@@ -7,7 +7,7 @@ from typing import Any, Generic, TypeVar
 from valtypes.parsing import parser
 from valtypes.typing import Dataclass
 
-from .abc import ABC
+from .base import ABC
 
 __all__ = ["DictToDataclass", "Factory"]
 
