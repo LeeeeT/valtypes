@@ -1,0 +1,30 @@
+{
+	"name": "Valtypes",
+	"image": "mcr.microsoft.com/devcontainers/python:0-3.11",
+	"features": {
+		"ghcr.io/devcontainers/features/git:1": {},
+		"ghcr.io/devcontainers-contrib/features/zsh-plugins:0": {
+			"plugins": [
+				"zsh-autosuggestions zsh-syntax-highlighting"
+			],
+			"omzPlugins": [
+				"https://github.com/zsh-users/zsh-autosuggestions https://github.com/zsh-users/zsh-syntax-highlighting"
+			]
+		},
+		"ghcr.io/devcontainers-contrib/features/poetry:2": {}
+	},
+	"settings": {
+		"terminal.integrated.shell.*": "zsh"
+	},
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-python.isort",
+				"bungcip.better-toml",
+				"ryanluker.vscode-coverage-gutters"
+			]
+		}
+	},
+	"postCreateCommand": ".devcontainer/prepare.sh"
+}

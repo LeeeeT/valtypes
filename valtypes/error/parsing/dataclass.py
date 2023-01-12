@@ -12,7 +12,7 @@ class Base(generic.Base):
 
 
 @dataclass(repr=False, frozen=True)
-class Composite(ExceptionGroup[Base], generic.Base):
+class Composite(ExceptionGroup[Base], Base):
     errors: Sequence[Base]
     got: Mapping[str, object]
 
@@ -30,7 +30,7 @@ class WrongFieldValue(ExceptionGroup[generic.Base], Base):
     got: object
 
     def __new__(cls, field: str, cause: generic.Base, got: object) -> Self:
-        return super().__new__(cls, f"can't parse field {field!r}", [cause])
+        return super().__new__(cls, f"can't parse field '{field}'", [cause])
 
     def derive(self, errors: Sequence[generic.Base]) -> Self:
         return self.__class__(self.field, errors[0], self.got)
@@ -41,4 +41,4 @@ class MissingField(Base):
     field: str
 
     def __str__(self) -> str:
-        return f"required field {self.field!r} is missing"
+        return f"required field '{self.field}' is missing"

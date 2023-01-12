@@ -21,17 +21,34 @@ __all__ = [
     "GenericAlias",
     "LiteralAlias",
     "ReadableBuffer",
+    "SupportsGT",
+    "SupportsLT",
+    "SupportsReachComparison",
     "SupportsTrunc",
     "UnionAlias",
 ]
 
 
 T_co = TypeVar("T_co", covariant=True)
+T_contra = TypeVar("T_contra", contravariant=True)
 
 
 class SupportsTrunc(Protocol):
     def __trunc__(self) -> int:
         ...
+
+
+class SupportsLT(Protocol[T_contra]):
+    def __lt__(self, _: T_contra, /) -> bool:
+        ...
+
+
+class SupportsGT(Protocol[T_contra]):
+    def __gt__(self, _: T_contra, /) -> bool:
+        ...
+
+
+SupportsReachComparison = SupportsGT[T_contra] | SupportsLT[T_contra]
 
 
 @runtime_checkable

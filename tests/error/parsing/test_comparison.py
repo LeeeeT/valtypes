@@ -1,4 +1,4 @@
-from valtypes.error.parsing.type.numeric import ExclusiveMaximum, ExclusiveMinimum, Maximum, Minimum
+from valtypes.error.parsing.comparison import ExclusiveMaximum, ExclusiveMinimum, Maximum, Minimum
 
 
 def test_maximum() -> None:

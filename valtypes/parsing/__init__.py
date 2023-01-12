@@ -1,3 +1,4 @@
 from .parse_json import parse_json
+from .rule import Rule
 
-__all__ = ["parse_json"]
+__all__ = ["Rule", "parse_json"]

@@ -1,11 +1,12 @@
 from typing import ClassVar, SupportsFloat, SupportsIndex
 
-import valtypes.error.parsing.type.numeric as error
+import valtypes.error.parsing.float as error
 from valtypes.typing import ReadableBuffer
 
 from . import generic
 
 __all__ = [
+    "Any",
     "ExclusiveMaximum",
     "ExclusiveMinimum",
     "InitHook",
@@ -19,8 +20,11 @@ __all__ = [
 ]
 
 
+Any = float
+
+
 class InitHook(generic.InitHook, float):
-    def __init__(self, x: SupportsFloat | SupportsIndex | str | ReadableBuffer = 0.0, /):
+    def __init__(self, _: SupportsFloat | SupportsIndex | str | ReadableBuffer = 0.0, /):
         super().__init__()
 
 

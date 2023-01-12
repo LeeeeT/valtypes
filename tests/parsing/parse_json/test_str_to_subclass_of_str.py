@@ -1,6 +1,6 @@
 import pytest
 
-import valtypes.error.parsing.type.sized as error
+import valtypes.error.parsing.sized as error
 from valtypes import parse_json
 from valtypes.type import str
 

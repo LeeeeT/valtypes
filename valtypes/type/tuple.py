@@ -3,14 +3,17 @@ from typing import TypeVar
 
 from . import generic, sized
 
-__all__ = ["InitHook", "MaximumLength", "MinimumLength", "NonEmpty"]
+__all__ = ["Any", "InitHook", "MaximumLength", "MinimumLength", "NonEmpty"]
 
 
 T_co = TypeVar("T_co", covariant=True)
 
 
+Any = tuple[T_co, ...]
+
+
 class InitHook(generic.InitHook, tuple[T_co, ...]):
-    def __init__(self, iterable: Iterable[T_co] = (), /):
+    def __init__(self, _: Iterable[T_co] = (), /):
         super().__init__()
 
 

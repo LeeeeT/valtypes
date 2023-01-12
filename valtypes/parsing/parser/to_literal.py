@@ -4,7 +4,7 @@ from typing import Generic, TypeVar
 
 import valtypes.error.parsing.literal as literal_error
 
-from .abc import ABC
+from .base import ABC
 from .to_literal_choice_preparse import ToLiteralChoicePreparse
 
 __all__ = ["ToLiteral"]

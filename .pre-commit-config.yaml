@@ -1,62 +1,57 @@
-ci:
-  autofix_commit_msg: 'refactor: auto fixes from pre-commit hooks'
-  autoupdate_commit_msg: 'build(deps): update pre-commit hooks'
-  skip: [ pyproject-flake8, pyright, pyright-verify, pytest ]
-
 repos:
-  - repo: https://github.com/pycqa/isort
-    rev: 5.11.4
-    hooks:
-      - id: isort
-        stages: [ commit ]
-
-  - repo: https://github.com/aio-libs/sort-all
-    rev: v1.2.0
-    hooks:
-      - id: sort-all
-        name: sort-all
-        stages: [ commit ]
-
-  - repo: https://github.com/psf/black
-    rev: 22.12.0
-    hooks:
-      - id: black
-        stages: [ commit ]
-
-  - repo: https://github.com/csachs/pyproject-flake8
-    rev: v6.0.0.post1
-    hooks:
-      - id: pyproject-flake8
-        name: flake8
-        alias: flake8
-        stages: [ commit ]
-
   - repo: local
     hooks:
-#      - id: mypy
-#        name: mypy
-#        entry: bash -c "pip install poetry && poetry install --with mypy && mypy"
-#        language: system
-#        pass_filenames: false
-#        stages: [ commit ]
+      - id: isort
+        name: isort
+        entry: poetry run isort
+        language: system
+        pass_filenames: false
+        stages: [ commit ]
+
+      - id: sort-all
+        name: sort-all
+        entry: poetry run sort-all
+        language: system
+        stages: [ commit ]
+
+      - id: black
+        name: black
+        entry: poetry run black .
+        language: system
+        pass_filenames: false
+        stages: [ commit ]
+
+      - id: flake8
+        name: flake8
+        entry: poetry run pflake8 valtypes tests testing
+        language: system
+        pass_filenames: false
+        stages: [ commit ]
+
+      # - id: mypy
+      #   name: mypy
+      #   entry: poetry run mypy
+      #   language: system
+      #   pass_filenames: false
+      #   stages: [ commit ]
 
       - id: pyright
         name: pyright
-        entry: bash -c "pip install poetry && poetry install --with pyright && pyright"
+        entry: poetry run pyright
         language: system
         pass_filenames: false
         stages: [ commit ]
 
       - id: pyright-verify
         name: pyright-verify
-        entry: bash -c "pip install poetry && poetry install --with pyright-verify && pyright --verifytypes valtypes"
+        entry: poetry run pyright --verifytypes valtypes
         language: system
         pass_filenames: false
         stages: [ commit ]
 
       - id: pytest
         name: pytest
-        entry: bash -c "pip install poetry && poetry install --with pytest && pytest"
+        entry: poetry run pytest
         language: system
         pass_filenames: false
         stages: [ commit ]

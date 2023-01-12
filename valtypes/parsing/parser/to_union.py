@@ -5,7 +5,7 @@ from typing import Generic, TypeVar
 
 import valtypes.error.parsing as error
 
-from .abc import ABC
+from .base import ABC
 
 __all__ = ["Parser", "ToUnion"]
 

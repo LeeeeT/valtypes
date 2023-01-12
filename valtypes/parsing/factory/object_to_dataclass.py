@@ -2,7 +2,7 @@ from typing import Any
 
 from valtypes.parsing import parser
 
-from .abc import ABC
+from .base import ABC
 from .dict_to_dataclass import DictToDataclass
 from .shortcut import Shortcut
 

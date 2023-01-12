@@ -2,7 +2,7 @@ from typing import TypeVar
 
 from valtypes.parsing import parser
 
-from .abc import ABC
+from .base import ABC
 from .iterable_to_list import IterableToList
 from .shortcut import Shortcut
 

@@ -4,7 +4,7 @@ from typing import TypeVar
 from valtypes.parsing import parser
 from valtypes.util import resolve_type_arguments
 
-from .abc import ABC
+from .base import ABC
 
 __all__ = ["IterableToList"]
 

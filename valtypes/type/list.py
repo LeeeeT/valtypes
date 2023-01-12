@@ -1,14 +1,18 @@
+import typing
 from collections.abc import Iterable
-from typing import Any, Self, SupportsIndex, TypeVar, cast, overload
+from typing import Self, SupportsIndex, TypeVar, cast, overload
 
 from valtypes.util import ensure_sequence, get_slice_length
 
 from . import generic, sized
 
-__all__ = ["InitHook", "LengthHook", "MaximumLength", "MinimumLength", "NonEmpty"]
+__all__ = ["Any", "InitHook", "LengthHook", "MaximumLength", "MinimumLength", "NonEmpty"]
 
 
 T = TypeVar("T")
+
+
+Any = list[T]
 
 
 class InitHook(generic.InitHook, list[T]):
@@ -54,7 +58,7 @@ class LengthHook(InitHook[T], sized.LengthHook):
         if isinstance(item, slice):
             object = ensure_sequence(cast(Iterable[T], object))
             self.__notify_length_delta__(len(object) - get_slice_length(item, self))
-        super().__setitem__(cast(Any, item), cast(Any, object))
+        super().__setitem__(cast(typing.Any, item), cast(typing.Any, object))
 
     def __delitem__(self, item: SupportsIndex | slice, /) -> None:
         if isinstance(item, slice):

@@ -9,185 +9,115 @@ on:
 jobs:
   flake8:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [ '3.11' ]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Restore cache and venv
-        id: cache
+      - uses: actions/checkout@v3
+      - name: Restore venv
         uses: actions/cache@v3
         with:
           path: |
-            ~/.cache
             .venv
-          key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
-      - name: Install Poetry
-        if: steps.cache.outputs.cache-hit != 'true'
-        uses: snok/install-poetry@v1.3.3
+          key: ${{ hashFiles('poetry.lock') }}
+      - name: Restore cache
+        uses: actions/cache@v3
         with:
-          virtualenvs-in-project: true
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: poetry install --with dev
+          path: |
+            .mypy_cache
+            .pytest_cache
+          key: ${{ github.ref_name }}
       - name: Run flake8
-        run: |
-          source .venv/bin/activate
-          pre-commit run --all-files flake8
+        uses: devcontainers/ci@v0.2
+        with:
+          cacheFrom: ghcr.io/${{ github.repository }}
+          runCmd: poetry run pre-commit run --all-files flake8
 
-#  mypy:
-#    runs-on: ubuntu-latest
-#    strategy:
-#      matrix:
-#        python-version: [ '3.11' ]
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v3
-#      - name: Setup Python
-#        uses: actions/setup-python@v4
-#        with:
-#          python-version: ${{ matrix.python-version }}
-#      - name: Restore cache and venv
-#        id: cache
-#        uses: actions/cache@v3
-#        with:
-#          path: |
-#            ~/.cache
-#            .venv
-#          key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
-#      - name: Restore mypy cache
-#        uses: actions/cache@v3
-#        with:
-#          path: .mypy_cache
-#          key: ${{ matrix.python-version }}
-#      - name: Install Poetry
-#        if: steps.cache.outputs.cache-hit != 'true'
-#        uses: snok/install-poetry@v1.3.3
-#        with:
-#          virtualenvs-in-project: true
-#      - name: Install dependencies
-#        if: steps.cache.outputs.cache-hit != 'true'
-#        run: poetry install --with dev
-#      - name: Run mypy
-#        run: |
-#          source .venv/bin/activate
-#          pre-commit run --all-files mypy
+  # mypy:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - name: Restore venv
+  #       uses: actions/cache@v3
+  #       with:
+  #         path: |
+  #           .venv
+  #         key: ${{ hashFiles('poetry.lock') }}
+  #     - name: Restore cache
+  #       uses: actions/cache@v3
+  #       with:
+  #         path: |
+  #           .mypy_cache
+  #           .pytest_cache
+  #         key: ${{ github.ref_name }}
+  #     - name: Run mypy
+  #       uses: devcontainers/ci@v0.2
+  #       with:
+  #         cacheFrom: ghcr.io/${{ github.repository }}
+  #         runCmd: poetry run pre-commit run --all-files mypy
 
   pyright:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [ '3.11' ]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Restore cache and venv
-        id: cache
+      - uses: actions/checkout@v3
+      - name: Restore venv
         uses: actions/cache@v3
         with:
           path: |
-            ~/.cache
             .venv
-          key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
-      - name: Install Poetry
-        if: steps.cache.outputs.cache-hit != 'true'
-        uses: snok/install-poetry@v1.3.3
+          key: ${{ hashFiles('poetry.lock') }}
+      - name: Restore cache
+        uses: actions/cache@v3
         with:
-          virtualenvs-in-project: true
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: poetry install --with dev
+          path: |
+            .mypy_cache
+            .pytest_cache
+          key: ${{ github.ref_name }}
       - name: Run pyright
-        run: |
-          source .venv/bin/activate
-          pre-commit run --all-files pyright
+        uses: devcontainers/ci@v0.2
+        with:
+          cacheFrom: ghcr.io/${{ github.repository }}
+          runCmd: poetry run pre-commit run --all-files pyright
 
   pyright-verify:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: [ '3.11' ]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Restore cache and venv
-        id: cache
+      - uses: actions/checkout@v3
+      - name: Restore venv
         uses: actions/cache@v3
         with:
           path: |
-            ~/.cache
             .venv
-          key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
-      - name: Install Poetry
-        if: steps.cache.outputs.cache-hit != 'true'
-        uses: snok/install-poetry@v1.3.3
+          key: ${{ hashFiles('poetry.lock') }}
+      - name: Restore cache
+        uses: actions/cache@v3
         with:
-          virtualenvs-in-project: true
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: poetry install --with dev
+          path: |
+            .mypy_cache
+            .pytest_cache
+          key: ${{ github.ref_name }}
       - name: Run pyright-verify
-        run: |
-          source .venv/bin/activate
-          pre-commit run --all-files pyright-verify
+        uses: devcontainers/ci@v0.2
+        with:
+          cacheFrom: ghcr.io/${{ github.repository }}
+          runCmd: poetry run pre-commit run --all-files pyright-verify
 
   pytest:
-    runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        shell: bash
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
-        python-version: [ '3.11' ]
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
-      - name: Restore cache and venv
-        id: cache
+      - uses: actions/checkout@v3
+      - name: Restore venv
         uses: actions/cache@v3
         with:
           path: |
-            ~/.cache
             .venv
-          key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
-      - name: Restore pytest cache
+          key: ${{ hashFiles('poetry.lock') }}
+      - name: Restore cache
         uses: actions/cache@v3
         with:
-          path: .pytest_cache
-          key: pytest-${{ runner.os }}-${{ matrix.python-version }}
-      - name: Install Poetry
-        if: steps.cache.outputs.cache-hit != 'true'
-        uses: snok/install-poetry@v1.3.3
+          path: |
+            .mypy_cache
+            .pytest_cache
+          key: ${{ github.ref_name }}
+      - name: Run pytest
+        uses: devcontainers/ci@v0.2
         with:
-          virtualenvs-in-project: true
-      - name: Install dependencies
-        if: steps.cache.outputs.cache-hit != 'true'
-        run: poetry install --with dev
-      - name: Run pytest on Windows
-        if: runner.os == 'Windows'
-        run: |
-          source .venv/scripts/activate
-          pre-commit run --all-files pytest
-      - name: Run pytest on normal OS
-        if: runner.os != 'Windows'
-        run: |
-          source .venv/bin/activate
-          pre-commit run --all-files pytest
+          cacheFrom: ghcr.io/${{ github.repository }}
+          runCmd: poetry run pre-commit run --all-files pytest
