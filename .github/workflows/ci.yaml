@@ -29,7 +29,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Install Poetry
         if: steps.cache.outputs.cache-hit != 'true'
-        uses: snok/install-poetry@v1.3.3
+        uses: snok/install-poetry@v1.3.4
         with:
           virtualenvs-in-project: true
       - name: Install dependencies
@@ -67,7 +67,7 @@ jobs:
 #          key: ${{ matrix.python-version }}
 #      - name: Install Poetry
 #        if: steps.cache.outputs.cache-hit != 'true'
-#        uses: snok/install-poetry@v1.3.3
+#        uses: snok/install-poetry@v1.3.4
 #        with:
 #          virtualenvs-in-project: true
 #      - name: Install dependencies
@@ -100,7 +100,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Install Poetry
         if: steps.cache.outputs.cache-hit != 'true'
-        uses: snok/install-poetry@v1.3.3
+        uses: snok/install-poetry@v1.3.4
         with:
           virtualenvs-in-project: true
       - name: Install dependencies
@@ -133,7 +133,7 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Install Poetry
         if: steps.cache.outputs.cache-hit != 'true'
-        uses: snok/install-poetry@v1.3.3
+        uses: snok/install-poetry@v1.3.4
         with:
           virtualenvs-in-project: true
       - name: Install dependencies
@@ -175,7 +175,7 @@ jobs:
           key: pytest-${{ runner.os }}-${{ matrix.python-version }}
       - name: Install Poetry
         if: steps.cache.outputs.cache-hit != 'true'
-        uses: snok/install-poetry@v1.3.3
+        uses: snok/install-poetry@v1.3.4
         with:
           virtualenvs-in-project: true
       - name: Install dependencies
