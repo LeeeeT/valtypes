@@ -24,7 +24,7 @@ repos:
         stages: [ commit ]
 
   - repo: https://github.com/csachs/pyproject-flake8
-    rev: v6.0.0.post1
+    rev: v6.1.0
     hooks:
       - id: pyproject-flake8
         name: flake8
