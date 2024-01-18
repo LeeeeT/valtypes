@@ -21,7 +21,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Restore cache and venv
         id: cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cache
@@ -54,14 +54,14 @@ jobs:
 #          python-version: ${{ matrix.python-version }}
 #      - name: Restore cache and venv
 #        id: cache
-#        uses: actions/cache@v3
+#        uses: actions/cache@v4
 #        with:
 #          path: |
 #            ~/.cache
 #            .venv
 #          key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
 #      - name: Restore mypy cache
-#        uses: actions/cache@v3
+#        uses: actions/cache@v4
 #        with:
 #          path: .mypy_cache
 #          key: ${{ matrix.python-version }}
@@ -92,7 +92,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Restore cache and venv
         id: cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cache
@@ -125,7 +125,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Restore cache and venv
         id: cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cache
@@ -162,14 +162,14 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Restore cache and venv
         id: cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cache
             .venv
           key: ${{ runner.os }}-${{ matrix.python-version }}-${{ hashFiles('poetry.lock') }}
       - name: Restore pytest cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: .pytest_cache
           key: pytest-${{ runner.os }}-${{ matrix.python-version }}
