@@ -1,5 +1,16 @@
 # Changelog
 
+## [7.0.0](https://github.com/LeeeeT/valtypes/compare/v6.0.1...v7.0.0) (2024-02-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* use exception groups for composite errors ([#49](https://github.com/LeeeeT/valtypes/issues/49))
+
+### Features
+
+* use exception groups for composite errors ([#49](https://github.com/LeeeeT/valtypes/issues/49)) ([1c53071](https://github.com/LeeeeT/valtypes/commit/1c53071566348a09fd2072c461b58cf899dcd07e))
+
 ## [6.0.1](https://github.com/LeeeeT/valtypes/compare/v6.0.0...v6.0.1) (2022-11-09)
 
 
