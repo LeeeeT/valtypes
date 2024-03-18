@@ -18,12 +18,10 @@ __all__ = [
 
 class InitHook(generic.InitHook, int):
     @overload
-    def __init__(self, x: str | ReadableBuffer | SupportsInt | SupportsIndex | SupportsTrunc = ..., /):
-        ...
+    def __init__(self, x: str | ReadableBuffer | SupportsInt | SupportsIndex | SupportsTrunc = ..., /): ...
 
     @overload
-    def __init__(self, x: str | bytes | bytearray, /, base: SupportsIndex):
-        ...
+    def __init__(self, x: str | bytes | bytearray, /, base: SupportsIndex): ...
 
     def __init__(self, x: str | ReadableBuffer | SupportsInt | SupportsIndex | SupportsTrunc = 0, /, base: SupportsIndex = 10):
         super().__init__()

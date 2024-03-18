@@ -43,12 +43,10 @@ class LengthHook(InitHook[T], sized.LengthHook):
         super().remove(value)
 
     @overload
-    def __setitem__(self, index: SupportsIndex, value: T, /) -> None:
-        ...
+    def __setitem__(self, index: SupportsIndex, value: T, /) -> None: ...
 
     @overload
-    def __setitem__(self, slice: slice, iterable: Iterable[T], /) -> None:
-        ...
+    def __setitem__(self, slice: slice, iterable: Iterable[T], /) -> None: ...
 
     def __setitem__(self, item: SupportsIndex | slice, object: T | Iterable[T], /) -> None:
         if isinstance(item, slice):
