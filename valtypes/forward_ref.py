@@ -18,12 +18,10 @@ if TYPE_CHECKING:
 
     class ForwardRef(Generic[T]):
         @classmethod
-        def evaluate(cls) -> object:
-            ...
+        def evaluate(cls) -> object: ...
 
     class ForwardRefAlias:
-        def evaluate(self) -> object:
-            ...
+        def evaluate(self) -> object: ...
 
 else:
 

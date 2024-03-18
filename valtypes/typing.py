@@ -30,14 +30,12 @@ T_co = TypeVar("T_co", covariant=True)
 
 
 class SupportsTrunc(Protocol):
-    def __trunc__(self) -> int:
-        ...
+    def __trunc__(self) -> int: ...
 
 
 @runtime_checkable
 class Descriptor(Protocol[T_co]):
-    def __get__(self, instance: object, owner: type | None = ...) -> T_co:
-        ...
+    def __get__(self, instance: object, owner: type | None = ...) -> T_co: ...
 
 
 ReadOnlyBuffer = bytes
