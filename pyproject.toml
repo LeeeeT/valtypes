@@ -48,7 +48,7 @@ pyright = "^1.1.279"
 optional = true
 [tool.poetry.group.pytest.dependencies]
 pytest = ">=7.2,<9.0"
-pytest-cov = "^4.0.0"
+pytest-cov = ">=4,<6"
 
 [tool.isort]
 profile = "black"
